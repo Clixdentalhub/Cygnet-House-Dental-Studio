@@ -223,6 +223,50 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
 }
 
+
+/* ==========================================================================
+   2d · IMAGERY
+   Card media sits flush to the card edge (no gutter). Section photos sit
+   under a scrim so white text keeps its contrast whatever the photo does.
+   Missing files degrade to a labelled block rather than a broken-image icon.
+   ========================================================================== */
+.card--media{padding:0; overflow:hidden; display:flex; flex-direction:column}
+.card--media .card__body{padding:var(--space-3); display:flex; flex-direction:column; gap:10px; flex:1}
+.card__media{
+  position:relative; margin:0; overflow:hidden;
+  aspect-ratio:16/10; background:var(--color-muted);
+  border-bottom:1px solid var(--color-border);
+}
+/* The labelled slot is always painted underneath; a loaded image covers it.
+   No JS and no load-order race — a missing or still-lazy file just shows the
+   slot. color:transparent keeps broken-image alt text from flashing over it
+   while leaving the alt attribute intact for assistive tech. */
+.card__media::before{
+  content:attr(data-file); position:absolute; inset:0; z-index:0;
+  display:grid; place-items:center; padding:var(--space-2);
+  text-align:center; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.75rem; font-weight:600; color:var(--color-foreground-mut);
+  background:repeating-linear-gradient(45deg,var(--color-muted),var(--color-muted) 10px,#E7DEEE 10px,#E7DEEE 20px);
+}
+.card__media img{
+  position:relative; z-index:1; width:100%; height:100%;
+  object-fit:cover; display:block; color:transparent;
+}
+.hero__media .card__media{aspect-ratio:16/9; border:1px solid var(--color-border); border-radius:var(--radius)}
+.clinician .card__media{aspect-ratio:1; border-radius:var(--radius); border:1px solid var(--color-border)}
+
+/* Section photo layer — sits below the motion layer, above nothing. */
+.photo{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-color:var(--color-primary);
+  background-size:cover; background-position:center;
+}
+.photo::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(26,18,32,.86) 0%,rgba(26,18,32,.78) 55%,rgba(26,18,32,.90) 100%);
+}
+.trust-strip .photo::after{background:rgba(26,18,32,.88)}
+
 /* ==========================================================================
    2c · SECTION CUT — layered wave
    Four wave layers at rising opacity in the NEXT section's colour. The
@@ -1037,12 +1081,7 @@ body{padding-bottom:88px}
     </div>
 
     <div class="hero__media">
-      <!-- TODO: replace with a real photo of the practice / a consented patient. No stock smiles. -->
-      <div class="placeholder">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.6-4.6a2 2 0 0 0-2.8 0L3 21"/></svg>
-        <span class="placeholder-label">Hero image slot</span>
-        <span>Real clinician or consented patient photo — landscape, min 1200&nbsp;×&nbsp;800px</span>
-      </div>
+      <div class="card__media" data-file="assets/hero.webp"><img src="assets/hero.webp" alt="Dr Dimitrios Sourtzis with a patient at Cygnet House Dental Studio" fetchpriority="high" decoding="async"></div>
     </div>
 
   </div>
@@ -1062,6 +1101,7 @@ body{padding-bottom:88px}
      3 · TRUST STRIP
      ============================================================ -->
 <section class="trust-strip has-bg" aria-label="Why patients choose us">
+  <div class="photo" style="background-image:url('assets/section-trust.webp')" aria-hidden="true"></div>
   <!-- A6 · Quiet Premium (zero motion) -->
   <div class="bg bg-quiet" aria-hidden="true"></div>
   <div class="container">
@@ -1100,33 +1140,33 @@ body{padding-bottom:88px}
     </div>
 
     <ul class="grid grid--4 reveal">
-      <li class="card problem-card">
-        <span class="problem-card__icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5c-1.5-1.2-3-1.8-4.5-1.5C5 4.5 3.5 6.5 3.5 9.5c0 3 1 5 1.8 7.4.5 1.6 1 3.1 2.2 3.1 1.3 0 1.6-1.6 2-3.2.3-1.3.7-2.3 2.5-2.3s2.2 1 2.5 2.3c.4 1.6.7 3.2 2 3.2 1.2 0 1.7-1.5 2.2-3.1.8-2.4 1.8-4.4 1.8-7.4 0-3-1.5-5-4-5.5-1.5-.3-3 .3-4.5 1.5Z"/></svg>
-        </span>
-        <h3>Missing one or more teeth</h3>
-        <p>And you want a permanent fix, not a gap or a bridge.</p>
+      <li class="card card--media problem-card">
+        <div class="card__media" data-file="assets/is-missing-teeth.webp"><img src="assets/is-missing-teeth.webp" alt="A patient smiling after single-tooth implant treatment at the practice" loading="lazy" decoding="async"></div>
+        <div class="card__body">
+          <h3>Missing one or more teeth</h3>
+          <p>And you want a permanent fix, not a gap or a bridge.</p>
+        </div>
       </li>
-      <li class="card problem-card">
-        <span class="problem-card__icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 18 0"/><path d="M3 12c0 3 1.5 5 3 5s2-1.5 3-1.5 1.5 1.5 3 1.5 2-1.5 3-1.5 1.5 1.5 3 1.5 3-2 3-5"/></svg>
-        </span>
-        <h3>Struggling with loose dentures</h3>
-        <p>That move, click or make eating uncomfortable.</p>
+      <li class="card card--media problem-card">
+        <div class="card__media" data-file="assets/is-loose-dentures.webp"><img src="assets/is-loose-dentures.webp" alt="A relaxed patient in the consultation room discussing denture problems" loading="lazy" decoding="async"></div>
+        <div class="card__body">
+          <h3>Struggling with loose dentures</h3>
+          <p>That move, click or make eating uncomfortable.</p>
+        </div>
       </li>
-      <li class="card problem-card">
-        <span class="problem-card__icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.4 1.8 17.6A2 2 0 0 0 3.5 20.6h17a2 2 0 0 0 1.7-3L13.7 3.4a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
-        </span>
-        <h3>Living with failing teeth</h3>
-        <p>Cracked, loose or painful teeth you know can't last.</p>
+      <li class="card card--media problem-card">
+        <div class="card__media" data-file="assets/is-failing-teeth.webp"><img src="assets/is-failing-teeth.webp" alt="A clinician examining a patient in the treatment room" loading="lazy" decoding="async"></div>
+        <div class="card__body">
+          <h3>Living with failing teeth</h3>
+          <p>Cracked, loose or painful teeth you know can't last.</p>
+        </div>
       </li>
-      <li class="card problem-card">
-        <span class="problem-card__icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21s-6-4.4-6-9.6A4.4 4.4 0 0 1 12 8a4.4 4.4 0 0 1 10 3.4C22 16.6 16 21 16 21"/><path d="M12 8v13"/></svg>
-        </span>
-        <h3>Ready for a full-mouth solution</h3>
-        <p>Fixed teeth in as few as one set of implants.</p>
+      <li class="card card--media problem-card">
+        <div class="card__media" data-file="assets/is-full-mouth.webp"><img src="assets/is-full-mouth.webp" alt="A patient reviewing a full-mouth treatment plan with the team" loading="lazy" decoding="async"></div>
+        <div class="card__body">
+          <h3>Ready for a full-mouth solution</h3>
+          <p>Fixed teeth in as few as one set of implants.</p>
+        </div>
       </li>
     </ul>
 
@@ -1305,6 +1345,7 @@ body{padding-bottom:88px}
      8 · NERVOUS ABOUT IMPLANTS?
      ============================================================ -->
 <section class="section section--primary has-bg" id="nervous" aria-labelledby="nervous-title">
+  <div class="photo" style="background-image:url('assets/section-nervous.webp')" aria-hidden="true"></div>
   <!-- A2 · Aurora Wash -->
   <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container">
@@ -1364,11 +1405,7 @@ body{padding-bottom:88px}
     <div class="grid grid--2 reveal">
       <div class="card">
         <div class="clinician">
-          <!-- TODO: replace with a real photo of Dr Sourtzis -->
-          <div class="placeholder">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-            <span class="placeholder-label">Photo</span>
-          </div>
+          <div class="card__media" data-file="assets/clinician-sourtzis.webp"><img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis, implant treatment provider" loading="lazy" decoding="async"></div>
           <div>
             <h3>Dr Dimitrios Sourtzis</h3>
             <p class="clinician__cred">Implant treatment provider · Dentist · GDC No. 287145</p>
@@ -1380,12 +1417,7 @@ body{padding-bottom:88px}
 
       <div class="card">
         <div class="clinician">
-          <!-- Clinic photo — see assets/README for the filename convention -->
-          <div class="placeholder">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/></svg>
-            <span class="placeholder-label">Practice photo</span>
-            <span>assets/practice.webp</span>
-          </div>
+          <div class="card__media" data-file="assets/practice.webp"><img src="assets/practice.webp" alt="The treatment room at Cygnet House Dental Studio" loading="lazy" decoding="async"></div>
           <div>
             <h3>A family-run practice in Spilsby</h3>
             <p class="clinician__cred">Cygnet House Dental Studio Ltd</p>
@@ -1529,6 +1561,7 @@ body{padding-bottom:88px}
      13 · FINAL CTA + LOCATION
      ============================================================ -->
 <section class="section section--primary has-bg" id="contact" aria-labelledby="final-title">
+  <div class="photo" style="background-image:url('assets/section-contact.webp')" aria-hidden="true"></div>
   <!-- A2 · Aurora Wash — the other CTA band -->
   <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container final__grid">
