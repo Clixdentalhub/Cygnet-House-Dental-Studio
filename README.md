@@ -45,22 +45,38 @@ Everything still awaiting client confirmation is rendered as a highlighted
 
 | # | Item | Where it appears |
 |---|------|------------------|
-| 1 | **Finance figures** — provider, term, representative APR, monthly amounts | Hero anchor, all 3 pricing cards, §11 representative example, footer |
+| 1 | **Phone number** for click-to-call | Header, hero, §8, §13, footer, sticky mobile bar — and `telephone` in the JSON-LD |
 | 2 | **Real consented before/after images** | §6 — three placeholder slots |
-| 3 | **Phone number** for click-to-call | Header, hero, §8, §13, footer, sticky mobile bar |
-| 4 | **Substantiation for any savings claim** | Currently omitted entirely — see note below |
+| 3 | **Finance lender + FCA authorisation / credit-broker status** | §11 finance block, footer disclosure |
 
 ## Also outstanding
 
-- Dr Rose — full name, credentials, GDC number
-- Practice address + opening hours + Google Map embed (§13 placeholder slot)
 - The six real, consented patient reviews (§7 — six placeholder cards, treatment
   labels already set)
-- Real logo and brand colours (a proposed premium palette is in use)
-- Clinician photos (§10), hero image (§2)
-- CQC provider ID, FCA firm reference number
-- Privacy policy / complaints / terms URLs (footer)
+- Clinician photo for Dr Sourtzis, hero image, practice photo
+- Weekend opening hours (assumed closed — needs confirming, and it also affects
+  the JSON-LD)
+- CQC provider ID
 - £50 deposit — confirm whether it is refundable or redeemable against treatment
+- Real logo and brand assets
+- Privacy policy / complaints / terms URLs (footer)
+
+## Confirmed and in the build
+
+- Legal entity **Cygnet House Dental Studio Ltd**, company number **05359263**
+- Address **Cygnet House, Grace Swan Close, Spilsby, PE23 5LT** + live map embed
+- Opening hours Mon–Fri
+- Website, Facebook and Instagram
+- Implant treatment provider **Dr Dimitrios Sourtzis**, GDC 287145
+- Pricing: single **£3,000–£3,500**, All-on-4 **from £12,000**, All-on-6
+  **from £15,000**
+- Finance: **0% over 12 months**, giving £250 / £1,000 / £1,250 per month
+- `Dentist` JSON-LD with NAP, hours, services and social profiles
+
+> **Full-arch finance is the biggest open lever.** 0% over 12 months makes a
+> superb anchor for a single implant (£250/month) but forces £1,000 and £1,250
+> for All-on-4 and All-on-6. A longer-term plan for full-arch would do more for
+> this page's conversion rate than any design change in it.
 
 ---
 

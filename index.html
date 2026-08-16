@@ -614,6 +614,7 @@ fieldset{border:0; padding:0; margin:0}
   border-bottom:1px solid var(--color-border);
 }
 .price-card p{font-size:.9375rem; color:var(--color-foreground-mut)}
+.price-card__note{font-size:.8125rem!important; padding-top:10px; margin-top:10px; border-top:1px dashed var(--color-border)}
 .price-card .btn{margin-top:auto}
 .price-card__body{margin-bottom:var(--space-3)}
 .note-block{
@@ -714,6 +715,11 @@ fieldset{border:0; padding:0; margin:0}
 .final__grid .placeholder svg,
 .final__grid .placeholder .placeholder-label{color:#fff}
 .address{font-size:.9375rem; color:var(--color-on-primary-mut); margin-top:var(--space-2)}
+.hours{margin-top:var(--space-2); border-collapse:collapse; font-size:.875rem; color:var(--color-on-primary-mut); font-variant-numeric:tabular-nums}
+.hours th{text-align:left; font-weight:600; color:#fff; padding:3px var(--space-2) 3px 0; white-space:nowrap}
+.hours td{padding:3px 0}
+.mapwrap{position:relative; aspect-ratio:4/3; border-radius:var(--radius); overflow:hidden; border:1px solid rgba(255,255,255,.28)}
+.mapwrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block}
 .address strong{color:#fff; display:block}
 
 /* ==========================================================================
@@ -725,6 +731,10 @@ fieldset{border:0; padding:0; margin:0}
 .footer h3{font-size:1rem; color:#fff; margin-bottom:12px}
 .footer a{color:#fff}
 .footer ul{display:grid; gap:8px}
+.social{margin-top:10px}
+.social a{display:inline-flex; align-items:center; gap:8px; min-height:32px}
+.hours--foot{color:#CFC6D8; margin-top:0}
+.hours--foot th{color:#fff; font-weight:600; padding-right:var(--space-2)}
 .footer__legal{
   border-top:1px solid rgba(255,255,255,.15);
   padding-top:var(--space-3);
@@ -833,7 +843,7 @@ body{padding-bottom:88px}
 
       <p class="finance-anchor hero__finance">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        <span>Implants from <strong>£<span class="ph">[250]</span>/month</strong> <em>(illustrative)</em> · 0% interest available · full pricing shown below — no surprises.</span>
+        <span>Implants from <strong>£250/month</strong> with 0% finance over 12 months · full pricing shown below — no surprises.</span>
       </p>
 
       <ul class="chips hero__chips">
@@ -1142,9 +1152,10 @@ body{padding-bottom:88px}
         <span class="price-card__tag">Most enquired about</span>
         <div class="price-card__body">
           <h3>Single Dental Implant</h3>
-          <p class="price-card__monthly">From £<span class="ph">[250]</span>/month <small>(illustrative)</small></p>
-          <p class="price-card__total">or £3,000–£3,500 total</p>
+          <p class="price-card__monthly">From £250 <small>/month</small></p>
+          <p class="price-card__total">12 payments at 0% · £3,000–£3,500 total</p>
           <p>Replace a single missing tooth with a permanent, natural-looking result that stands alone — no damage to neighbouring teeth.</p>
+          <p class="price-card__note">Your exact cost depends on your case — additional treatment such as a bone graft or an extraction can affect the final price. You'll get it in writing before anything begins.</p>
         </div>
         <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
       </li>
@@ -1152,8 +1163,8 @@ body{padding-bottom:88px}
       <li class="card price-card">
         <div class="price-card__body">
           <h3>All-on-4 Full-Arch Implants</h3>
-          <p class="price-card__monthly">From £<span class="ph">[X]</span>/month <small>(needs longer-term plan)</small></p>
-          <p class="price-card__total">or from £12,000 per arch</p>
+          <p class="price-card__monthly">From £1,000 <small>/month</small></p>
+          <p class="price-card__total">12 payments at 0% · from £12,000 per arch</p>
           <p>A complete set of fixed teeth supported by four implants — a life-changing alternative to dentures.</p>
         </div>
         <a class="btn btn--secondary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
@@ -1162,8 +1173,8 @@ body{padding-bottom:88px}
       <li class="card price-card">
         <div class="price-card__body">
           <h3>All-on-6 Full-Arch Implants</h3>
-          <p class="price-card__monthly">From £<span class="ph">[X]</span>/month <small>(needs longer-term plan)</small></p>
-          <p class="price-card__total">or from £15,000 per arch</p>
+          <p class="price-card__monthly">From £1,250 <small>/month</small></p>
+          <p class="price-card__total">12 payments at 0% · from £15,000 per arch</p>
           <p>Our premium full-arch solution — six implants for maximum stability, function and confidence.</p>
         </div>
         <a class="btn btn--secondary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
@@ -1174,7 +1185,7 @@ body{padding-bottom:88px}
          If the "Save" claims are substantiated with a genuine prior price, reintroduce here as
          "£[amount] off until [date]". Otherwise omit entirely — see brief §4 (ASA). -->
     <p class="note-block reveal">
-      <strong>Build note (remove before launch):</strong> a 12-month 0% plan produces a full-arch monthly figure too high to anchor with (£1,000+/mo). Secure a longer-term finance plan for full-arch so the monthly anchor actually works. Savings claims (“Save up to £1,000” / “SAVE £500”) are omitted pending substantiation.
+      <strong>Build note (remove before launch):</strong> these monthlies are the confirmed prices divided across the only plan currently offered — 0% over 12 months. That works beautifully for a single implant (£250) but produces £1,000 and £1,250 for full-arch, which is too high to work as an anchor. Securing a longer-term plan for full-arch is the single highest-value change available to this page. Savings claims (“Save up to £1,000” / “SAVE £500”) remain omitted pending substantiation.
     </p>
   </div>
 </section>
@@ -1360,7 +1371,7 @@ body{padding-bottom:88px}
           </div>
           <div>
             <h3>Dr Dimitrios Sourtzis</h3>
-            <p class="clinician__cred">Dentist · GDC No. 287145</p>
+            <p class="clinician__cred">Implant treatment provider · Dentist · GDC No. 287145</p>
             <p>MSc Endodontics (King's College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.</p>
             <p>My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what's possible before anything begins.</p>
           </div>
@@ -1369,15 +1380,16 @@ body{padding-bottom:88px}
 
       <div class="card">
         <div class="clinician">
-          <!-- TODO: replace with a real photo of Dr Rose -->
+          <!-- Clinic photo — see assets/README for the filename convention -->
           <div class="placeholder">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-            <span class="placeholder-label">Photo</span>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/></svg>
+            <span class="placeholder-label">Practice photo</span>
+            <span>assets/practice.webp</span>
           </div>
           <div>
-            <h3>Dr <span class="ph">[Rose — full name]</span></h3>
-            <p class="clinician__cred"><span class="ph">[Credentials + GDC number to confirm]</span></p>
-            <p>Together the team plans every case restoratively, so both function and aesthetics are considered from the very start.</p>
+            <h3>A family-run practice in Spilsby</h3>
+            <p class="clinician__cred">Cygnet House Dental Studio Ltd</p>
+            <p>Every case is planned restoratively, so both function and aesthetics are considered from the very start — and you always see the full plan and the exact cost in writing before treatment begins.</p>
           </div>
         </div>
       </div>
@@ -1406,7 +1418,7 @@ body{padding-bottom:88px}
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Personalised treatment plan</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Time with an experienced treatment coordinator</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> A clear, written breakdown of options and costs</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance options explained</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance over 12 months explained</li>
         </ul>
       </div>
 
@@ -1417,10 +1429,13 @@ body{padding-bottom:88px}
         </div>
 
         <div class="callout callout--compliance">
-          <h3>Finance</h3>
-          <p style="margin-bottom:12px"><strong>PLACEHOLDER — must be replaced with FCA-approved wording before launch.</strong></p>
+          <h3>Spreading the cost</h3>
+          <p style="margin-bottom:12px">0% interest over 12 months is available on every implant treatment.</p>
           <p class="rep-example">
-            Representative example: Total £<span class="ph">[X]</span> over <span class="ph">[term]</span> months at <span class="ph">[X]</span>% APR representative. <span class="ph">[X]</span> monthly payments of £<span class="ph">[X]</span>. Total payable £<span class="ph">[X]</span>. Cygnet House Dental Studio acts as a credit broker, not a lender. Finance provided by <span class="ph">[Lender]</span>, subject to status. Terms and conditions apply.
+            <strong>Representative example:</strong> Total amount of credit £3,000 for a single dental implant, repaid over 12 months at 0% APR representative. 12 monthly payments of £250. Total amount payable £3,000. Finance is subject to status and affordability checks.
+          </p>
+          <p style="margin-top:12px;font-size:.8125rem">
+            <span class="ph">[Lender name + Cygnet House Dental Studio's FCA authorisation and credit-broker status required before this section can be published]</span>
           </p>
         </div>
       </div>
@@ -1494,7 +1509,7 @@ body{padding-bottom:88px}
           </button>
         </h3>
         <div class="faq__a" id="faq-a5" role="region" aria-labelledby="faq-q5" hidden>
-          <p>Yes — 0% finance is available, and full pricing is shown up front. <span class="ph">[Adjust to confirmed plans]</span></p>
+          <p>Yes. Every implant treatment can be spread over 12 months at 0% interest — that&rsquo;s from £250 a month for a single implant. Full pricing is shown up front, and finance is subject to status.</p>
         </div>
       </div>
     </div>
@@ -1529,17 +1544,29 @@ body{padding-bottom:88px}
       </div>
       <address class="address" style="font-style:normal">
         <strong>Cygnet House Dental Studio</strong>
-        <span class="ph">[Practice address, Spilsby, postcode]</span><br>
-        <span class="ph">[Opening hours]</span>
+        Cygnet House, Grace Swan Close,<br>Spilsby, PE23 5LT
       </address>
+      <table class="hours">
+        <caption class="sr-only">Opening hours</caption>
+        <tbody>
+          <tr><th scope="row">Monday</th><td>9:00 am – 5:30 pm</td></tr>
+          <tr><th scope="row">Tuesday</th><td>9:00 am – 5:30 pm</td></tr>
+          <tr><th scope="row">Wednesday</th><td>9:00 am – 6:00 pm</td></tr>
+          <tr><th scope="row">Thursday</th><td>9:00 am – 5:30 pm</td></tr>
+          <tr><th scope="row">Friday</th><td>9:00 am – 3:00 pm</td></tr>
+          <tr><th scope="row">Sat &amp; Sun</th><td><span class="ph">[Confirm — closed?]</span></td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="reveal">
-      <!-- TODO: embed the practice's Google Map once the address is confirmed -->
-      <div class="placeholder">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span class="placeholder-label">Map embed slot</span>
-        <span>Add the Google Maps iframe once the address is confirmed</span>
+      <!-- Third-party embed: sets Google cookies on load. If the site uses a
+           cookie banner, gate this behind consent. -->
+      <div class="mapwrap">
+        <iframe
+          title="Map showing Cygnet House Dental Studio, Grace Swan Close, Spilsby PE23 5LT"
+          src="https://www.google.com/maps?q=Cygnet+House+Dental+Studio,+Grace+Swan+Close,+Spilsby+PE23+5LT&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
   </div>
@@ -1555,9 +1582,17 @@ body{padding-bottom:88px}
     <div class="footer__grid">
       <div>
         <h3>Cygnet House Dental Studio</h3>
-        <p><span class="ph">[Practice address, Spilsby, postcode]</span></p>
+        <p>Cygnet House, Grace Swan Close,<br>Spilsby, PE23 5LT</p>
         <p><a class="js-tel" href="tel:[Phone]"><span class="js-phone">[Phone]</span></a></p>
-        <p><span class="ph">[Opening hours]</span></p>
+        <p><a href="https://www.cygnethousedentalstudio.co.uk" rel="noopener">cygnethousedentalstudio.co.uk</a></p>
+        <ul class="social">
+          <li><a href="https://www.facebook.com/CygnetHouseDentalStudio" rel="noopener me">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1Z"/></svg>
+            Facebook</a></li>
+          <li><a href="https://www.instagram.com/dental.artstudio" rel="noopener me">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            Instagram</a></li>
+        </ul>
       </div>
       <div>
         <h3>Treatments on this page</h3>
@@ -1569,7 +1604,18 @@ body{padding-bottom:88px}
         </ul>
       </div>
       <div>
-        <h3>Practice information</h3>
+        <h3>Opening hours</h3>
+        <table class="hours hours--foot">
+          <tbody>
+            <tr><th scope="row">Mon</th><td>9:00 am – 5:30 pm</td></tr>
+            <tr><th scope="row">Tue</th><td>9:00 am – 5:30 pm</td></tr>
+            <tr><th scope="row">Wed</th><td>9:00 am – 6:00 pm</td></tr>
+            <tr><th scope="row">Thu</th><td>9:00 am – 5:30 pm</td></tr>
+            <tr><th scope="row">Fri</th><td>9:00 am – 3:00 pm</td></tr>
+            <tr><th scope="row">Sat/Sun</th><td><span class="ph">[Confirm]</span></td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:var(--space-3)">Practice information</h3>
         <ul>
           <li><a href="[/privacy-policy]">Privacy policy</a></li>
           <li><a href="[/complaints]">Complaints procedure</a></li>
@@ -1579,7 +1625,8 @@ body{padding-bottom:88px}
     </div>
 
     <div class="footer__legal">
-      <p><strong>Regulatory:</strong> Dr Dimitrios Sourtzis, GDC No. 287145. Dr <span class="ph">[Rose — full name]</span>, GDC No. <span class="ph">[number]</span>. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission: <span class="ph">[CQC provider ID]</span>.</p>
+      <p><strong>Regulatory:</strong> Implant treatment provided by Dr Dimitrios Sourtzis, GDC No. 287145. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission: <span class="ph">[CQC provider ID]</span>.</p>
+      <p><strong>Company:</strong> Cygnet House Dental Studio Ltd, registered in England &amp; Wales, company number 05359263. Registered office: Cygnet House, Grace Swan Close, Spilsby, PE23 5LT.</p>
       <p><strong>Finance:</strong> <span class="ph">[FCA-approved wording required]</span> — Cygnet House Dental Studio acts as a credit broker, not a lender. Finance provided by <span class="ph">[Lender]</span>, subject to status. Representative <span class="ph">[X]</span>% APR. Cygnet House Dental Studio is authorised and regulated by the Financial Conduct Authority, FRN <span class="ph">[number]</span>.</p>
       <p><strong>Pricing:</strong> prices shown are guide prices from the stated amount. Your exact cost is confirmed in writing after your consultation and CBCT assessment. Monthly figures marked <em>(illustrative)</em> are examples only and must be replaced with confirmed finance figures before launch.</p>
       <p>Individual results vary. All before-and-after images and reviews shown are from real patients of this practice, used with written consent.</p>
@@ -1598,6 +1645,45 @@ body{padding-bottom:88px}
   </a>
   <a class="btn btn--primary js-scroll-form" href="#qualifier">Check My Suitability</a>
 </div>
+
+<!-- Local-search structured data. Every value here is client-confirmed.
+     "telephone" is deliberately absent until the number is supplied — an
+     incomplete entry is better than a wrong one. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dentist",
+  "name": "Cygnet House Dental Studio",
+  "legalName": "Cygnet House Dental Studio Ltd",
+  "url": "https://www.cygnethousedentalstudio.co.uk",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Cygnet House, Grace Swan Close",
+    "addressLocality": "Spilsby",
+    "addressRegion": "Lincolnshire",
+    "postalCode": "PE23 5LT",
+    "addressCountry": "GB"
+  },
+  "areaServed": "Spilsby and East Lincolnshire",
+  "medicalSpecialty": "Dentistry",
+  "availableService": [
+    { "@type": "MedicalProcedure", "name": "Single dental implant" },
+    { "@type": "MedicalProcedure", "name": "All-on-4 full-arch dental implants" },
+    { "@type": "MedicalProcedure", "name": "All-on-6 full-arch dental implants" }
+  ],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday",    "opens": "09:00", "closes": "17:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday",   "opens": "09:00", "closes": "17:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "18:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday",  "opens": "09:00", "closes": "17:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday",    "opens": "09:00", "closes": "15:00" }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/CygnetHouseDentalStudio",
+    "https://www.instagram.com/dental.artstudio"
+  ]
+}
+</script>
 
 <script>
 (function () {
