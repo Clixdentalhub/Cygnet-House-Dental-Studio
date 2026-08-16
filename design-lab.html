@@ -16,13 +16,21 @@
    TOKENS — identical variable names to index.html, so every block below is
    a drop-in. Re-skinning a funnel for another practice = swap this block only.
    ========================================================================== */
+/* DEFAULT = Option 1 · Aubergine & Antique Gold.
+   Brand colour #6A2383 has luminance 0.059 — it is a DARK colour (9.63:1 with
+   white). That single fact drives the whole system: it works as the primary
+   surface, and no dark metallic CTA can sit on top of it. Hence --cta-on-dark. */
 :root{
-  --color-primary:#1E3A5F; --color-primary-dark:#162C48; --color-on-primary:#FFFFFF;
-  --color-secondary:#2563EB;
+  --color-primary:#6A2383; --color-primary-dark:#521B66; --color-on-primary:#FFFFFF;
+  --color-secondary:#7A2E92;
   --color-accent:#A16207; --color-accent-dark:#855106; --color-on-accent:#FFFFFF;
-  --color-background:#F8FAFC; --color-surface:#FFFFFF;
-  --color-foreground:#0F172A; --color-foreground-mut:#475569;
-  --color-muted:#E9EEF5; --color-border:#CBD5E1; --color-border-strong:#94A3B8;
+  /* CTA when it sits ON a primary-coloured band */
+  --cta-on-dark:#FFFFFF; --cta-on-dark-text:#6A2383;
+  /* metallic tint for icons/rules on dark — 6.07:1 on the brand purple */
+  --color-flourish:#F0C87A;
+  --color-background:#FAF7FB; --color-surface:#FFFFFF;
+  --color-foreground:#1F1024; --color-foreground-mut:#57496B;
+  --color-muted:#F1E9F5; --color-border:#DCC9E4; --color-border-strong:#9B84A6;
   --color-success:#16794A;
 
   --radius:12px; --radius-sm:8px; --radius-pill:999px;
@@ -33,17 +41,34 @@
   --shadow-md:0 4px 12px rgba(15,23,42,.08),0 2px 4px rgba(15,23,42,.04);
   --shadow-lg:0 12px 32px rgba(15,23,42,.12),0 4px 8px rgba(15,23,42,.05);
 }
-/* Alternate practice palettes — proof that every block is token-driven.
-   Both accents verified ≥4.5:1 with white text. */
-:root[data-palette="teal"]{
-  --color-primary:#0F5C6B; --color-primary-dark:#0B4653;
-  --color-accent:#0E7C66; --color-accent-dark:#0B6252;
-  --color-secondary:#0369A1; --color-muted:#E3F1F3; --color-border:#B9D9DE;
+/* Option 2 · Aubergine & Copper — warmer, more contemporary than gold */
+:root[data-palette="copper"]{
+  --color-accent:#A44A1E; --color-accent-dark:#8A3E19;
+  --color-flourish:#F0C4A0;
 }
-:root[data-palette="slate"]{
-  --color-primary:#1F2937; --color-primary-dark:#111827;
+/* Option 3 · Plum & Emerald — jewel tones; the CTA reads "go" */
+:root[data-palette="emerald"]{
   --color-accent:#047857; --color-accent-dark:#036249;
-  --color-secondary:#4F46E5; --color-muted:#E9EDF2; --color-border:#C6CFDA;
+  --color-flourish:#6EE7B7;
+}
+/* Option 4 · Ink & Amethyst — the brand purple becomes the CTA itself */
+:root[data-palette="ink"]{
+  --color-primary:#241730; --color-primary-dark:#1A1220;
+  --color-accent:#6A2383; --color-accent-dark:#521B66;
+  --cta-on-dark:#9B4DD6; --cta-on-dark-text:#FFFFFF;
+  --color-flourish:#C4A5E8;
+  --color-secondary:#6A2383;
+  --color-muted:#EFEAF2; --color-border:#D8CFE0; --color-border-strong:#94879E;
+}
+/* Reference only · the navy currently built, for side-by-side comparison */
+:root[data-palette="navy"]{
+  --color-primary:#1E3A5F; --color-primary-dark:#162C48;
+  --color-secondary:#2563EB;
+  --color-accent:#A16207; --color-accent-dark:#855106;
+  --cta-on-dark:#FFFFFF; --cta-on-dark-text:#1E3A5F;
+  --color-flourish:#F3C969;
+  --color-background:#F8FAFC; --color-foreground:#0F172A; --color-foreground-mut:#475569;
+  --color-muted:#E9EEF5; --color-border:#CBD5E1; --color-border-strong:#94A3B8;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -89,6 +114,44 @@ a{color:var(--color-secondary)}
 }
 .swatch i{flex:1;display:block}
 .swatch[aria-pressed="true"]{border-color:var(--color-foreground);box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px var(--color-foreground)}
+.swatch--ref{border-style:dashed;opacity:.75}
+
+/* ---------- Palette option cards ---------- */
+.pal{display:flex;flex-direction:column;gap:0}
+.pal__ramp{display:flex;height:76px}
+.pal__ramp i{flex:1;display:block}
+.pal__ramp i:first-child{flex:2.2}
+.pal__name{display:flex;flex-wrap:wrap;gap:var(--space);align-items:baseline;justify-content:space-between;padding:var(--space-2) var(--space-3) 0}
+.pal__name h3{margin:0}
+.pal__body{padding:var(--space-2) var(--space-3) var(--space-3);display:flex;flex-direction:column;gap:var(--space-2);flex:1}
+.pal__body p{font-size:.9375rem;color:var(--color-foreground-mut)}
+.pal__tokens{
+  display:grid;gap:2px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.75rem;background:var(--color-muted);border-radius:var(--radius-sm);padding:10px 12px;
+}
+.pal__tokens span{display:flex;justify-content:space-between;gap:var(--space-2)}
+.pal__tokens b{font-weight:600;color:var(--color-foreground)}
+.ratio{
+  display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;
+  padding:3px 9px;border-radius:var(--radius-pill);background:#E6F4EC;color:var(--color-success);
+  font-variant-numeric:tabular-nums;
+}
+.ratios{display:flex;flex-wrap:wrap;gap:6px}
+.btn--apply{margin-top:auto;align-self:flex-start}
+.btn--apply[disabled]{opacity:1;background:var(--color-muted);color:var(--color-foreground-mut);border-color:var(--color-border);cursor:default}
+.callout-warn{
+  background:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #D97706;
+  border-radius:var(--radius-sm);padding:var(--space-2);font-size:.9375rem;
+}
+.callout-warn h3{font-size:1rem;margin-bottom:6px;color:#92400E}
+.callout-warn p{color:#78350F}
+.swap-demo{display:grid;gap:var(--space-2);grid-template-columns:1fr}
+@media(min-width:560px){.swap-demo{grid-template-columns:1fr 1fr}}
+.swap-demo > div{min-width:0;padding:var(--space-3) var(--space-2);border-radius:var(--radius-sm);text-align:center;background:var(--color-primary)}
+/* long CTA labels must be allowed to wrap, or they force the grid wider than 375px */
+.swap-demo .btn{width:100%;white-space:normal;padding-inline:var(--space-2)}
+.swap-demo p{font-size:.75rem;margin:8px 0 0;color:#fff;opacity:.85}
+.bad-cta{background:var(--color-accent);color:#fff;border-color:var(--color-accent)}
 .jump{display:flex;flex-wrap:wrap;gap:6px}
 .jump a{
   font-size:.8125rem;font-weight:600;text-decoration:none;color:var(--color-primary);
@@ -264,6 +327,17 @@ details.more > .code{margin-top:var(--space-2)}
 .btn--on-dark{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
 .btn--on-dark:hover{background:rgba(255,255,255,.14);border-color:#fff}
 .btn--block{width:100%}
+/* On a primary-coloured band the CTA inverts to a light fill. A dark metallic
+   button on #6A2383 measures under 2:1 against the band, so the control's own
+   boundary disappears even though its label is legible. */
+.band--navy .btn--primary,
+.mbar--solid .btn--primary,
+.stage .btn--primary{
+  background:var(--cta-on-dark);color:var(--cta-on-dark-text);border-color:var(--cta-on-dark);
+}
+.band--navy .btn--primary:hover,
+.mbar--solid .btn--primary:hover,
+.stage .btn--primary:hover{filter:brightness(.94)}
 .tick{display:flex;gap:9px;align-items:flex-start;font-size:.9375rem}
 .tick svg{color:var(--color-success);margin-top:3px}
 .chip{
@@ -383,18 +457,25 @@ details.more > .code{margin-top:var(--space-2)}
     <p class="lab-bar__title">Funnel Design Lab<span>Clix Dental · reusable blocks</span></p>
 
     <div class="swatches" role="group" aria-label="Preview palette">
-      <button type="button" class="swatch" data-palette="cygnet" aria-pressed="true" aria-label="Cygnet navy and gold palette">
+      <button type="button" class="swatch" data-palette="aubergine" aria-pressed="true" aria-label="Option 1: Aubergine and antique gold" title="1 · Aubergine & Antique Gold">
+        <i style="background:#6A2383"></i><i style="background:#A16207"></i>
+      </button>
+      <button type="button" class="swatch" data-palette="copper" aria-pressed="false" aria-label="Option 2: Aubergine and copper" title="2 · Aubergine & Copper">
+        <i style="background:#6A2383"></i><i style="background:#A44A1E"></i>
+      </button>
+      <button type="button" class="swatch" data-palette="emerald" aria-pressed="false" aria-label="Option 3: Plum and emerald" title="3 · Plum & Emerald">
+        <i style="background:#6A2383"></i><i style="background:#047857"></i>
+      </button>
+      <button type="button" class="swatch" data-palette="ink" aria-pressed="false" aria-label="Option 4: Ink and amethyst" title="4 · Ink & Amethyst">
+        <i style="background:#241730"></i><i style="background:#6A2383"></i>
+      </button>
+      <button type="button" class="swatch swatch--ref" data-palette="navy" aria-pressed="false" aria-label="Reference: the navy currently built" title="Reference · current navy">
         <i style="background:#1E3A5F"></i><i style="background:#A16207"></i>
-      </button>
-      <button type="button" class="swatch" data-palette="teal" aria-pressed="false" aria-label="Clinical teal palette">
-        <i style="background:#0F5C6B"></i><i style="background:#0E7C66"></i>
-      </button>
-      <button type="button" class="swatch" data-palette="slate" aria-pressed="false" aria-label="Slate and emerald palette">
-        <i style="background:#1F2937"></i><i style="background:#047857"></i>
       </button>
     </div>
 
     <nav class="jump" aria-label="Sections">
+      <a href="#palettes">Palettes</a>
       <a href="#motion">Motion</a>
       <a href="#cuts">Cuts</a>
       <a href="#blocks">Blocks</a>
@@ -409,10 +490,145 @@ details.more > .code{margin-top:var(--space-2)}
   <div class="wrap">
     <header>
       <span class="eyebrow">How to use this</span>
-      <h1>Background motion, section cuts and funnel blocks</h1>
-      <p class="lede">Everything here is dependency-free HTML + CSS built on the <strong>same token names</strong> as the implants page, so any block can be pasted straight in. The three swatches in the header re-skin every preview live — that's the whole re-use story for other practices: swap the token block, keep the components.</p>
+      <h1>Brand palettes, motion, cuts and funnel blocks</h1>
+      <p class="lede">Built around the brand colour <strong>#6A2383</strong>. Everything is dependency-free HTML + CSS on the <strong>same token names</strong> as the implants page, so any block pastes straight in. The swatches in the header re-skin every preview on this page live — pick one and scroll.</p>
       <p class="lede">Motion follows the brief's constraints: no neon, no heavy gradients, nothing motion-heavy. Every animation uses <code>transform</code>/<code>opacity</code> only and stops completely under <code>prefers-reduced-motion</code>.</p>
     </header>
+  </div>
+</section>
+
+<!-- ==================== PART 0 — PALETTES ==================== -->
+<section class="lab-section" id="palettes" style="background:var(--color-surface)">
+  <div class="wrap">
+    <header>
+      <span class="eyebrow">Part 0</span>
+      <h2>Four ways to build a premium palette on #6A2383</h2>
+      <p class="lede">The brand purple is a <strong>dark</strong> colour — 9.63:1 against white. That's the single fact the whole system turns on. It makes a superb primary surface, and it means no dark metallic CTA can sit on top of it. Each option below solves that the same way and differs only in the accent it pairs with.</p>
+    </header>
+
+    <div class="callout-warn" style="margin-bottom:var(--space-4)">
+      <h3>The one trap to avoid</h3>
+      <p>A gold button placed <em>on</em> a purple band measures <strong>1.96:1</strong> against that band. The white label stays readable, but the button's own edge dissolves into the background — it stops looking like a button. So on purple sections the CTA inverts to a light fill. Every option below carries a <code>--cta-on-dark</code> token for exactly this.</p>
+      <div class="swap-demo" style="margin-top:var(--space-2)">
+        <div>
+          <span class="btn bad-cta">Check My Suitability</span>
+          <p>Gold on purple — 1.96:1. Edge disappears.</p>
+        </div>
+        <div>
+          <span class="btn btn--primary" style="background:var(--cta-on-dark);color:var(--cta-on-dark-text);border-color:var(--cta-on-dark)">Check My Suitability</span>
+          <p>Inverted — 9.63:1. Reads as the action.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="specs specs--2">
+
+      <article class="spec pal">
+        <div class="pal__ramp" aria-hidden="true">
+          <i style="background:#6A2383"></i><i style="background:#521B66"></i>
+          <i style="background:#A16207"></i><i style="background:#F0C87A"></i>
+          <i style="background:#F1E9F5"></i>
+        </div>
+        <div class="pal__name"><h3>1 · Aubergine &amp; Antique Gold</h3><span class="tag tag--go">Recommended</span></div>
+        <div class="pal__body">
+          <p>The oldest luxury pairing there is — jewel purple against warm metal. Reads high-end without trying, and gold is a proven CTA colour because it's warm against a cool ground. Safest choice for a high-ticket implant funnel.</p>
+          <div class="pal__tokens">
+            <span><b>--color-primary</b> #6A2383</span>
+            <span><b>--color-accent</b> #A16207</span>
+            <span><b>--cta-on-dark</b> #FFFFFF</span>
+            <span><b>--color-flourish</b> #F0C87A</span>
+          </div>
+          <div class="ratios">
+            <span class="ratio">purple / white 9.63</span>
+            <span class="ratio">gold / white 4.92</span>
+            <span class="ratio">flourish / purple 6.07</span>
+          </div>
+          <button type="button" class="btn btn--ghost btn--apply" data-apply="aubergine">Preview this palette</button>
+        </div>
+      </article>
+
+      <article class="spec pal">
+        <div class="pal__ramp" aria-hidden="true">
+          <i style="background:#6A2383"></i><i style="background:#521B66"></i>
+          <i style="background:#A44A1E"></i><i style="background:#F0C4A0"></i>
+          <i style="background:#F1E9F5"></i>
+        </div>
+        <div class="pal__name"><h3>2 · Aubergine &amp; Copper</h3><span class="tag">Warmer</span></div>
+        <div class="pal__body">
+          <p>Same structure, a warmer and more contemporary metal. Copper is further from the purple on the wheel than gold, so the CTA pops harder — at the cost of a little classicism. Good if the practice wants premium but not traditional.</p>
+          <div class="pal__tokens">
+            <span><b>--color-primary</b> #6A2383</span>
+            <span><b>--color-accent</b> #A44A1E</span>
+            <span><b>--cta-on-dark</b> #FFFFFF</span>
+            <span><b>--color-flourish</b> #F0C4A0</span>
+          </div>
+          <div class="ratios">
+            <span class="ratio">purple / white 9.63</span>
+            <span class="ratio">copper / white 5.87</span>
+          </div>
+          <button type="button" class="btn btn--ghost btn--apply" data-apply="copper">Preview this palette</button>
+        </div>
+      </article>
+
+      <article class="spec pal">
+        <div class="pal__ramp" aria-hidden="true">
+          <i style="background:#6A2383"></i><i style="background:#521B66"></i>
+          <i style="background:#047857"></i><i style="background:#6EE7B7"></i>
+          <i style="background:#F1E9F5"></i>
+        </div>
+        <div class="pal__name"><h3>3 · Plum &amp; Emerald</h3><span class="tag">Jewel tones</span></div>
+        <div class="pal__body">
+          <p>Two jewel tones instead of metal. Emerald carries a "go / safe / healthy" read that suits healthcare, and it's the highest-contrast CTA of the four. The risk is that purple + green can tip festive if the ratio slips — keep the green strictly for actions.</p>
+          <div class="pal__tokens">
+            <span><b>--color-primary</b> #6A2383</span>
+            <span><b>--color-accent</b> #047857</span>
+            <span><b>--cta-on-dark</b> #FFFFFF</span>
+            <span><b>--color-flourish</b> #6EE7B7</span>
+          </div>
+          <div class="ratios">
+            <span class="ratio">purple / white 9.63</span>
+            <span class="ratio">emerald / white 5.48</span>
+          </div>
+          <button type="button" class="btn btn--ghost btn--apply" data-apply="emerald">Preview this palette</button>
+        </div>
+      </article>
+
+      <article class="spec pal">
+        <div class="pal__ramp" aria-hidden="true">
+          <i style="background:#241730"></i><i style="background:#1A1220"></i>
+          <i style="background:#6A2383"></i><i style="background:#C4A5E8"></i>
+          <i style="background:#EFEAF2"></i>
+        </div>
+        <div class="pal__name"><h3>4 · Ink &amp; Amethyst</h3><span class="tag">Max brand</span></div>
+        <div class="pal__body">
+          <p>Inverts the roles: near-black plum ink carries the structure, and <strong>#6A2383 becomes the CTA</strong>. Every button on the page is then literally the brand colour — the strongest brand presence of the four, and at 9.63:1 the most legible CTA. Trade-off: no warm accent, so the page runs cooler and more severe.</p>
+          <div class="pal__tokens">
+            <span><b>--color-primary</b> #241730</span>
+            <span><b>--color-accent</b> #6A2383</span>
+            <span><b>--cta-on-dark</b> #9B4DD6</span>
+            <span><b>--color-flourish</b> #C4A5E8</span>
+          </div>
+          <div class="ratios">
+            <span class="ratio">ink / white 16.93</span>
+            <span class="ratio">purple / white 9.63</span>
+            <span class="ratio">amethyst / ink 3.57</span>
+          </div>
+          <button type="button" class="btn btn--ghost btn--apply" data-apply="ink">Preview this palette</button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="spec" style="margin-top:var(--space-3)">
+      <div class="spec__head"><h3>Keeping it luxurious, not "AI purple"</h3><span class="tag tag--warn">Direction</span></div>
+      <div class="spec__body">
+        <p class="spec__meta">
+          <span><b>The failure mode</b> is the violet→blue gradient with a lone acid accent — the look every AI-generated page currently defaults to. It's what the brief meant by "avoid AI purple/pink", and it's a treatment, not a hue. Your brand purple is nothing like it.</span>
+          <span><b>What keeps it premium:</b> use #6A2383 flat and deep as a ground, never as a gradient into blue. Pair it with one warm metal. Keep saturation everywhere else near zero — the neutrals here are purple-biased greys, not pure grey, so the page reads as one considered family.</span>
+          <span><b>Generous whitespace and tabular figures on prices</b> do more for perceived luxury than any effect. Restraint is the premium signal.</span>
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1044,16 +1260,28 @@ input.addEventListener('input', function(){
 
   /* ---------- Palette switcher ---------- */
   var swatches = [].slice.call(document.querySelectorAll('.swatch'));
-  swatches.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var name = btn.dataset.palette;
-      if (name === 'cygnet') document.documentElement.removeAttribute('data-palette');
-      else document.documentElement.setAttribute('data-palette', name);
-      swatches.forEach(function(b){
-        b.setAttribute('aria-pressed', String(b === btn));
-      });
+
+  function setPalette(name){
+    if (name === 'aubergine') document.documentElement.removeAttribute('data-palette');
+    else document.documentElement.setAttribute('data-palette', name);
+    swatches.forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.palette === name));
     });
+    document.querySelectorAll('[data-apply]').forEach(function(b){
+      var on = b.dataset.apply === name;
+      b.textContent = on ? 'Previewing' : 'Preview this palette';
+      b.disabled = on;
+    });
+  }
+
+  swatches.forEach(function(btn){
+    btn.addEventListener('click', function(){ setPalette(btn.dataset.palette); });
   });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-apply]');
+    if (b) { setPalette(b.dataset.apply); document.getElementById('palettes').scrollIntoView({block:'start'}); }
+  });
+  setPalette('aubergine');
 
   /* ---------- Section cuts: generated so shape data lives in one place ---------- */
   var CUTS = [
