@@ -36,9 +36,17 @@ need genuine, consented patient images with signed forms on file, and they are
 the single most scrutinised asset on a dental page. They stay blocked until that
 paperwork exists.
 
-## Why these aren't already here
+## How to deliver the files
 
-The Google Drive folders shared for this build are blocked by this environment's
-network policy (`drive.google.com`, `lh3.googleusercontent.com` and
-`drive.usercontent.google.com` all refuse the connection), so the files could not
-be fetched automatically. Committing them to this folder is the fastest route.
+The Google Drive folders cannot be fetched from this environment (its network
+policy blocks every Google host), so the files need to arrive one of two ways:
+
+1. **Attach them in the Claude chat** — attachments land on disk here, then
+   `tools/ingest-images.py` resizes, strips EXIF, converts to WebP and drops
+   them into this folder under the right names in one command.
+2. **Upload via GitHub's web UI** to the `claude/new-session-lx19ci` branch
+   (drag-and-drop into `assets/` works) — github.com is reachable from here,
+   so they can be pulled and processed the same way.
+
+There is no need to pre-resize or rename anything — send the raw `Y#-…` files
+and say which goes where.
