@@ -3,9 +3,31 @@
 Single-page, mobile-first lead-generation landing page for dental implants
 (Single / All-on-4 / All-on-6), built from the Clix Dental build brief.
 
-**Deliverable:** `index.html` — one self-contained file (HTML + CSS + vanilla JS).
-No frameworks, no build step, no external JS. Open it in a browser or drop it on
-any static host.
+**Deliverables**
+
+| File | What it is |
+|------|------------|
+| `index.html` | The live funnel page. One self-contained file (HTML + CSS + vanilla JS). No frameworks, no build step, no external JS. |
+| `design-lab.html` | Internal design reference — background motion options, section cuts and reusable funnel blocks, with copy-paste code. Not a public page. |
+
+Open either in a browser or drop them on any static host.
+
+### `design-lab.html`
+
+A picker for design decisions that are still open, built on the **same token
+names** as `index.html`, so anything in it pastes straight across:
+
+- **Part A — background motion**, six hero treatments from calmest to most
+  active, including a zero-motion control worth A/B testing against.
+- **Part B — section cuts**, eight SVG dividers using one overlay technique that
+  never clips content.
+- **Part C — funnel blocks**, reusable sections for any treatment funnel —
+  alternative heroes, a before/after slider, a price comparison table, CTA bands,
+  a stat strip and sticky-bar variants.
+
+Three palette swatches in the header re-skin every preview live. That is the
+re-use story for other practices: swap the token block, keep the components.
+All three palettes are contrast-checked (accent on white: 4.92 / 5.13 / 5.48).
 
 ---
 

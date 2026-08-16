@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Funnel Design Lab — Clix Dental</title>
+<meta name="description" content="Reusable background motion, section cuts and funnel blocks for Clix Dental landing pages.">
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   TOKENS — identical variable names to index.html, so every block below is
+   a drop-in. Re-skinning a funnel for another practice = swap this block only.
+   ========================================================================== */
+:root{
+  --color-primary:#1E3A5F; --color-primary-dark:#162C48; --color-on-primary:#FFFFFF;
+  --color-secondary:#2563EB;
+  --color-accent:#A16207; --color-accent-dark:#855106; --color-on-accent:#FFFFFF;
+  --color-background:#F8FAFC; --color-surface:#FFFFFF;
+  --color-foreground:#0F172A; --color-foreground-mut:#475569;
+  --color-muted:#E9EEF5; --color-border:#CBD5E1; --color-border-strong:#94A3B8;
+  --color-success:#16794A;
+
+  --radius:12px; --radius-sm:8px; --radius-pill:999px;
+  --space:8px; --space-2:16px; --space-3:24px; --space-4:32px; --space-6:48px; --space-8:64px;
+  --font-heading:"Lexend","Segoe UI",system-ui,sans-serif;
+  --font-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.08);
+  --shadow-md:0 4px 12px rgba(15,23,42,.08),0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.12),0 4px 8px rgba(15,23,42,.05);
+}
+/* Alternate practice palettes — proof that every block is token-driven.
+   Both accents verified ≥4.5:1 with white text. */
+:root[data-palette="teal"]{
+  --color-primary:#0F5C6B; --color-primary-dark:#0B4653;
+  --color-accent:#0E7C66; --color-accent-dark:#0B6252;
+  --color-secondary:#0369A1; --color-muted:#E3F1F3; --color-border:#B9D9DE;
+}
+:root[data-palette="slate"]{
+  --color-primary:#1F2937; --color-primary-dark:#111827;
+  --color-accent:#047857; --color-accent-dark:#036249;
+  --color-secondary:#4F46E5; --color-muted:#E9EDF2; --color-border:#C6CFDA;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; font-family:var(--font-body); font-size:16px; line-height:1.6;
+  color:var(--color-foreground); background:var(--color-background);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-heading);font-weight:700;line-height:1.2;margin:0 0 var(--space-2);color:var(--color-primary);text-wrap:balance}
+h1{font-size:clamp(1.75rem,1.3rem+1.8vw,2.5rem)}
+h2{font-size:clamp(1.375rem,1.15rem+1.1vw,2rem)}
+h3{font-size:1.125rem;font-weight:600}
+p{margin:0 0 var(--space-2)} p:last-child{margin-bottom:0}
+ul,ol{margin:0;padding:0;list-style:none}
+img{max-width:100%;height:auto;display:block}
+svg{flex:none}
+a{color:var(--color-secondary)}
+:focus-visible{outline:3px solid var(--color-secondary);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.wrap{width:100%;max-width:1180px;margin-inline:auto;padding-inline:var(--space-2)}
+@media(min-width:768px){.wrap{padding-inline:var(--space-4)}}
+.lab-section{padding-block:var(--space-6)}
+.lab-section > .wrap > header{max-width:70ch;margin-bottom:var(--space-4)}
+.eyebrow{
+  display:inline-block;font-family:var(--font-heading);font-weight:600;font-size:.75rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent);margin-bottom:var(--space)
+}
+.lede{color:var(--color-foreground-mut)}
+
+/* ---------- Lab chrome ---------- */
+.lab-bar{
+  position:sticky;top:0;z-index:60;background:var(--color-surface);
+  border-bottom:1px solid var(--color-border);box-shadow:var(--shadow-sm);
+}
+.lab-bar__inner{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;justify-content:space-between;padding-block:10px}
+.lab-bar__title{font-family:var(--font-heading);font-weight:700;color:var(--color-primary);font-size:.9375rem;line-height:1.2}
+.lab-bar__title span{display:block;font-family:var(--font-body);font-weight:400;font-size:.75rem;color:var(--color-foreground-mut)}
+.swatches{display:flex;gap:6px;align-items:center}
+.swatch{
+  width:36px;height:32px;border-radius:var(--radius-sm);cursor:pointer;
+  border:2px solid var(--color-border);padding:0;overflow:hidden;display:flex;
+}
+.swatch i{flex:1;display:block}
+.swatch[aria-pressed="true"]{border-color:var(--color-foreground);box-shadow:0 0 0 2px var(--color-surface),0 0 0 4px var(--color-foreground)}
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.jump a{
+  font-size:.8125rem;font-weight:600;text-decoration:none;color:var(--color-primary);
+  border:1px solid var(--color-border);border-radius:var(--radius-pill);padding:6px 12px;
+}
+.jump a:hover{background:var(--color-muted)}
+
+/* ---------- Spec cards ---------- */
+.specs{display:grid;gap:var(--space-3)}
+@media(min-width:900px){.specs--2{grid-template-columns:repeat(2,1fr)}}
+.spec{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;
+}
+.spec__head{padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);display:flex;flex-wrap:wrap;gap:var(--space);align-items:baseline;justify-content:space-between}
+.spec__head h3{margin:0}
+.spec__body{padding:var(--space-2) var(--space-3) var(--space-3);display:flex;flex-direction:column;gap:var(--space-2);flex:1}
+.spec__meta{display:grid;gap:6px;font-size:.875rem;color:var(--color-foreground-mut);margin:0}
+.spec__meta b{color:var(--color-foreground);font-weight:600}
+.tag{
+  display:inline-flex;align-items:center;gap:5px;font-size:.6875rem;font-weight:600;
+  letter-spacing:.03em;text-transform:uppercase;padding:4px 9px;border-radius:var(--radius-pill);
+  background:var(--color-muted);color:var(--color-primary);
+}
+.tag--go{background:#E6F4EC;color:var(--color-success)}
+.tag--warn{background:#FEF3C7;color:#854D0E}
+
+/* ---------- Code blocks ---------- */
+/* Button sits ABOVE the code, never over it — long single-line snippets
+   scroll horizontally and an overlaid button would cover them. */
+.code{margin:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.code pre{
+  width:100%;margin:0;padding:var(--space-2);
+  background:#0E2038;color:#D6E2F0;border-radius:var(--radius-sm);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.78125rem;line-height:1.65;overflow-x:auto;
+  tab-size:2;
+}
+.code pre code{font:inherit;color:inherit;white-space:pre}
+.copy{
+  min-height:32px;padding:5px 12px;
+  font-family:var(--font-body);font-size:.75rem;font-weight:600;cursor:pointer;
+  color:var(--color-primary);background:var(--color-muted);
+  border:1px solid var(--color-border);
+  border-radius:6px;transition:background-color 180ms ease,color 180ms ease;
+}
+.copy:hover{background:var(--color-border)}
+.copy[data-done]{color:#fff}
+.copy[data-done="true"]{background:var(--color-success);border-color:var(--color-success)}
+details.more{border-top:1px solid var(--color-border);padding-top:var(--space-2)}
+details.more > summary{
+  cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:.875rem;
+  color:var(--color-primary);list-style:none;display:flex;align-items:center;gap:8px;min-height:32px;
+}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"+";display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--color-muted);font-size:.875rem}
+details.more[open] > summary::before{content:"−"}
+details.more > .code{margin-top:var(--space-2)}
+
+/* ==========================================================================
+   PART A — BACKGROUND MOTION
+   Every layer: transform/opacity only, sits behind content, aria-hidden,
+   and stops completely under prefers-reduced-motion.
+   ========================================================================== */
+.stage{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:230px;display:grid;place-items:center;padding:var(--space-4) var(--space-3);
+  background:var(--color-primary);color:var(--color-on-primary);text-align:center;
+}
+.stage__fg{position:relative;z-index:2;max-width:30ch}
+.stage__fg p{font-family:var(--font-heading);font-weight:700;font-size:1.25rem;line-height:1.25;margin:0 0 6px}
+.stage__fg span{font-size:.875rem;opacity:.82}
+.bg{position:absolute;inset:0;z-index:1;pointer-events:none}
+
+/* A1 · Calm Drift */
+.bg-drift::before,.bg-drift::after{
+  content:"";position:absolute;width:70%;aspect-ratio:1;border-radius:50%;
+  filter:blur(60px);opacity:.5;will-change:transform;
+}
+.bg-drift::before{background:radial-gradient(circle,#3E6FA8 0%,transparent 70%);top:-30%;left:-15%;animation:drift-a 26s ease-in-out infinite alternate}
+.bg-drift::after{background:radial-gradient(circle,var(--color-accent) 0%,transparent 70%);bottom:-35%;right:-12%;opacity:.34;animation:drift-b 34s ease-in-out infinite alternate}
+@keyframes drift-a{to{transform:translate3d(14%,10%,0) scale(1.14)}}
+@keyframes drift-b{to{transform:translate3d(-12%,-8%,0) scale(1.1)}}
+
+/* A2 · Aurora Wash */
+.bg-aurora{overflow:hidden}
+.bg-aurora::before{
+  content:"";position:absolute;top:-50%;left:-60%;width:220%;height:200%;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.13) 45%,rgba(161,98,7,.30) 52%,rgba(255,255,255,.13) 59%,transparent 74%);
+  will-change:transform;animation:aurora 17s linear infinite;
+}
+@keyframes aurora{from{transform:translate3d(-28%,0,0) rotate(0deg)}to{transform:translate3d(28%,0,0) rotate(0deg)}}
+
+/* A3 · Precision Grid */
+.bg-grid::before{
+  content:"";position:absolute;inset:-25%;
+  background-image:linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.16) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 62% 62% at 50% 45%,#000 25%,transparent 78%);
+          mask-image:radial-gradient(ellipse 62% 62% at 50% 45%,#000 25%,transparent 78%);
+  will-change:transform;animation:grid-pan 34s linear infinite;
+}
+@keyframes grid-pan{to{transform:translate3d(44px,44px,0)}}
+
+/* A4 · Scan Pulse */
+.bg-scan span{
+  position:absolute;top:50%;left:50%;width:min(46vw,260px);aspect-ratio:1;
+  margin:calc(min(46vw,260px) / -2) 0 0 calc(min(46vw,260px) / -2);
+  border:1px solid rgba(255,255,255,.42);border-radius:50%;
+  opacity:0;will-change:transform,opacity;animation:scan 6.4s ease-out infinite;
+}
+.bg-scan span:nth-child(2){animation-delay:2.13s}
+.bg-scan span:nth-child(3){animation-delay:4.26s}
+@keyframes scan{
+  0%{transform:scale(.28);opacity:0}
+  14%{opacity:.55}
+  100%{transform:scale(2.5);opacity:0}
+}
+
+/* A5 · Parallax Depth (scroll-driven, 3 layers) */
+.bg-parallax i{position:absolute;display:block;border-radius:50%;filter:blur(34px);will-change:transform}
+.bg-parallax i:nth-child(1){width:44%;aspect-ratio:1;top:-14%;left:4%;background:rgba(62,111,168,.62)}
+.bg-parallax i:nth-child(2){width:34%;aspect-ratio:1;bottom:-16%;right:10%;background:rgba(161,98,7,.44)}
+.bg-parallax i:nth-child(3){width:22%;aspect-ratio:1;top:32%;right:34%;background:rgba(255,255,255,.20)}
+
+/* A6 · Quiet Premium (no motion — the safe default & the A/B control) */
+.bg-quiet{
+  background:
+    radial-gradient(ellipse 70% 90% at 12% -10%,rgba(62,111,168,.55),transparent 60%),
+    radial-gradient(ellipse 60% 80% at 92% 108%,rgba(161,98,7,.34),transparent 62%);
+}
+.bg-quiet::after{
+  content:"";position:absolute;inset:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   PART B — SECTION CUTS
+   SVG overlay technique: the cut is painted in the NEXT section's colour and
+   sits at the bottom of the current one. Content is never clipped.
+   ========================================================================== */
+.cutdemo{border:1px solid var(--color-border);border-radius:var(--radius);overflow:hidden}
+.cutdemo__top{
+  position:relative;background:var(--color-surface);padding:var(--space-3) var(--space-3) var(--space-6);
+  font-size:.875rem;color:var(--color-foreground-mut);
+}
+.cutdemo__bottom{background:var(--color-primary);color:#DBE4F0;padding:var(--space-3);font-size:.875rem}
+.cut{position:absolute;left:0;right:0;bottom:-1px;line-height:0;color:var(--color-primary);pointer-events:none}
+.cut svg{display:block;width:100%;height:56px}
+@media(min-width:768px){.cut svg{height:72px}}
+
+/* ==========================================================================
+   PART C — FUNNEL BLOCKS
+   ========================================================================== */
+.frame{
+  border:1px solid var(--color-border);border-radius:var(--radius);
+  overflow:hidden;background:var(--color-background);
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:12px var(--space-3);
+  font-family:var(--font-heading);font-size:1rem;font-weight:600;line-height:1.2;
+  text-decoration:none;text-align:center;border:2px solid transparent;
+  border-radius:var(--radius-sm);cursor:pointer;
+  transition:background-color 200ms ease,transform 200ms ease,border-color 200ms ease;
+}
+.btn--primary{background:var(--color-accent);color:var(--color-on-accent);border-color:var(--color-accent)}
+.btn--primary:hover{background:var(--color-accent-dark);border-color:var(--color-accent-dark);transform:scale(1.02)}
+.btn--ghost{background:transparent;color:var(--color-primary);border-color:var(--color-border-strong)}
+.btn--ghost:hover{background:var(--color-muted)}
+.btn--on-dark{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn--on-dark:hover{background:rgba(255,255,255,.14);border-color:#fff}
+.btn--block{width:100%}
+.tick{display:flex;gap:9px;align-items:flex-start;font-size:.9375rem}
+.tick svg{color:var(--color-success);margin-top:3px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;background:var(--color-surface);
+  border:1px solid var(--color-border);border-radius:var(--radius-pill);
+  padding:6px 12px;font-size:.8125rem;font-weight:600;color:var(--color-primary);
+}
+
+/* C1 · Centred CTA-first hero */
+.fb-centred{text-align:center;padding:var(--space-6) var(--space-3);background:var(--color-surface)}
+.fb-centred h3{font-size:clamp(1.375rem,1.1rem+1.4vw,2rem);margin-bottom:12px}
+.fb-centred .lede{max-width:46ch;margin-inline:auto;margin-bottom:var(--space-3)}
+.fb-centred__ticks{display:flex;flex-wrap:wrap;gap:12px var(--space-3);justify-content:center;margin-bottom:var(--space-3)}
+.fb-centred__cta{display:flex;flex-direction:column;gap:10px;align-items:center;max-width:340px;margin-inline:auto}
+.fb-centred__cta .btn{width:100%}
+.fb-centred__chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:var(--space-3)}
+
+/* C2 · Full-bleed hero with overlay card */
+.fb-bleed{position:relative;min-height:340px;display:grid;align-items:end;background:var(--color-primary)}
+.fb-bleed__img{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 70% at 70% 30%,rgba(62,111,168,.85),transparent 70%),
+    linear-gradient(160deg,#25456E,#12263F);
+  display:grid;place-items:center;color:rgba(255,255,255,.5);
+}
+.fb-bleed__scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,.15) 0%,rgba(10,22,40,.82) 78%)}
+.fb-bleed__card{
+  position:relative;z-index:2;margin:var(--space-3);padding:var(--space-3);
+  background:var(--color-surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  border-top:4px solid var(--color-accent);
+}
+@media(min-width:768px){.fb-bleed__card{max-width:440px;margin:var(--space-4)}}
+
+/* C3 · Before / after slider */
+.ba{
+  position:relative;border-radius:var(--radius);overflow:hidden;
+  background:var(--color-muted);aspect-ratio:16/10;
+}
+.ba__layer{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-heading);font-weight:700;color:#fff;font-size:.9375rem}
+.ba__layer--before{background:linear-gradient(140deg,#6B7A8D,#43505F)}
+.ba__layer--after{background:linear-gradient(140deg,#2E7FB8,#1E3A5F);clip-path:inset(0 0 0 var(--pos,50%))}
+.ba__badge{position:absolute;top:12px;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(15,23,42,.62);font-size:.6875rem;letter-spacing:.05em;text-transform:uppercase}
+.ba__badge--l{left:12px} .ba__badge--r{right:12px}
+.ba__line{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:3px;background:#fff;transform:translateX(-50%);box-shadow:0 0 0 1px rgba(15,23,42,.25);pointer-events:none}
+.ba__knob{
+  position:absolute;top:50%;left:var(--pos,50%);width:44px;height:44px;
+  transform:translate(-50%,-50%);border-radius:50%;background:#fff;color:var(--color-primary);
+  display:grid;place-items:center;box-shadow:var(--shadow-md);pointer-events:none;
+}
+.ba input[type="range"]{
+  position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;
+}
+.ba input[type="range"]:focus-visible ~ .ba__knob{outline:3px solid var(--color-secondary);outline-offset:3px}
+
+/* C4 · Price comparison table */
+.ptable{width:100%;border-collapse:collapse;font-size:.9375rem;background:var(--color-surface)}
+.ptable caption{text-align:left;padding:var(--space-2) var(--space-2) var(--space);font-size:.8125rem;color:var(--color-foreground-mut)}
+.ptable th,.ptable td{padding:12px var(--space-2);text-align:left;border-bottom:1px solid var(--color-border);vertical-align:top}
+.ptable thead th{font-family:var(--font-heading);color:var(--color-primary);font-size:.875rem;background:var(--color-muted);white-space:nowrap}
+.ptable tbody th{font-weight:600;color:var(--color-foreground)}
+.ptable td{font-variant-numeric:tabular-nums;color:var(--color-foreground-mut)}
+.ptable .is-feature{color:var(--color-foreground);font-weight:600}
+.tablewrap{overflow-x:auto;border:1px solid var(--color-border);border-radius:var(--radius)}
+
+/* C5 · CTA bands */
+.band{padding:var(--space-4) var(--space-3);text-align:center}
+.band--gold{background:var(--color-accent);color:#fff}
+.band--gold h3{color:#fff}
+.band--navy{background:var(--color-primary);color:#DBE4F0}
+.band--navy h3{color:#fff}
+.band__row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:var(--space-2)}
+.band--gold .btn{background:#fff;color:var(--color-accent-dark);border-color:#fff}
+.band--gold .btn:hover{background:#FDF6E8;border-color:#FDF6E8}
+
+/* C6 · Stat strip */
+.stats{display:grid;gap:var(--space-2);grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--color-surface);padding:var(--space-3);border-radius:var(--radius);border:1px solid var(--color-border)}
+.stats li{text-align:center}
+.stats b{display:block;font-family:var(--font-heading);font-size:1.5rem;color:var(--color-primary);font-variant-numeric:tabular-nums}
+.stats span{font-size:.8125rem;color:var(--color-foreground-mut)}
+
+/* C7 · Sticky mobile bar variants */
+.barvar{display:grid;gap:var(--space-2)}
+.mbar{
+  display:grid;grid-template-columns:1fr 1.4fr;gap:8px;padding:10px var(--space-2);
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius);box-shadow:var(--shadow-md);
+}
+.mbar--solid{background:var(--color-primary);border-color:var(--color-primary)}
+.mbar--solid .btn--ghost{color:#fff;border-color:rgba(255,255,255,.55)}
+.mbar--solid .btn--ghost:hover{background:rgba(255,255,255,.14)}
+.mbar .btn{min-height:48px;font-size:.9375rem;padding-inline:var(--space-2)}
+
+/* ---------- Footer ---------- */
+.lab-foot{background:#0E2038;color:#C7D3E3;padding-block:var(--space-6) var(--space-4);font-size:.875rem;margin-top:var(--space-6)}
+.lab-foot h3{color:#fff}
+.lab-foot ul{display:grid;gap:10px}
+.lab-foot li{display:flex;gap:10px;align-items:flex-start}
+.lab-foot li svg{color:#F3C969;margin-top:4px}
+
+/* ---------- Motion policy ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+  .bg-drift::before,.bg-drift::after,.bg-aurora::before,.bg-grid::before,.bg-scan span{animation:none!important}
+  .bg-scan span{opacity:.3;transform:scale(1.4)}
+  .btn:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="lab-bar">
+  <div class="wrap lab-bar__inner">
+    <p class="lab-bar__title">Funnel Design Lab<span>Clix Dental · reusable blocks</span></p>
+
+    <div class="swatches" role="group" aria-label="Preview palette">
+      <button type="button" class="swatch" data-palette="cygnet" aria-pressed="true" aria-label="Cygnet navy and gold palette">
+        <i style="background:#1E3A5F"></i><i style="background:#A16207"></i>
+      </button>
+      <button type="button" class="swatch" data-palette="teal" aria-pressed="false" aria-label="Clinical teal palette">
+        <i style="background:#0F5C6B"></i><i style="background:#0E7C66"></i>
+      </button>
+      <button type="button" class="swatch" data-palette="slate" aria-pressed="false" aria-label="Slate and emerald palette">
+        <i style="background:#1F2937"></i><i style="background:#047857"></i>
+      </button>
+    </div>
+
+    <nav class="jump" aria-label="Sections">
+      <a href="#motion">Motion</a>
+      <a href="#cuts">Cuts</a>
+      <a href="#blocks">Blocks</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ==================== INTRO ==================== -->
+<section class="lab-section">
+  <div class="wrap">
+    <header>
+      <span class="eyebrow">How to use this</span>
+      <h1>Background motion, section cuts and funnel blocks</h1>
+      <p class="lede">Everything here is dependency-free HTML + CSS built on the <strong>same token names</strong> as the implants page, so any block can be pasted straight in. The three swatches in the header re-skin every preview live — that's the whole re-use story for other practices: swap the token block, keep the components.</p>
+      <p class="lede">Motion follows the brief's constraints: no neon, no heavy gradients, nothing motion-heavy. Every animation uses <code>transform</code>/<code>opacity</code> only and stops completely under <code>prefers-reduced-motion</code>.</p>
+    </header>
+  </div>
+</section>
+
+<!-- ==================== PART A — MOTION ==================== -->
+<section class="lab-section" id="motion" style="background:var(--color-muted)">
+  <div class="wrap">
+    <header>
+      <span class="eyebrow">Part A</span>
+      <h2>Background motion</h2>
+      <p class="lede">Six hero-background treatments, ordered from calmest to most active. For a high-ticket healthcare funnel the first three are the safe picks; A6 is the zero-motion control worth A/B testing against, since motion behind a form can cost more attention than it earns.</p>
+    </header>
+
+    <div class="specs specs--2">
+
+      <!-- A1 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-drift" aria-hidden="true"></div>
+          <div class="stage__fg">
+            <p>A1 · Calm Drift</p>
+            <span>Two blurred colour fields breathing slowly</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A1 · Calm Drift</h3>
+          <span class="tag tag--go">Recommended</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> the implants hero — premium and almost subliminal.</span>
+            <span><b>Cycle</b> 26s / 34s, offset so it never visibly loops.</span>
+            <span><b>Cost</b> 2 composited layers, no repaint. Safe on mid-tier mobile.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-drift" aria-hidden="true"&gt;&lt;/div&gt;
+
+.bg-drift::before,.bg-drift::after{
+  content:"";position:absolute;width:70%;aspect-ratio:1;
+  border-radius:50%;filter:blur(60px);opacity:.5;
+  will-change:transform;
+}
+.bg-drift::before{
+  background:radial-gradient(circle,#3E6FA8,transparent 70%);
+  top:-30%;left:-15%;
+  animation:drift-a 26s ease-in-out infinite alternate;
+}
+.bg-drift::after{
+  background:radial-gradient(circle,var(--color-accent),transparent 70%);
+  bottom:-35%;right:-12%;opacity:.34;
+  animation:drift-b 34s ease-in-out infinite alternate;
+}
+@keyframes drift-a{to{transform:translate3d(14%,10%,0) scale(1.14)}}
+@keyframes drift-b{to{transform:translate3d(-12%,-8%,0) scale(1.1)}}</code></pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- A2 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-aurora" aria-hidden="true"></div>
+          <div class="stage__fg">
+            <p>A2 · Aurora Wash</p>
+            <span>A slow sheen crossing the panel</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A2 · Aurora Wash</h3>
+          <span class="tag tag--go">Recommended</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> CTA bands and the final contact section — adds life to flat navy.</span>
+            <span><b>Cycle</b> 17s linear, continuous.</span>
+            <span><b>Watch</b> keep the highlight under ~30% opacity or it reads as a cheap "shine" sweep.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-aurora" aria-hidden="true"&gt;&lt;/div&gt;
+
+.bg-aurora{overflow:hidden}
+.bg-aurora::before{
+  content:"";position:absolute;
+  top:-50%;left:-60%;width:220%;height:200%;
+  background:linear-gradient(115deg,
+    transparent 30%,
+    rgba(255,255,255,.13) 45%,
+    rgba(161,98,7,.30) 52%,
+    rgba(255,255,255,.13) 59%,
+    transparent 74%);
+  will-change:transform;
+  animation:aurora 17s linear infinite;
+}
+@keyframes aurora{
+  from{transform:translate3d(-28%,0,0)}
+  to{transform:translate3d(28%,0,0)}
+}</code></pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- A3 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-grid" aria-hidden="true"></div>
+          <div class="stage__fg">
+            <p>A3 · Precision Grid</p>
+            <span>Masked grid drifting one cell per cycle</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A3 · Precision Grid</h3>
+          <span class="tag">On-message</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> the CBCT / 3D-planning and "Your journey" sections — it reads as precision, not decoration.</span>
+            <span><b>Cycle</b> 34s, translating exactly one 44px cell so the loop is invisible.</span>
+            <span><b>Cost</b> one masked layer. The radial mask is what stops it looking like a spreadsheet.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-grid" aria-hidden="true"&gt;&lt;/div&gt;
+
+.bg-grid::before{
+  content:"";position:absolute;inset:-25%;
+  background-image:
+    linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.16) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(ellipse 62% 62% at 50% 45%,
+    #000 25%,transparent 78%);
+  will-change:transform;
+  animation:grid-pan 34s linear infinite;
+}
+/* translate exactly one cell = seamless loop */
+@keyframes grid-pan{to{transform:translate3d(44px,44px,0)}}</code></pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- A4 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-scan" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="stage__fg">
+            <p>A4 · Scan Pulse</p>
+            <span>Concentric rings echoing a 3D scan</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A4 · Scan Pulse</h3>
+          <span class="tag tag--warn">Use sparingly</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> one section only — behind the CBCT scan claim or the consultation-includes list.</span>
+            <span><b>Cycle</b> 6.4s, three rings offset by a third.</span>
+            <span><b>Watch</b> repeating pulses pull the eye. Never put this behind the form.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-scan" aria-hidden="true"&gt;
+  &lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+.bg-scan span{
+  position:absolute;top:50%;left:50%;
+  width:min(46vw,260px);aspect-ratio:1;
+  margin:calc(min(46vw,260px) / -2) 0 0 calc(min(46vw,260px) / -2);
+  border:1px solid rgba(255,255,255,.42);border-radius:50%;
+  opacity:0;will-change:transform,opacity;
+  animation:scan 6.4s ease-out infinite;
+}
+.bg-scan span:nth-child(2){animation-delay:2.13s}
+.bg-scan span:nth-child(3){animation-delay:4.26s}
+@keyframes scan{
+  0%{transform:scale(.28);opacity:0}
+  14%{opacity:.55}
+  100%{transform:scale(2.5);opacity:0}
+}</code></pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- A5 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-parallax" data-parallax aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="stage__fg">
+            <p>A5 · Parallax Depth</p>
+            <span>Scroll this page — three layers at different speeds</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A5 · Parallax Depth</h3>
+          <span class="tag">Scroll-driven</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> a long page that needs depth without idle motion — nothing moves unless the user scrolls.</span>
+            <span><b>Rule</b> decorative layers only. Never parallax body copy or the form.</span>
+            <span><b>Cost</b> ~15 lines of JS, one rAF-throttled scroll listener for all layers.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-parallax" data-parallax aria-hidden="true"&gt;
+  &lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;
+&lt;/div&gt;
+
+// One listener drives every layer. Depth = index * speed.
+var layers = [].slice.call(document.querySelectorAll('[data-parallax] i'));
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var ticking = false;
+
+function frame(){
+  layers.forEach(function(el,i){
+    var box = el.parentElement.getBoundingClientRect();
+    // progress: -1 (below fold) → 1 (above fold)
+    var p = (box.top + box.height / 2 - innerHeight / 2) / innerHeight;
+    el.style.transform = 'translate3d(0,' + (p * (i + 1) * -18) + 'px,0)';
+  });
+  ticking = false;
+}
+if (!reduce) {
+  addEventListener('scroll', function(){
+    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
+  }, { passive:true });
+  frame();
+}</code></pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- A6 -->
+      <article class="spec">
+        <div class="stage">
+          <div class="bg bg-quiet" aria-hidden="true"></div>
+          <div class="stage__fg">
+            <p>A6 · Quiet Premium</p>
+            <span>Zero motion — gradient depth plus fine grain</span>
+          </div>
+        </div>
+        <div class="spec__head">
+          <h3>A6 · Quiet Premium</h3>
+          <span class="tag tag--go">A/B control</span>
+        </div>
+        <div class="spec__body">
+          <p class="spec__meta">
+            <span><b>Best for</b> the hero behind the form, and as the automatic fallback for every option above.</span>
+            <span><b>Cost</b> nothing — pure paint, no animation frames, no JS.</span>
+            <span><b>Note</b> the grain is an inline SVG data URI, so there's no image request.</span>
+          </p>
+          <div class="code">
+            <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="bg bg-quiet" aria-hidden="true"&gt;&lt;/div&gt;
+
+.bg-quiet{
+  background:
+    radial-gradient(ellipse 70% 90% at 12% -10%,
+      rgba(62,111,168,.55),transparent 60%),
+    radial-gradient(ellipse 60% 80% at 92% 108%,
+      rgba(161,98,7,.34),transparent 62%);
+}
+/* Fine grain stops large gradients from banding on cheap panels */
+.bg-quiet::after{
+  content:"";position:absolute;inset:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}</code></pre>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="spec" style="margin-top:var(--space-3)">
+      <div class="spec__head"><h3>The wrapper every option needs</h3><span class="tag">Required</span></div>
+      <div class="spec__body">
+        <p class="spec__meta"><span>The parent creates the stacking context and clips the layer; the background sits at <code>z-index:1</code>, content at <code>2</code>. Without <code>isolation:isolate</code> the blurred layers can bleed over neighbouring sections.</span></p>
+        <div class="code">
+          <button type="button" class="copy">Copy</button>
+<pre><code>.hero{position:relative;isolation:isolate;overflow:hidden}
+.hero .bg{position:absolute;inset:0;z-index:1;pointer-events:none}
+.hero &gt; .container{position:relative;z-index:2}
+
+@media (prefers-reduced-motion:reduce){
+  .bg-drift::before,.bg-drift::after,
+  .bg-aurora::before,.bg-grid::before,.bg-scan span{animation:none!important}
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PART B — CUTS ==================== -->
+<section class="lab-section" id="cuts">
+  <div class="wrap">
+    <header>
+      <span class="eyebrow">Part B</span>
+      <h2>Section cuts</h2>
+      <p class="lede">Transitions between sections. All eight use the same technique: an SVG sits at the bottom of the upper section, painted in the <em>lower</em> section's colour. Content is never clipped, the shape scales with <code>preserveAspectRatio="none"</code>, and it costs one inline element.</p>
+      <p class="lede">Set the colour with <code>.cut{color:…}</code> and the SVG inherits it via <code>fill="currentColor"</code> — so cuts re-skin with the palette automatically.</p>
+    </header>
+
+    <div class="specs specs--2" id="cut-grid"></div>
+
+    <div class="spec" style="margin-top:var(--space-3)">
+      <div class="spec__head"><h3>The pattern</h3><span class="tag tag--go">Safe</span></div>
+      <div class="spec__body">
+        <p class="spec__meta">
+          <span><b>Why not <code>clip-path</code>?</b> Clipping the section itself cuts real content and forces extra padding to compensate. The overlay never touches layout.</span>
+          <span><b>Height</b> 56px mobile / 72px desktop. Deeper than ~96px starts eating scroll on small screens.</span>
+          <span><b>A11y</b> the SVG is decorative — <code>aria-hidden</code>, no title.</span>
+        </p>
+        <div class="code">
+          <button type="button" class="copy">Copy</button>
+<pre><code>&lt;section class="section-a"&gt;
+  … content …
+  &lt;div class="cut" aria-hidden="true"&gt;
+    &lt;svg viewBox="0 0 1440 80" preserveAspectRatio="none"&gt;
+      &lt;path d="M0,80 C360,10 1080,10 1440,80 Z" fill="currentColor"/&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+&lt;section class="section-b"&gt;…&lt;/section&gt;
+
+.section-a{position:relative}
+.cut{
+  position:absolute;left:0;right:0;bottom:-1px;   /* -1px kills seam gaps */
+  line-height:0;pointer-events:none;
+  color:var(--color-primary);                      /* = section-b background */
+}
+.cut svg{display:block;width:100%;height:56px}
+@media(min-width:768px){.cut svg{height:72px}}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PART C — BLOCKS ==================== -->
+<section class="lab-section" id="blocks" style="background:var(--color-muted)">
+  <div class="wrap">
+    <header>
+      <span class="eyebrow">Part C</span>
+      <h2>Funnel blocks</h2>
+      <p class="lede">Reusable sections for any treatment funnel — implants, Invisalign, veneers, whitening. Each one is token-driven, so re-skinning for another practice is a token swap, not a rebuild. Copy shown is generic; treatment specifics stay in the brief.</p>
+    </header>
+
+    <div class="specs">
+
+      <!-- C1 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C1 · Centred CTA-first hero</h3>
+          <span class="tag tag--go">Mobile winner</span>
+        </div>
+        <div class="spec__body">
+          <div class="frame">
+            <div class="fb-centred">
+              <h3>Replace missing teeth with permanent implants</h3>
+              <p class="lede">Fixed, natural-looking teeth — so you can eat, speak and smile with confidence again.</p>
+              <div class="fb-centred__ticks">
+                <span class="tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> No slipping dentures</span>
+                <span class="tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> CBCT-planned</span>
+                <span class="tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance</span>
+              </div>
+              <div class="fb-centred__cta">
+                <a class="btn btn--primary" href="#blocks">Check My Suitability</a>
+                <a class="btn btn--ghost" href="#blocks">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
+                  Or call the practice
+                </a>
+              </div>
+              <div class="fb-centred__chips">
+                <span class="chip">GDC-registered</span>
+                <span class="chip">Complex cases welcome</span>
+              </div>
+            </div>
+          </div>
+          <p class="spec__meta">
+            <span><b>Use when</b> most traffic is mobile. The CTA scrolls to the qualifier rather than embedding it, so the offer lands above the fold instead of a form header.</span>
+            <span><b>This is A/B test #1</b> in the brief — embedded step-1 versus a button that reveals the form.</span>
+            <span><b>Keep</b> one primary action. The call button stays visually subordinate.</span>
+          </p>
+        </div>
+      </article>
+
+      <!-- C2 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C2 · Full-bleed hero with overlay card</h3>
+          <span class="tag">Premium</span>
+        </div>
+        <div class="spec__body">
+          <div class="frame">
+            <div class="fb-bleed">
+              <div class="fb-bleed__img" aria-hidden="true">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.6-4.6a2 2 0 0 0-2.8 0L3 21"/></svg>
+              </div>
+              <div class="fb-bleed__scrim" aria-hidden="true"></div>
+              <div class="fb-bleed__card">
+                <h3 style="font-size:1.25rem">Ready to find out if implants are right for you?</h3>
+                <p class="lede" style="font-size:.9375rem">A consultation, CBCT scan and a written plan — no obligation.</p>
+                <a class="btn btn--primary btn--block" href="#blocks">Check My Suitability</a>
+              </div>
+            </div>
+          </div>
+          <p class="spec__meta">
+            <span><b>Use when</b> the practice has a genuinely strong photo. It fails badly with stock imagery, so it's gated on the real photography arriving.</span>
+            <span><b>Scrim is mandatory</b> — the gradient guarantees text contrast whatever the photo does. Without it, contrast depends on luck.</span>
+            <span><b>Mobile</b> card goes full-width at the bottom; the image keeps a 340px minimum so it never collapses.</span>
+          </p>
+        </div>
+      </article>
+
+      <!-- C3 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C3 · Before / after slider</h3>
+          <span class="tag tag--go">Highest impact</span>
+        </div>
+        <div class="spec__body">
+          <div class="ba" id="ba-demo" style="--pos:50%">
+            <div class="ba__layer ba__layer--before" aria-hidden="true">Before</div>
+            <div class="ba__layer ba__layer--after" aria-hidden="true">After</div>
+            <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
+            <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
+            <label class="sr-only" for="ba-range">Reveal the after image</label>
+            <input type="range" id="ba-range" min="0" max="100" value="50" step="1"
+                   aria-describedby="ba-help">
+            <span class="ba__line" aria-hidden="true"></span>
+            <span class="ba__knob" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+          <p class="spec__meta" id="ba-help">
+            <span><b>Why this one matters</b> the brief calls before/afters the single highest-impact proof gap for implants. A slider gets far more engagement than a static pair.</span>
+            <span><b>Accessible by construction</b> it's a native <code>&lt;input type="range"&gt;</code> — arrow keys work, it has a real label, and it needs no JS to be operable.</span>
+            <span><b>Still gated</b> on consented images with signed forms on file. Placeholder panels shown here.</span>
+          </p>
+          <details class="more">
+            <summary>Markup &amp; CSS</summary>
+            <div class="code">
+              <button type="button" class="copy">Copy</button>
+<pre><code>&lt;div class="ba" style="--pos:50%"&gt;
+  &lt;img class="ba__layer" src="before.webp" alt="Before treatment"&gt;
+  &lt;img class="ba__layer ba__layer--after" src="after.webp" alt="After treatment"&gt;
+  &lt;label class="sr-only" for="ba1"&gt;Reveal the after image&lt;/label&gt;
+  &lt;input type="range" id="ba1" min="0" max="100" value="50"&gt;
+  &lt;span class="ba__line" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="ba__knob" aria-hidden="true"&gt;…&lt;/span&gt;
+&lt;/div&gt;
+
+.ba{position:relative;overflow:hidden;aspect-ratio:16/10;border-radius:12px}
+.ba__layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ba__layer--after{clip-path:inset(0 0 0 var(--pos,50%))}
+.ba__line{position:absolute;top:0;bottom:0;left:var(--pos,50%);
+  width:3px;background:#fff;transform:translateX(-50%);pointer-events:none}
+.ba__knob{position:absolute;top:50%;left:var(--pos,50%);width:44px;height:44px;
+  transform:translate(-50%,-50%);border-radius:50%;background:#fff;
+  display:grid;place-items:center;pointer-events:none}
+.ba input[type="range"]{position:absolute;inset:0;width:100%;height:100%;
+  margin:0;opacity:0;cursor:ew-resize}
+.ba input:focus-visible ~ .ba__knob{outline:3px solid var(--color-secondary);outline-offset:3px}
+
+// one line of JS
+input.addEventListener('input', function(){
+  this.closest('.ba').style.setProperty('--pos', this.value + '%');
+});</code></pre>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <!-- C4 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C4 · Price comparison table</h3>
+          <span class="tag">Pricing variant</span>
+        </div>
+        <div class="spec__body">
+          <div class="tablewrap">
+            <table class="ptable">
+              <caption>Alternative to the three-card layout — better when patients are comparing options rather than picking one.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Option</th>
+                  <th scope="col">From / month</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Best for</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Single implant</th>
+                  <td class="is-feature">£[250]</td>
+                  <td>£3,000–£3,500</td>
+                  <td>One missing tooth</td>
+                </tr>
+                <tr>
+                  <th scope="row">All-on-4</th>
+                  <td class="is-feature">£[X]</td>
+                  <td>from £12,000 / arch</td>
+                  <td>Full arch, fixed</td>
+                </tr>
+                <tr>
+                  <th scope="row">All-on-6</th>
+                  <td class="is-feature">£[X]</td>
+                  <td>from £15,000 / arch</td>
+                  <td>Maximum stability</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="spec__meta">
+            <span><b>Use when</b> the funnel covers several treatments at once. Cards win for a single hero offer; a table wins for comparison.</span>
+            <span><b>Real table markup</b> — <code>&lt;th scope&gt;</code> on both axes and a <code>&lt;caption&gt;</code>, so it's navigable by screen reader. A div grid pretending to be a table is not.</span>
+            <span><b>Tabular figures</b> on every price column, and it scrolls inside its own wrapper rather than pushing the page sideways.</span>
+          </p>
+        </div>
+      </article>
+
+      <!-- C5 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C5 · CTA bands</h3>
+          <span class="tag">Two weights</span>
+        </div>
+        <div class="spec__body">
+          <div class="frame">
+            <div class="band band--gold">
+              <h3 style="font-size:1.25rem">Not sure if implants are right for you?</h3>
+              <p style="font-size:.9375rem;opacity:.95">That's exactly what the consultation is for.</p>
+              <div class="band__row"><a class="btn" href="#blocks">Check My Suitability</a></div>
+            </div>
+            <div class="band band--navy">
+              <h3 style="font-size:1.25rem">Prefer to talk it through first?</h3>
+              <p style="font-size:.9375rem">No obligation, no pressure — just a straight answer.</p>
+              <div class="band__row">
+                <a class="btn btn--primary" href="#blocks">Check My Suitability</a>
+                <a class="btn btn--on-dark" href="#blocks">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
+                  Call the practice
+                </a>
+              </div>
+            </div>
+          </div>
+          <p class="spec__meta">
+            <span><b>Gold band</b> for the single strongest mid-page interrupt — use it once. On gold, the button inverts to white so the CTA still reads as the action.</span>
+            <span><b>Navy band</b> for the repeatable one after proof sections, where the call option is worth surfacing.</span>
+            <span><b>Rhythm</b> alternate band and plain sections; two colour bands back to back kills the emphasis of both.</span>
+          </p>
+        </div>
+      </article>
+
+      <!-- C6 -->
+      <article class="spec">
+        <div class="spec__head">
+          <h3>C6 · Stat strip &amp; sticky bar variants</h3>
+          <span class="tag">Support</span>
+        </div>
+        <div class="spec__body">
+          <ul class="stats">
+            <li><b>[X]</b><span>Implants placed</span></li>
+            <li><b>[X] yrs</b><span>Placing implants</span></li>
+            <li><b>0%</b><span>Finance available</span></li>
+            <li><b>£50</b><span>Consultation deposit</span></li>
+          </ul>
+          <p class="spec__meta" style="margin-top:var(--space)">
+            <span><b>Stat strip</b> sits directly under the hero as a second trust layer. Every figure must be substantiable — bracketed until the practice confirms them.</span>
+          </p>
+          <div class="barvar">
+            <div class="mbar">
+              <a class="btn btn--ghost" href="#blocks">Call</a>
+              <a class="btn btn--primary" href="#blocks">Check My Suitability</a>
+            </div>
+            <div class="mbar mbar--solid">
+              <a class="btn btn--ghost" href="#blocks">Call</a>
+              <a class="btn btn--primary" href="#blocks">Check My Suitability</a>
+            </div>
+          </div>
+          <p class="spec__meta" style="margin-top:var(--space)">
+            <span><b>Light bar</b> (currently live) disappears into pale sections; <b>solid navy</b> holds its edge over any background. Worth switching if the bar starts blending on scroll.</span>
+            <span><b>Both</b> keep a 1 : 1.4 split so the primary action is visually dominant, 48px tall, with <code>env(safe-area-inset-bottom)</code> padding.</span>
+          </p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="lab-foot">
+  <div class="wrap">
+    <h3>Before any of this ships</h3>
+    <ul>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>Pick <strong>one</strong> background treatment for the page. Stacking two is the fastest way to make a healthcare funnel look cheap.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>Never put looping motion behind the qualifier form — it competes with the one thing the page is for.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>Cuts are decorative: <code>aria-hidden</code>, and the section still needs its own padding so text never crowds the shape.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>The before/after slider and stat strip stay blocked until consented images and substantiated figures are on file.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span>Re-test contrast after any palette swap. The swatches change tokens, not the WCAG maths.</span>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- Palette switcher ---------- */
+  var swatches = [].slice.call(document.querySelectorAll('.swatch'));
+  swatches.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var name = btn.dataset.palette;
+      if (name === 'cygnet') document.documentElement.removeAttribute('data-palette');
+      else document.documentElement.setAttribute('data-palette', name);
+      swatches.forEach(function(b){
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+    });
+  });
+
+  /* ---------- Section cuts: generated so shape data lives in one place ---------- */
+  var CUTS = [
+    { id:'straight', name:'B1 · Straight',    tag:'Baseline',  d:'M0,80 L1440,80 L1440,80 L0,80 Z',
+      note:'No cut — omit the .cut element entirely. Listed so that "plain edge" stays an explicit choice: when two sections already contrast, a shape adds nothing.' },
+    { id:'angle',    name:'B2 · Angle',       tag:'Workhorse', d:'M0,80 L1440,14 L1440,80 Z',
+      note:'A 2–4° slope. Reads as intentional at any width and never fights the content.' },
+    { id:'angle-r',  name:'B3 · Reverse angle',tag:'Pairs with B2', d:'M0,14 L1440,80 L0,80 Z',
+      note:'Mirror of B2. Alternate the two down a long page for rhythm without new shapes.' },
+    { id:'curve',    name:'B4 · Soft curve',  tag:'Calm',      d:'M0,80 Q720,-6 1440,80 Z',
+      note:'A single quadratic. The softest option and the safest match for healthcare.' },
+    { id:'dome',     name:'B5 · Dome',        tag:'Focal',     d:'M0,80 C360,4 1080,4 1440,80 Z',
+      note:'Flatter shoulders than B4, lifting the centre — good directly above a centred CTA.' },
+    { id:'wave',     name:'B6 · Wave',        tag:'Use once',  d:'M0,44 C240,84 480,4 720,32 C960,60 1200,10 1440,42 L1440,80 L0,80 Z',
+      note:'More personality, less clinical authority. One per page at most.' },
+    { id:'notch',    name:'B7 · Plinth',      tag:'CTA anchor',d:'M0,80 L636,80 L678,22 L762,22 L804,80 L1440,80 Z',
+      note:'A raised tab in the lower section’s colour. Centre a CTA or a single price card directly beneath it and the shape frames it. Keep the tab centred on the element it frames, or it reads as a mistake.' },
+    { id:'chevron',  name:'B8 · Chevron',     tag:'Directional',d:'M0,10 L720,66 L1440,10 L1440,80 L0,80 Z',
+      note:'Strongest downward cue on the list — it says "keep scrolling". Use high on the page.' }
+  ];
+
+  var grid = document.getElementById('cut-grid');
+  var esc = function(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+  grid.innerHTML = CUTS.map(function(c){
+    var svg = '<svg viewBox="0 0 1440 80" preserveAspectRatio="none">' +
+              '<path d="' + c.d + '" fill="currentColor"/></svg>';
+    return '' +
+    '<article class="spec">' +
+      '<div class="spec__head"><h3>' + c.name + '</h3><span class="tag">' + c.tag + '</span></div>' +
+      '<div class="cutdemo" style="border:0;border-radius:0">' +
+        '<div class="cutdemo__top">Section above — light surface.' +
+          '<div class="cut" aria-hidden="true">' + svg + '</div>' +
+        '</div>' +
+        '<div class="cutdemo__bottom">Section below — navy.</div>' +
+      '</div>' +
+      '<div class="spec__body">' +
+        '<p class="spec__meta"><span>' + c.note + '</span></p>' +
+        '<div class="code"><button type="button" class="copy">Copy</button>' +
+        '<pre><code>' + esc('<path d="' + c.d + '" fill="currentColor"/>') + '</code></pre></div>' +
+      '</div>' +
+    '</article>';
+  }).join('');
+
+  /* ---------- Before / after slider ---------- */
+  var baRange = document.getElementById('ba-range');
+  if (baRange) {
+    baRange.addEventListener('input', function(){
+      document.getElementById('ba-demo').style.setProperty('--pos', baRange.value + '%');
+    });
+  }
+
+  /* ---------- Copy buttons ---------- */
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.copy');
+    if (!btn) return;
+    var code = btn.parentElement.querySelector('code');
+    if (!code) return;
+
+    var done = function(ok){
+      btn.textContent = ok ? 'Copied' : 'Select it';
+      btn.dataset.done = ok ? 'true' : 'false';
+      window.setTimeout(function(){ btn.textContent = 'Copy'; delete btn.dataset.done; }, 1800);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(code.textContent).then(function(){ done(true); }, function(){ done(false); });
+    } else {
+      /* file:// and other insecure contexts have no clipboard API — select instead */
+      var range = document.createRange();
+      range.selectNodeContents(code);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      done(false);
+    }
+  });
+
+  /* ---------- Parallax demo (A5) ---------- */
+  var layers = [].slice.call(document.querySelectorAll('[data-parallax] i'));
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ticking = false;
+
+  function frame(){
+    layers.forEach(function(el, i){
+      var box = el.parentElement.getBoundingClientRect();
+      var p = (box.top + box.height / 2 - window.innerHeight / 2) / window.innerHeight;
+      el.style.transform = 'translate3d(0,' + (p * (i + 1) * -18) + 'px,0)';
+    });
+    ticking = false;
+  }
+
+  if (layers.length && !reduce) {
+    window.addEventListener('scroll', function(){
+      if (!ticking) { ticking = true; window.requestAnimationFrame(frame); }
+    }, { passive:true });
+    frame();
+  }
+})();
+</script>
+
+</body>
+</html>
