@@ -16,25 +16,35 @@
 /* ==========================================================================
    1 · DESIGN TOKENS
    ========================================================================== */
+/* Brand palette: Ink & Amethyst.
+   Brand aubergine #6A2383 has luminance 0.059 — a DARK colour (9.63:1 on
+   white), so it serves as the CTA here while near-black plum ink carries the
+   structure. Because the primary surface is dark, a CTA placed ON it must
+   invert: see --cta-on-dark and the .section--primary .btn--primary rule. */
 :root{
   /* Colour */
-  --color-primary:        #1E3A5F;  /* deep trust navy */
-  --color-primary-dark:   #162C48;
+  --color-primary:        #241730;  /* plum ink — 16.9:1 with white */
+  --color-primary-dark:   #1A1220;
   --color-on-primary:     #FFFFFF;
-  --color-secondary:      #2563EB;  /* link / accent blue — 5.2:1 on white */
-  --color-accent:         #A16207;  /* CTA gold — 4.9:1 with white text */
-  --color-accent-dark:    #855106;
+  --color-secondary:      #6A2383;  /* links — brand aubergine, 9.6:1 on white */
+  --color-accent:         #6A2383;  /* CTA — the brand colour itself */
+  --color-accent-dark:    #521B66;
   --color-on-accent:      #FFFFFF;
-  --color-background:     #F8FAFC;
+  --cta-on-dark:          #9B4DD6;  /* CTA fill on ink bands — 3.6:1 vs ink */
+  --cta-on-dark-text:     #FFFFFF;  /* 4.7:1 on that fill */
+  --color-flourish:       #C4A5E8;  /* icons/rules on ink */
+  --color-on-primary-mut: #D5CADE;  /* body copy on ink */
+  --color-background:     #FAF8FB;
   --color-surface:        #FFFFFF;
-  --color-foreground:     #0F172A;
-  --color-foreground-mut: #475569;  /* 7.4:1 on surface — AA for body text */
-  --color-muted:          #E9EEF5;
-  --color-border:         #CBD5E1;
-  --color-border-strong:  #94A3B8;
+  --color-foreground:     #1F1024;
+  --color-foreground-mut: #57496B;  /* 7.7:1 on background — AA for body text */
+  --color-muted:          #EFEAF2;
+  --color-border:         #D8CFE0;
+  --color-border-strong:  #94879E;
   --color-success:        #16794A;
   --color-error:          #B42318;
-  --color-star:           #B45309;
+  --color-star:           #B45309;  /* semantic, not brand — gold stars are the
+                                       convention readers recognise for ratings */
 
   /* Radius */
   --radius:      12px;
@@ -125,6 +135,112 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .skip-link:focus{top:var(--space-2)}
 
 /* ==========================================================================
+   2b · BACKGROUND LAYERS
+   One treatment per section, each tuned to the ground it sits on. Layers are
+   transform/opacity only, decorative (aria-hidden), and never sit above
+   content. Full motion policy at the end of this stylesheet.
+   ========================================================================== */
+/* The clip lives on the layer, not the section — a section with overflow:hidden
+   would shave the 1px bleed off the cut below it and leave a hairline seam. */
+.has-bg,.has-cut{position:relative; isolation:isolate}
+.has-bg > .container{position:relative; z-index:2}
+.bg{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden}
+
+/* --- A1 · Calm Drift → HERO (light ground) --------------------------------
+   The form card is an opaque white surface, so the motion reads behind the
+   headline and never under the fields themselves. */
+.bg-drift::before,.bg-drift::after{
+  content:""; position:absolute; width:70%; aspect-ratio:1; border-radius:50%;
+  filter:blur(64px); will-change:transform;
+}
+.bg-drift::before{
+  background:radial-gradient(circle,rgba(155,77,214,.42) 0%,transparent 70%);
+  top:-32%; left:-16%; animation:drift-a 26s ease-in-out infinite alternate;
+}
+.bg-drift::after{
+  background:radial-gradient(circle,rgba(36,23,48,.26) 0%,transparent 70%);
+  bottom:-36%; right:-12%; animation:drift-b 34s ease-in-out infinite alternate;
+}
+@keyframes drift-a{to{transform:translate3d(14%,10%,0) scale(1.14)}}
+@keyframes drift-b{to{transform:translate3d(-12%,-8%,0) scale(1.1)}}
+
+/* --- A2 · Aurora Wash → CTA BANDS (§8 + §13, ink ground) ------------------ */
+.bg-aurora::before{
+  content:""; position:absolute; top:-50%; left:-60%; width:220%; height:200%;
+  background:linear-gradient(115deg,
+    transparent 30%,
+    rgba(196,165,232,.13) 45%,
+    rgba(155,77,214,.34) 52%,
+    rgba(196,165,232,.13) 59%,
+    transparent 74%);
+  will-change:transform; animation:aurora 17s linear infinite;
+}
+@keyframes aurora{from{transform:translate3d(-28%,0,0)}to{transform:translate3d(28%,0,0)}}
+
+/* --- A4 · Scan Pulse → §11 CONSULTATION INCLUDES (light ground) -----------
+   Rings are ink-tinted here so they read on a pale ground. */
+.bg-scan span{
+  position:absolute; top:50%; left:50%; width:min(52vw,300px); aspect-ratio:1;
+  margin:calc(min(52vw,300px) / -2) 0 0 calc(min(52vw,300px) / -2);
+  border:1px solid rgba(36,23,48,.34); border-radius:50%;
+  opacity:0; will-change:transform,opacity; animation:scan 6.4s ease-out infinite;
+}
+.bg-scan span:nth-child(2){animation-delay:2.13s}
+.bg-scan span:nth-child(3){animation-delay:4.26s}
+@keyframes scan{
+  0%{transform:scale(.28); opacity:0}
+  14%{opacity:.5}
+  100%{transform:scale(2.5); opacity:0}
+}
+
+/* --- A5 · Parallax Depth → §9 YOUR JOURNEY (light ground) -----------------
+   Scroll-driven: nothing moves while the user is still. */
+.bg-parallax i{position:absolute; display:block; border-radius:50%; filter:blur(40px); will-change:transform}
+.bg-parallax i:nth-child(1){width:44%; aspect-ratio:1; top:-16%; left:3%;  background:rgba(155,77,214,.26)}
+.bg-parallax i:nth-child(2){width:34%; aspect-ratio:1; bottom:-18%; right:8%; background:rgba(36,23,48,.16)}
+.bg-parallax i:nth-child(3){width:22%; aspect-ratio:1; top:34%; right:33%; background:rgba(196,165,232,.34)}
+
+/* --- A6 · Quiet Premium → §3 TRUST STRIP (ink ground, zero motion) -------- */
+.bg-quiet{
+  background:
+    radial-gradient(ellipse 70% 90% at 12% -10%,rgba(155,77,214,.42),transparent 60%),
+    radial-gradient(ellipse 60% 80% at 92% 108%,rgba(196,165,232,.20),transparent 62%);
+}
+.bg-quiet::after{
+  content:""; position:absolute; inset:0; opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   2c · SECTION CUT — layered wave
+   Four wave layers at rising opacity in the NEXT section's colour. The
+   translucent back layers tint the section above, which is what produces the
+   depth a single path can't. Decorative; never clips content.
+   ========================================================================== */
+.cut{
+  position:absolute; left:0; right:0; bottom:-1px; z-index:3;
+  line-height:0; pointer-events:none; color:var(--color-primary);
+}
+.cut svg{display:block; width:100%; height:64px}
+@media (min-width:768px){ .cut svg{height:96px} }
+/* Back layers carry the brand amethyst, front layers the ink, so the wave
+   gradates light → lilac → plum → ink instead of reading as flat grey (low-
+   opacity ink over a near-white ground desaturates). */
+.cut__tint{fill:var(--color-accent)}
+
+/* Reserve space for the wave. Compound selectors so these beat .section /
+   .hero regardless of source order. */
+.section.has-cut{padding-bottom:calc(var(--space-6) + 64px)}
+.hero.has-bg{padding-bottom:calc(var(--space-6) + 64px)}
+@media (min-width:768px){
+  .section.has-cut{padding-bottom:calc(var(--space-8) + 96px)}
+  .hero.has-bg{padding-bottom:calc(var(--space-6) + 96px)}
+}
+@media (min-width:1024px){
+  .hero.has-bg{padding-bottom:calc(var(--space-8) + 96px)}
+}
+
+/* ==========================================================================
    3 · LAYOUT PRIMITIVES
    ========================================================================== */
 .container{
@@ -143,7 +259,7 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 
 .section-head{max-width:var(--container-narrow); margin:0 auto var(--space-4); text-align:center}
 .section-head p{color:var(--color-foreground-mut); font-size:1.0625rem; margin-bottom:0}
-.section--primary .section-head p{color:#DBE4F0}
+.section--primary .section-head p{color:var(--color-on-primary-mut)}
 
 .grid{display:grid; gap:var(--space-3)}
 .grid > *{min-width:0}
@@ -212,6 +328,13 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .btn--on-dark{background:transparent; color:var(--color-on-primary); border-color:rgba(255,255,255,.6)}
 .btn--on-dark:hover{background:rgba(255,255,255,.12); border-color:#fff}
 .btn--block{width:100%}
+/* A CTA sitting ON a primary-coloured band inverts to a light fill. The
+   accent measures under 2:1 against the band, so the button's own edge would
+   dissolve even though its label stays legible. */
+.section--primary .btn--primary{
+  background:var(--cta-on-dark); color:var(--cta-on-dark-text); border-color:var(--cta-on-dark);
+}
+.section--primary .btn--primary:hover{filter:brightness(1.08); background:var(--cta-on-dark)}
 .btn--lg{min-height:56px; font-size:1.0625rem; padding-inline:var(--space-4)}
 .btn[disabled]{opacity:.55; cursor:not-allowed; transform:none}
 
@@ -265,7 +388,7 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
    6 · HERO
    ========================================================================== */
 .hero{
-  background:linear-gradient(180deg,#F1F5FA 0%, var(--color-background) 100%);
+  background:linear-gradient(180deg,#F3EEF7 0%, var(--color-background) 100%);
   padding-block:var(--space-4) var(--space-6);
   border-bottom:1px solid var(--color-border);
 }
@@ -378,7 +501,7 @@ fieldset{border:0; padding:0; margin:0}
   transition:transform var(--motion) ease;
 }
 .option input:hover + .option__box{border-color:var(--color-border-strong); background:var(--color-background)}
-.option input:checked + .option__box{border-color:var(--color-accent); background:#FDF8EE}
+.option input:checked + .option__box{border-color:var(--color-accent); background:#F6EFFA}
 .option input:checked + .option__box .option__radio{border-color:var(--color-accent)}
 .option input:checked + .option__box .option__radio::after{transform:scale(1)}
 .option input:focus-visible + .option__box{outline:3px solid var(--color-secondary); outline-offset:2px}
@@ -441,7 +564,7 @@ fieldset{border:0; padding:0; margin:0}
   display:flex; align-items:center; gap:10px;
   font-size:.9375rem; font-weight:600;
 }
-.trust-strip svg{color:#F3C969}
+.trust-strip svg{color:var(--color-flourish)}
 
 /* ==========================================================================
    9 · PROBLEM CARDS
@@ -575,16 +698,16 @@ fieldset{border:0; padding:0; margin:0}
    ========================================================================== */
 .final__grid{display:grid; gap:var(--space-4)}
 @media (min-width:1024px){ .final__grid{grid-template-columns:1fr 1fr; align-items:start} }
-.final__grid .placeholder{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.35); color:#DBE4F0; min-height:260px}
+.final__grid .placeholder{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.35); color:var(--color-on-primary-mut); min-height:260px}
 .final__grid .placeholder svg,
 .final__grid .placeholder .placeholder-label{color:#fff}
-.address{font-size:.9375rem; color:#DBE4F0; margin-top:var(--space-2)}
+.address{font-size:.9375rem; color:var(--color-on-primary-mut); margin-top:var(--space-2)}
 .address strong{color:#fff; display:block}
 
 /* ==========================================================================
    17 · FOOTER
    ========================================================================== */
-.footer{background:#0E2038; color:#C7D3E3; padding-block:var(--space-6) var(--space-4); font-size:.875rem}
+.footer{background:#17101D; color:#CFC6D8; padding-block:var(--space-6) var(--space-4); font-size:.875rem}
 .footer__grid{display:grid; gap:var(--space-3); margin-bottom:var(--space-4)}
 @media (min-width:768px){ .footer__grid{grid-template-columns:repeat(3,1fr)} }
 .footer h3{font-size:1rem; color:#fff; margin-bottom:12px}
@@ -593,7 +716,7 @@ fieldset{border:0; padding:0; margin:0}
 .footer__legal{
   border-top:1px solid rgba(255,255,255,.15);
   padding-top:var(--space-3);
-  font-size:.75rem; line-height:1.6; color:#9FB0C6;
+  font-size:.75rem; line-height:1.6; color:#A79BB0;
 }
 .footer__legal p{margin-bottom:var(--space)}
 
@@ -627,6 +750,12 @@ body{padding-bottom:88px}
   }
   .reveal{opacity:1; transform:none}
   .btn:hover{transform:none}
+  /* Backgrounds hold a still frame rather than vanishing — the composition
+     stays, only the movement stops. */
+  .bg-drift::before,.bg-drift::after,
+  .bg-aurora::before,
+  .bg-scan span{animation:none!important}
+  .bg-scan span{opacity:.28; transform:scale(1.5)}
 }
 
 /* ==========================================================================
@@ -673,7 +802,9 @@ body{padding-bottom:88px}
 <!-- ============================================================
      2 · HERO
      ============================================================ -->
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero has-bg" aria-labelledby="hero-title">
+  <!-- A1 · Calm Drift -->
+  <div class="bg bg-drift" aria-hidden="true"></div>
   <div class="container hero__grid">
 
     <div class="hero__copy">
@@ -893,12 +1024,24 @@ body{padding-bottom:88px}
     </div>
 
   </div>
+
+  <!-- layered wave into the trust strip -->
+  <div class="cut" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path class="cut__tint" opacity=".26" d="M0,30 C240,74 470,-4 720,26 C980,58 1220,4 1440,30 L1440,120 L0,120 Z"/>
+      <path class="cut__tint" opacity=".44" d="M0,46 C260,88 500,10 760,42 C1000,72 1240,20 1440,46 L1440,120 L0,120 Z"/>
+      <path opacity=".58" fill="currentColor" d="M0,62 C220,102 490,26 740,58 C990,88 1230,36 1440,62 L1440,120 L0,120 Z"/>
+      <path fill="currentColor" d="M0,80 C240,118 480,44 720,76 C960,106 1200,54 1440,80 L1440,120 L0,120 Z"/>
+    </svg>
+  </div>
 </section>
 
 <!-- ============================================================
      3 · TRUST STRIP
      ============================================================ -->
-<section class="trust-strip" aria-label="Why patients choose us">
+<section class="trust-strip has-bg" aria-label="Why patients choose us">
+  <!-- A6 · Quiet Premium (zero motion) -->
+  <div class="bg bg-quiet" aria-hidden="true"></div>
   <div class="container">
     <ul>
       <li>
@@ -1064,7 +1207,7 @@ body{padding-bottom:88px}
 <!-- ============================================================
      7 · REVIEWS
      ============================================================ -->
-<section class="section section--surface" id="reviews" aria-labelledby="reviews-title">
+<section class="section section--surface has-cut" id="reviews" aria-labelledby="reviews-title">
   <div class="container">
     <div class="section-head reveal">
       <h2 id="reviews-title">What our implant patients say</h2>
@@ -1124,12 +1267,23 @@ body{padding-bottom:88px}
       </li>
     </ul>
   </div>
+
+  <div class="cut" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path class="cut__tint" opacity=".26" d="M0,30 C240,74 470,-4 720,26 C980,58 1220,4 1440,30 L1440,120 L0,120 Z"/>
+      <path class="cut__tint" opacity=".44" d="M0,46 C260,88 500,10 760,42 C1000,72 1240,20 1440,46 L1440,120 L0,120 Z"/>
+      <path opacity=".58" fill="currentColor" d="M0,62 C220,102 490,26 740,58 C990,88 1230,36 1440,62 L1440,120 L0,120 Z"/>
+      <path fill="currentColor" d="M0,80 C240,118 480,44 720,76 C960,106 1200,54 1440,80 L1440,120 L0,120 Z"/>
+    </svg>
+  </div>
 </section>
 
 <!-- ============================================================
      8 · NERVOUS ABOUT IMPLANTS?
      ============================================================ -->
-<section class="section section--primary" id="nervous" aria-labelledby="nervous-title">
+<section class="section section--primary has-bg" id="nervous" aria-labelledby="nervous-title">
+  <!-- A2 · Aurora Wash -->
+  <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container">
     <div class="section-head reveal">
       <h2 id="nervous-title">Feeling nervous? You're in good hands.</h2>
@@ -1148,7 +1302,9 @@ body{padding-bottom:88px}
 <!-- ============================================================
      9 · YOUR JOURNEY
      ============================================================ -->
-<section class="section" id="journey" aria-labelledby="journey-title">
+<section class="section has-bg" id="journey" aria-labelledby="journey-title">
+  <!-- A5 · Parallax Depth (scroll-driven) -->
+  <div class="bg bg-parallax" data-parallax aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="container">
     <div class="section-head reveal">
       <h2 id="journey-title">Your journey — 3 simple steps</h2>
@@ -1220,7 +1376,9 @@ body{padding-bottom:88px}
 <!-- ============================================================
      11 · WHAT YOUR CONSULTATION INCLUDES + FINANCE
      ============================================================ -->
-<section class="section" id="consultation" aria-labelledby="consultation-title">
+<section class="section has-bg" id="consultation" aria-labelledby="consultation-title">
+  <!-- A4 · Scan Pulse — echoes the CBCT scan in the list below -->
+  <div class="bg bg-scan" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="container">
     <div class="section-head reveal">
       <h2 id="consultation-title">What your consultation includes</h2>
@@ -1261,7 +1419,7 @@ body{padding-bottom:88px}
 <!-- ============================================================
      12 · FAQ
      ============================================================ -->
-<section class="section section--surface" id="faq" aria-labelledby="faq-title">
+<section class="section section--surface has-cut" id="faq" aria-labelledby="faq-title">
   <div class="container">
     <div class="section-head reveal">
       <h2 id="faq-title">Frequently asked questions</h2>
@@ -1329,16 +1487,27 @@ body{padding-bottom:88px}
       </div>
     </div>
   </div>
+
+  <div class="cut" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path class="cut__tint" opacity=".26" d="M0,30 C240,74 470,-4 720,26 C980,58 1220,4 1440,30 L1440,120 L0,120 Z"/>
+      <path class="cut__tint" opacity=".44" d="M0,46 C260,88 500,10 760,42 C1000,72 1240,20 1440,46 L1440,120 L0,120 Z"/>
+      <path opacity=".58" fill="currentColor" d="M0,62 C220,102 490,26 740,58 C990,88 1230,36 1440,62 L1440,120 L0,120 Z"/>
+      <path fill="currentColor" d="M0,80 C240,118 480,44 720,76 C960,106 1200,54 1440,80 L1440,120 L0,120 Z"/>
+    </svg>
+  </div>
 </section>
 
 <!-- ============================================================
      13 · FINAL CTA + LOCATION
      ============================================================ -->
-<section class="section section--primary" id="contact" aria-labelledby="final-title">
+<section class="section section--primary has-bg" id="contact" aria-labelledby="final-title">
+  <!-- A2 · Aurora Wash — the other CTA band -->
+  <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container final__grid">
     <div class="reveal">
       <h2 id="final-title">Ready to find out if implants are right for you?</h2>
-      <p style="color:#DBE4F0">Whether it's one tooth or a full-mouth restoration, take the first easy step today.</p>
+      <p style="color:var(--color-on-primary-mut)">Whether it's one tooth or a full-mouth restoration, take the first easy step today.</p>
       <div class="cta-row" style="justify-content:flex-start">
         <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Check My Suitability</a>
         <a class="btn btn--on-dark js-tel" href="tel:[Phone]">
@@ -1622,9 +1791,33 @@ body{padding-bottom:88px}
   });
 
   /* ==========================================================
-     SCROLL REVEAL (respects prefers-reduced-motion)
+     A5 · PARALLAX DEPTH (§9 Your journey)
+     One rAF-throttled listener drives every layer. Decorative layers only —
+     never text or controls.
      ========================================================== */
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pxLayers = [].slice.call(document.querySelectorAll('[data-parallax] i'));
+  var pxTicking = false;
+
+  function pxFrame(){
+    pxLayers.forEach(function (el, i) {
+      var box = el.parentElement.getBoundingClientRect();
+      var p = (box.top + box.height / 2 - window.innerHeight / 2) / window.innerHeight;
+      el.style.transform = 'translate3d(0,' + (p * (i + 1) * -18) + 'px,0)';
+    });
+    pxTicking = false;
+  }
+
+  if (pxLayers.length && !reduceMotion) {
+    window.addEventListener('scroll', function () {
+      if (!pxTicking) { pxTicking = true; window.requestAnimationFrame(pxFrame); }
+    }, { passive: true });
+    pxFrame();
+  }
+
+  /* ==========================================================
+     SCROLL REVEAL (respects prefers-reduced-motion)
+     ========================================================== */
   var reveals = document.querySelectorAll('.reveal');
 
   if (reduceMotion || !('IntersectionObserver' in window)) {

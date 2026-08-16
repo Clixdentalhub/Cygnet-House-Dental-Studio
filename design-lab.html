@@ -297,13 +297,15 @@ details.more > .code{margin-top:var(--space-2)}
    ========================================================================== */
 .cutdemo{border:1px solid var(--color-border);border-radius:var(--radius);overflow:hidden}
 .cutdemo__top{
-  position:relative;background:var(--color-surface);padding:var(--space-3) var(--space-3) var(--space-6);
+  position:relative;background:var(--color-surface);padding:var(--space-3) var(--space-3) 88px;
   font-size:.875rem;color:var(--color-foreground-mut);
 }
 .cutdemo__bottom{background:var(--color-primary);color:#DBE4F0;padding:var(--space-3);font-size:.875rem}
 .cut{position:absolute;left:0;right:0;bottom:-1px;line-height:0;color:var(--color-primary);pointer-events:none}
-.cut svg{display:block;width:100%;height:56px}
-@media(min-width:768px){.cut svg{height:72px}}
+.cut svg{display:block;width:100%;height:64px}
+/* Back layers take the brand accent so the wave gradates rather than reading as flat grey. */
+.cut__tint{fill:var(--color-accent)}
+@media(min-width:768px){.cut svg{height:96px}}
 
 /* ==========================================================================
    PART C — FUNNEL BLOCKS
@@ -529,7 +531,7 @@ details.more > .code{margin-top:var(--space-2)}
           <i style="background:#A16207"></i><i style="background:#F0C87A"></i>
           <i style="background:#F1E9F5"></i>
         </div>
-        <div class="pal__name"><h3>1 · Aubergine &amp; Antique Gold</h3><span class="tag tag--go">Recommended</span></div>
+        <div class="pal__name"><h3>1 · Aubergine &amp; Antique Gold</h3><span class="tag">Alternate</span></div>
         <div class="pal__body">
           <p>The oldest luxury pairing there is — jewel purple against warm metal. Reads high-end without trying, and gold is a proven CTA colour because it's warm against a cool ground. Safest choice for a high-ticket implant funnel.</p>
           <div class="pal__tokens">
@@ -599,7 +601,7 @@ details.more > .code{margin-top:var(--space-2)}
           <i style="background:#6A2383"></i><i style="background:#C4A5E8"></i>
           <i style="background:#EFEAF2"></i>
         </div>
-        <div class="pal__name"><h3>4 · Ink &amp; Amethyst</h3><span class="tag">Max brand</span></div>
+        <div class="pal__name"><h3>4 · Ink &amp; Amethyst</h3><span class="tag tag--go">Selected</span></div>
         <div class="pal__body">
           <p>Inverts the roles: near-black plum ink carries the structure, and <strong>#6A2383 becomes the CTA</strong>. Every button on the page is then literally the brand colour — the strongest brand presence of the four, and at 9.63:1 the most legible CTA. Trade-off: no warm accent, so the page runs cooler and more severe.</p>
           <div class="pal__tokens">
@@ -964,7 +966,7 @@ if (!reduce) {
   color:var(--color-primary);                      /* = section-b background */
 }
 .cut svg{display:block;width:100%;height:56px}
-@media(min-width:768px){.cut svg{height:72px}}</code></pre>
+@media(min-width:768px){.cut svg{height:96px}}</code></pre>
         </div>
       </div>
     </div>
@@ -1281,7 +1283,7 @@ input.addEventListener('input', function(){
     var b = e.target.closest('[data-apply]');
     if (b) { setPalette(b.dataset.apply); document.getElementById('palettes').scrollIntoView({block:'start'}); }
   });
-  setPalette('aubergine');
+  setPalette('ink');   /* client selected Option 4 */
 
   /* ---------- Section cuts: generated so shape data lives in one place ---------- */
   var CUTS = [
@@ -1295,8 +1297,14 @@ input.addEventListener('input', function(){
       note:'A single quadratic. The softest option and the safest match for healthcare.' },
     { id:'dome',     name:'B5 · Dome',        tag:'Focal',     d:'M0,80 C360,4 1080,4 1440,80 Z',
       note:'Flatter shoulders than B4, lifting the centre — good directly above a centred CTA.' },
-    { id:'wave',     name:'B6 · Wave',        tag:'Use once',  d:'M0,44 C240,84 480,4 720,32 C960,60 1200,10 1440,42 L1440,80 L0,80 Z',
-      note:'More personality, less clinical authority. One per page at most.' },
+    { id:'wave', name:'B6 · Layered wave', tag:'Selected', viewBox:'0 0 1440 120',
+      layers:[
+        { d:'M0,30 C240,74 470,-4 720,26 C980,58 1220,4 1440,30 L1440,120 L0,120 Z', o:'.26', tint:true },
+        { d:'M0,46 C260,88 500,10 760,42 C1000,72 1240,20 1440,46 L1440,120 L0,120 Z', o:'.44', tint:true },
+        { d:'M0,62 C220,102 490,26 740,58 C990,88 1230,36 1440,62 L1440,120 L0,120 Z', o:'.58' },
+        { d:'M0,80 C240,118 480,44 720,76 C960,106 1200,54 1440,80 L1440,120 L0,120 Z', o:'1' }
+      ],
+      note:'Four wave layers at rising opacity, each a different phase and amplitude. The translucent back layers tint the section above, which is what produces depth a single path cannot. Still one colour — <code>currentColor</code> plus opacity — so it re-skins with the palette.' },
     { id:'notch',    name:'B7 · Plinth',      tag:'CTA anchor',d:'M0,80 L636,80 L678,22 L762,22 L804,80 L1440,80 Z',
       note:'A raised tab in the lower section’s colour. Centre a CTA or a single price card directly beneath it and the shape frames it. Keep the tab centred on the element it frames, or it reads as a mistake.' },
     { id:'chevron',  name:'B8 · Chevron',     tag:'Directional',d:'M0,10 L720,66 L1440,10 L1440,80 L0,80 Z',
@@ -1307,8 +1315,17 @@ input.addEventListener('input', function(){
   var esc = function(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
 
   grid.innerHTML = CUTS.map(function(c){
-    var svg = '<svg viewBox="0 0 1440 80" preserveAspectRatio="none">' +
-              '<path d="' + c.d + '" fill="currentColor"/></svg>';
+    var layers = c.layers || [{ d:c.d, o:'1' }];
+    var paths = layers.map(function(l){
+      return '<path' + (l.tint ? ' class="cut__tint"' : ' fill="currentColor"') +
+             (l.o === '1' ? '' : ' opacity="' + l.o + '"') + ' d="' + l.d + '"/>';
+    }).join('');
+    var svg = '<svg viewBox="' + (c.viewBox || '0 0 1440 80') + '" preserveAspectRatio="none">' +
+              paths + '</svg>';
+    var code = layers.map(function(l){
+      return '<path' + (l.tint ? ' class="cut__tint"' : ' fill="currentColor"') +
+             (l.o === '1' ? '' : ' opacity="' + l.o + '"') + ' d="' + l.d + '"/>';
+    }).join('\n');
     return '' +
     '<article class="spec">' +
       '<div class="spec__head"><h3>' + c.name + '</h3><span class="tag">' + c.tag + '</span></div>' +
@@ -1321,7 +1338,7 @@ input.addEventListener('input', function(){
       '<div class="spec__body">' +
         '<p class="spec__meta"><span>' + c.note + '</span></p>' +
         '<div class="code"><button type="button" class="copy">Copy</button>' +
-        '<pre><code>' + esc('<path d="' + c.d + '" fill="currentColor"/>') + '</code></pre></div>' +
+        '<pre><code>' + esc(code) + '</code></pre></div>' +
       '</div>' +
     '</article>';
   }).join('');
