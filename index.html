@@ -756,6 +756,53 @@ fieldset{border:0; padding:0; margin:0}
 .clinician p{font-size:.9375rem; color:var(--color-foreground-mut)}
 
 /* ==========================================================================
+   13b · TEAM ROSTER
+   Clickable people tiles driving one profile panel. Buttons carry
+   aria-expanded + aria-controls; the panel is aria-live so swaps announce.
+   Data lives in the PEOPLE array in the script — one entry per person.
+   ========================================================================== */
+.team-photo{aspect-ratio:1600/760; margin-bottom:var(--space-3)}
+.roster{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:var(--space-2); margin-bottom:var(--space-3);
+}
+.person{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:var(--space-2); min-height:44px;
+  background:var(--color-surface); border:2px solid var(--color-border);
+  border-radius:var(--radius); cursor:pointer; text-align:center;
+  font-family:var(--font-body);
+  transition:border-color var(--motion) ease, box-shadow var(--motion) ease, transform var(--motion) ease;
+}
+.person:hover{border-color:var(--color-border-strong); transform:translateY(-2px)}
+.person[aria-expanded="true"]{border-color:var(--color-accent); box-shadow:0 0 0 3px rgba(106,35,131,.15)}
+.person__avatar{
+  position:relative; width:88px; height:88px; border-radius:50%;
+  overflow:hidden; background:var(--color-muted);
+  display:grid; place-items:center;
+}
+.person__avatar::before{
+  content:attr(data-initials); position:absolute; inset:0;
+  display:grid; place-items:center;
+  font-family:var(--font-heading); font-weight:700; font-size:1.375rem;
+  color:var(--color-border-strong);
+}
+.person__avatar img{position:relative; z-index:1; width:100%; height:100%; object-fit:cover; color:transparent}
+.person__name{font-weight:600; font-size:.9375rem; color:var(--color-foreground); line-height:1.3}
+.person__role{font-size:.75rem; color:var(--color-foreground-mut)}
+.roster__note{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  padding:var(--space-2); text-align:center;
+  border:2px dashed var(--color-border); border-radius:var(--radius);
+  color:var(--color-foreground-mut); font-size:.8125rem;
+}
+.panel{display:grid; gap:var(--space-3)}
+@media (min-width:768px){ .panel{grid-template-columns:280px 1fr; align-items:start} }
+.panel__photo{aspect-ratio:1}
+.panel__body p{font-size:.9375rem; color:var(--color-foreground-mut)}
+.panel__body .clinician__cred{font-size:.875rem}
+
+/* ==========================================================================
    14 · INCLUDED / FINANCE
    ========================================================================== */
 .included-grid{display:grid; gap:var(--space-3)}
@@ -1419,32 +1466,31 @@ body{padding-bottom:88px}
 <section class="section section--surface" id="clinicians" aria-labelledby="clinicians-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="clinicians-title">Meet your clinicians</h2>
+      <h2 id="clinicians-title">Meet the team</h2>
+      <p>Select a team member to read about them.</p>
     </div>
 
-    <div class="grid grid--2 reveal">
-      <div class="stack">
-        <div class="stack__media stack__media--person" data-file="assets/clinician-sourtzis.webp">
-          <img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis, implant treatment provider" loading="lazy" decoding="async">
-        </div>
-        <div class="card">
-          <h3>Dr Dimitrios Sourtzis</h3>
-          <p class="clinician__cred">Implant treatment provider · Dentist · GDC No. 287145</p>
-          <p>MSc Endodontics (King's College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.</p>
-          <p>My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what's possible before anything begins.</p>
-        </div>
+    <div class="reveal">
+      <!-- Team photo stays on top; the roster below drives the profile panel. -->
+      <div class="card__media team-photo" data-file="assets/team-wide.webp">
+        <img src="assets/team-wide.webp" alt="The Cygnet House Dental Studio team outside the practice" loading="lazy" decoding="async">
       </div>
 
-      <div class="stack">
-        <div class="stack__media stack__media--person" data-file="assets/practice.webp">
-          <img src="assets/practice.webp" alt="The Cygnet House Dental Studio team outside the practice" loading="lazy" decoding="async">
+      <div class="roster" id="roster" aria-label="Team members"></div>
+
+      <article class="card panel" id="person-panel" aria-live="polite">
+        <div class="card__media panel__photo" data-file="assets/clinician-sourtzis.webp">
+          <img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis" loading="lazy" decoding="async">
         </div>
-        <div class="card">
-          <h3>A family-run practice in Spilsby</h3>
-          <p class="clinician__cred">Cygnet House Dental Studio Ltd</p>
-          <p>Every case is planned restoratively, so both function and aesthetics are considered from the very start — and you always see the full plan and the exact cost in writing before treatment begins.</p>
+        <div class="panel__body">
+          <h3 id="panel-name">Dr Dimitrios Sourtzis</h3>
+          <p class="clinician__cred" id="panel-role">Implant treatment provider · Dentist · GDC No. 287145</p>
+          <div id="panel-bio">
+            <p>MSc Endodontics (King's College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.</p>
+            <p>My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what's possible before anything begins.</p>
+          </div>
         </div>
-      </div>
+      </article>
     </div>
   </div>
 </section>
@@ -1948,6 +1994,98 @@ body{padding-bottom:88px}
       document.getElementById(btn.getAttribute('aria-controls')).hidden = expanded;
     });
   });
+
+  /* ==========================================================
+     TEAM ROSTER
+     One entry per person. To add a team member, append an object here —
+     nothing else to touch. img may be null until their photo is mapped
+     (the avatar then shows initials). Bio strings are paragraphs.
+     ========================================================== */
+  var PEOPLE = [
+    {
+      id: 'dimitrios',
+      name: 'Dr Dimitrios Sourtzis',
+      role: 'Implant treatment provider · Dentist · GDC No. 287145',
+      short: 'Dentist',
+      img: 'assets/clinician-sourtzis.webp',
+      bio: [
+        'MSc Endodontics (King’s College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.',
+        'My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what’s possible before anything begins.'
+      ]
+    },
+    {
+      id: 'rose',
+      name: 'Dr Rose <span class="ph">[surname]</span>',
+      role: 'Dentist · <span class="ph">[GDC number to confirm]</span>',
+      short: 'Dentist',
+      img: null,
+      bio: [
+        '<span class="ph">[Profile to follow — patients’ reviews credit Dr Rose with crowns, bridges, aligners and composite bonding, and with implant restorations alongside Dr Sourtzis.]</span>'
+      ]
+    }
+    /* Add each team member like:
+    { id:'sam', name:'Samantha …', role:'Reception', short:'Reception',
+      img:'assets/people/yNN.webp', bio:['…'] }, */
+  ];
+
+  var roster = document.getElementById('roster');
+  if (roster) {
+    var panelPhoto = document.querySelector('.panel__photo');
+    var panelName  = document.getElementById('panel-name');
+    var panelRole  = document.getElementById('panel-role');
+    var panelBio   = document.getElementById('panel-bio');
+
+    function initials(name){
+      return name.replace(/<[^>]*>/g,'').replace(/\[[^\]]*\]/g,'')
+        .split(/\s+/).filter(function(w){return /^[A-Za-z]/.test(w) && w!=='Dr'})
+        .slice(0,2).map(function(w){return w[0].toUpperCase()}).join('') || '?';
+    }
+
+    PEOPLE.forEach(function (person) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'person';
+      btn.setAttribute('aria-controls', 'person-panel');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.dataset.person = person.id;
+      btn.innerHTML =
+        '<span class="person__avatar" data-initials="' + initials(person.name) + '">' +
+        (person.img ? '<img src="' + person.img + '" alt="" loading="lazy" decoding="async">' : '') +
+        '</span>' +
+        '<span class="person__name">' + person.name + '</span>' +
+        '<span class="person__role">' + person.short + '</span>';
+      var av = btn.querySelector('img');
+      if (av) av.addEventListener('error', function(){ av.remove(); });
+      btn.addEventListener('click', function(){ show(person); });
+      roster.appendChild(btn);
+    });
+
+    var note = document.createElement('div');
+    note.className = 'roster__note';
+    note.innerHTML = '<strong>More profiles coming</strong><span>Each team member appears here as their details arrive.</span>';
+    roster.appendChild(note);
+
+    function show(person){
+      roster.querySelectorAll('.person').forEach(function(b){
+        b.setAttribute('aria-expanded', String(b.dataset.person === person.id));
+      });
+      if (person.img) {
+        panelPhoto.setAttribute('data-file', person.img);
+        panelPhoto.innerHTML = '<img src="' + person.img + '" alt="" loading="lazy" decoding="async">';
+        var im = panelPhoto.querySelector('img');
+        im.addEventListener('error', function(){ im.remove(); });
+        panelPhoto.style.display = '';
+      } else {
+        panelPhoto.setAttribute('data-file', 'photo coming');
+        panelPhoto.innerHTML = '';
+      }
+      panelName.innerHTML = person.name;
+      panelRole.innerHTML = person.role;
+      panelBio.innerHTML = person.bio.map(function(t){ return '<p>' + t + '</p>'; }).join('');
+    }
+
+    show(PEOPLE[0]);
+  }
 
   /* ==========================================================
      REVIEW MARQUEE
