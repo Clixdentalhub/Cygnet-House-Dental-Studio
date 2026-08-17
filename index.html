@@ -1067,7 +1067,7 @@ body{padding-bottom:88px}
           </div>
 
           <!-- CONFIGURE: replace action with the real form endpoint (CRM / Make webhook / GHL) -->
-          <form id="qualifier-form" action="[FORM_ENDPOINT]" method="post" novalidate>
+          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/19da6d71-307a-44a3-bf14-998efefb682c" method="post" novalidate>
 
             <!-- Step 1 -->
             <div class="step" data-step="1">
@@ -2031,24 +2031,32 @@ body{padding-bottom:88px}
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
 
-      /* ------------------------------------------------------
-         TODO: POST to the real endpoint. Replace this block:
-
-         fetch(form.action, {
-           method: 'POST',
-           body: new FormData(form)
-         }).then(showSuccess).catch(showError);
-
-         Until an endpoint is configured we show the success
-         state so the flow can be reviewed end to end.
-         ------------------------------------------------------ */
-      window.setTimeout(function () {
+      /* FormData keeps this a "simple" request (no CORS preflight), and
+         no-cors lets the webhook accept it cross-origin — the response is
+         opaque, so resolve = delivered, reject = a real network failure. */
+      fetch(form.action, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new FormData(form)
+      }).then(function () {
         formView.hidden = true;
         successView.hidden = false;
         successView.focus();
         successView.scrollIntoView({ block: 'center', behavior: 'smooth' });
         /* Analytics hook: window.dataLayer && window.dataLayer.push({event:'implant_lead'}); */
-      }, 400);
+      }).catch(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Check My Suitability';
+        var err = form.querySelector('.form-submit-error');
+        if (!err) {
+          err = document.createElement('p');
+          err.className = 'field__error is-visible form-submit-error';
+          err.setAttribute('role', 'alert');
+          err.textContent = 'Something went wrong sending your details — please try again, or call ' +
+            (SITE_CONFIG.phoneDisplay || 'the practice') + '.';
+          submitBtn.parentElement.insertAdjacentElement('afterend', err);
+        }
+      });
     });
 
     setStep(1, false);
