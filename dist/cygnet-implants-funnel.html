@@ -984,21 +984,35 @@ fieldset{border:0; padding:0; margin:0}
 
 /* The one finance fact worth a box of its own. Ink ground so it reads as a
    statement, not another card in the stack. */
+/* The badge sits AFTER the copy. Leading it pushed the heading 82px right of
+   "Your £50 consultation deposit" and "Spreading the cost" directly above and
+   below — three stacked cards whose headings started at three different
+   places. Copy first keeps all three on one left edge. */
 .finance-box{
-  display:flex; align-items:center; gap:var(--space-2);
+  display:flex; align-items:center; gap:var(--space-3);
   background:linear-gradient(135deg,var(--color-primary) 0%,#3A2148 100%);
   border:1px solid var(--color-primary); border-radius:var(--radius);
-  padding:var(--space-2) var(--space-3); margin-bottom:var(--space-3);
+  padding:var(--space-3); margin-bottom:var(--space-3);
   box-shadow:var(--shadow-md);
 }
+.finance-box__body{flex:1; min-width:0}
+/* place-items centres the badge's single child. The glyph has to be that one
+   child — "0" and <small>%</small> as siblings become two grid items and get
+   centred separately, which is what left the 0% sitting off-centre. */
 .finance-box__badge{
-  flex:none; display:flex; align-items:baseline; justify-content:center;
-  width:68px; height:68px; border-radius:50%; white-space:nowrap;
+  flex:none; display:grid; place-items:center;
+  width:72px; height:72px; border-radius:50%;
   background:rgba(255,255,255,.08); border:1px solid var(--color-flourish);
   font-family:var(--font-heading); font-weight:700; font-size:1.625rem;
   color:#fff; letter-spacing:-.03em;
 }
-.finance-box__badge small{font-size:1rem; font-weight:700; margin-left:1px}
+.finance-box__badge > span{display:block; white-space:nowrap; line-height:1}
+.finance-box__badge small{font-size:1rem; font-weight:700; letter-spacing:0}
+@media (max-width:479px){
+  /* Under about 480px the copy and a 72px disc cannot share a row without
+     the heading breaking every other word. */
+  .finance-box{flex-direction:column-reverse; align-items:flex-start; gap:var(--space-2)}
+}
 .finance-box h3{color:#fff; margin-bottom:4px; font-size:1.0625rem}
 .finance-box p{color:var(--color-on-primary-mut); font-size:.9375rem}
 .finance-box p strong{color:#fff}
@@ -1915,11 +1929,11 @@ body{padding-bottom:88px}
         </div>
 
         <div class="finance-box">
-          <span class="finance-box__badge" aria-hidden="true">0<small>%</small></span>
           <div class="finance-box__body">
             <h3>Interest-free over 12 months</h3>
             <p>0% interest over 12 months is available on <strong>every implant treatment</strong>.</p>
           </div>
+          <span class="finance-box__badge" aria-hidden="true"><span>0<small>%</small></span></span>
         </div>
 
         <div class="callout callout--compliance">
