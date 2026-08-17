@@ -1982,7 +1982,12 @@ body{padding-bottom:88px}
      ========================================================== */
   var SITE_CONFIG = {
     phoneDisplay: '07450 302990',
-    phoneHref:    '+447450302990'
+    phoneHref:    '+447450302990',
+    /* Where a successful submission lands. Set to null to keep the visitor
+       on this page and show the inline success state instead — the two are
+       mutually exclusive, and only one of them should ever fire a
+       conversion pixel. */
+    thankYouUrl:  'thank-you.html'
   };
 
   /* ---------- Apply config ---------- */
@@ -2162,6 +2167,15 @@ body{padding-bottom:88px}
         mode: 'no-cors',
         body: new FormData(form)
       }).then(function () {
+        if (SITE_CONFIG.thankYouUrl) {
+          /* The first name rides along so the thank-you page can greet them.
+             It is encoded here and screened again on arrival — never trust a
+             value that has been through a URL. */
+          var name = (form.firstName.value || '').trim();
+          window.location.href = SITE_CONFIG.thankYouUrl +
+            (name ? '?firstName=' + encodeURIComponent(name) : '');
+          return;
+        }
         formView.hidden = true;
         successView.hidden = false;
         successView.focus();

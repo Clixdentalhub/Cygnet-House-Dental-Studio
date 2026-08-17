@@ -8,6 +8,7 @@ Single-page, mobile-first lead-generation landing page for dental implants
 | File | What it is |
 |------|------------|
 | `index.html` | The live funnel page. One self-contained file (HTML + CSS + vanilla JS). No frameworks, no build step, no external JS. |
+| `thank-you.html` | The post-submission confirmation page. Same tokens, same header and footer, self-contained in the same way. `noindex` on purpose. |
 | `design-lab.html` | Internal design reference — background motion options, section cuts and reusable funnel blocks, with copy-paste code. Not a public page. |
 | `form-lab.html` | Internal reference — four luxury treatments of the qualifier form. **F1 · Ink Atelier is the one shipped in `index.html`.** F2 · Gilded Hairline is the natural control to A/B test it against. |
 
@@ -29,6 +30,10 @@ Open any of them in a browser or drop them on any static host.
       `/terms/`. Confirm those paths exist, or repoint them at the equivalent
       pages once the funnel is up in GHL.
 - [ ] **Set the canonical URL** to the funnel's GHL address once it has one.
+- [ ] **Point `SITE_CONFIG.thankYouUrl`** at the thank-you page's real URL once
+      both pages are up in GHL (it is a relative path today).
+- [ ] **Add the conversion tag** to `thank-you.html` — the marked block at the
+      bottom of its script takes the Google Ads / Meta snippet.
 
 ### After it is live
 
@@ -122,6 +127,29 @@ var SITE_CONFIG = {
 
 Set both and every phone reference and `tel:` link on the page updates.
 
+### Where a submission lands
+
+`SITE_CONFIG.thankYouUrl` in `index.html` decides what a successful send does:
+
+```js
+thankYouUrl: 'thank-you.html'   // redirect (default)
+thankYouUrl: null               // stay put, show the inline success state
+```
+
+The two are mutually exclusive, and **only one of them should carry a
+conversion pixel**. As shipped, the thank-you page is the conversion event —
+`thank-you.html` pushes `generate_lead` to the dataLayer and has a marked
+block for Google Ads / Meta / GTM tags. Do not also fire one on submit in
+`index.html`, or every lead counts twice.
+
+The lead's first name rides along as `?firstName=…` so the page can greet them
+by name. It is encoded on the way out and screened on the way in — written
+with `textContent`, and dropped entirely unless it looks like a name — so a
+crafted URL cannot put anything into the page.
+
+If you would rather GHL own the redirect, set `thankYouUrl` to the full GHL
+URL of the thank-you page.
+
 ### Form endpoint
 
 Wired to the LeadConnector webhook on `#qualifier-form`. The submit handler
@@ -158,6 +186,11 @@ mapping to list what it found and which slots are open.
 | 13 | Final CTA + address + live map |
 | — | Footer with regulatory/finance/pricing disclosures |
 | — | Sticky mobile CTA bar (Call · Check My Suitability) with safe-area padding |
+
+**`thank-you.html`** — confirmation seal, what-happens-next in three steps, a
+call band (they are as warm as they will ever be at that moment), four things
+worth thinking about before the call, links back into the funnel, and two
+reviews. One mobile action, not two: they have already filled the form in.
 
 **Qualifier form (Ink Atelier):** 3 steps, hairline progress rail, per-step
 validation, inline errors wired with `aria-invalid` / `aria-describedby`, back
