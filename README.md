@@ -45,21 +45,19 @@ Everything still awaiting client confirmation is rendered as a highlighted
 
 | # | Item | Where it appears |
 |---|------|------------------|
-| 1 | **Phone number** for click-to-call | Header, hero, §8, §13, footer, sticky mobile bar — and `telephone` in the JSON-LD |
-| 2 | **Real consented before/after images** | §6 — three placeholder slots |
-| 3 | **Finance lender + FCA authorisation / credit-broker status** | §11 finance block, footer disclosure |
+| 1 | **Real consented before/after images** (the "Implants" Drive folder was empty) | §6 — three placeholder slots |
+| 2 | **Finance lender + FCA authorisation / credit-broker status + FRN** | §11 finance block, footer disclosure |
+| 3 | **Form endpoint** — the form currently shows success without posting anywhere | `[FORM_ENDPOINT]` on `#qualifier-form` |
 
 ## Also outstanding
 
-- The six real, consented patient reviews (§7 — six placeholder cards, treatment
-  labels already set)
-- Clinician photo for Dr Sourtzis, hero image, practice photo
-- Weekend opening hours (assumed closed — needs confirming, and it also affects
-  the JSON-LD)
+- Weekend opening hours (assumed closed — footer, contact block and JSON-LD)
 - CQC provider ID
-- £50 deposit — confirm whether it is refundable or redeemable against treatment
-- Real logo and brand assets
-- Privacy policy / complaints / terms URLs (footer)
+- £50 deposit — refundable or redeemable against treatment
+- "Save up to £1,000" — substantiate or it stays omitted
+- Confirm the four staff photo matches (Samantha y20, Melissa y23, Ava y28,
+  Hayley y34) — the doctors are embroidery-confirmed
+- Final GDC/ASA copy review, then remove the noindex meta tag
 
 ## Confirmed and in the build
 
