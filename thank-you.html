@@ -727,7 +727,9 @@ body{padding-bottom:88px}
    would be invisible. */
 .next.reveal{opacity:1; transform:none; transition:none}
 
-.next__item{position:relative; padding-top:var(--space-4)}
+/* The badge is 36px tall and sits at top:0, so the item has to reserve more
+   than 36px or the badge lands on the heading's ascenders. */
+.next__item{position:relative; padding-top:var(--space-6)}
 .next__item h3{font-size:1.0625rem; margin-bottom:6px}
 .next__item p{font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:0}
 
@@ -739,9 +741,9 @@ body{padding-bottom:88px}
   display:grid; place-items:center;
   background:var(--color-accent); color:#fff;
   font-family:var(--font-heading); font-weight:700; font-size:.9375rem;
-  opacity:0; transform:scale(.4);
-  transition:opacity 260ms ease var(--d,0ms),
-             transform 460ms cubic-bezier(.34,1.56,.64,1) var(--d,0ms);
+  opacity:0; transform:scale(.72);
+  transition:opacity 300ms ease var(--d,0ms),
+             transform 420ms cubic-bezier(.22,1,.36,1) var(--d,0ms);
 }
 .next.is-visible .next__item::before{opacity:1; transform:scale(1)}
 
@@ -757,8 +759,11 @@ body{padding-bottom:88px}
 
 /* --- connector: only exists where the steps sit side by side --- */
 @media (min-width:768px){
+  /* Runs badge-to-badge across the grid gutter, with the same 8px of air at
+     each end. Ending at the column edge left it hanging in dead space. */
   .next__item:not(:last-child)::after{
-    content:""; position:absolute; top:17px; left:44px; right:var(--space-2);
+    content:""; position:absolute; top:17px;
+    left:calc(36px + var(--space)); right:calc(-1 * var(--space));
     height:2px; background:var(--color-border);
     transform:scaleX(0); transform-origin:left center;
     transition:transform 560ms cubic-bezier(.22,1,.36,1) calc(var(--d,0ms) + 300ms);
