@@ -769,26 +769,10 @@ body{padding-bottom:88px}
 .prep li strong{display:block}
 .prep li span{color:var(--color-foreground-mut); font-size:.9375rem}
 
-/* Reassurance links */
-.explore{display:grid; gap:var(--space-2); max-width:var(--container-narrow); margin-inline:auto}
-@media (min-width:640px){ .explore{grid-template-columns:1fr 1fr} }
-.explore a{
-  display:flex; align-items:center; justify-content:space-between; gap:var(--space-2);
-  padding:var(--space-2) var(--space-3); min-height:64px;
-  background:var(--color-surface); border:1px solid var(--color-border);
-  border-radius:var(--radius); text-decoration:none; color:var(--color-primary);
-  font-family:var(--font-heading); font-weight:600; font-size:1rem;
-  transition:border-color var(--motion) ease, transform var(--motion) ease,
-             box-shadow var(--motion) ease;
-}
-.explore a:hover{
-  border-color:var(--color-accent); transform:translateY(-2px);
-  box-shadow:var(--shadow-md); text-decoration:none;
-}
-.explore a svg{color:var(--color-accent); flex:none}
-
 .ty-reviews{display:grid; gap:var(--space-2); max-width:var(--container-narrow); margin-inline:auto}
 @media (min-width:768px){ .ty-reviews{grid-template-columns:1fr 1fr} }
+/* .stars lives in index.html's hero block, which this page does not carry. */
+.stars{display:inline-flex; gap:1px; color:var(--color-star)}
 .rating-line{
   display:flex; align-items:center; justify-content:center; gap:8px;
   font-size:.9375rem; font-weight:600; color:var(--color-foreground-mut);
@@ -806,7 +790,7 @@ body{padding-bottom:88px}
 
 <header class="header">
   <div class="container header__inner">
-    <a class="logo" href="index.html">
+    <a class="logo js-funnel" href="index.html">
       <img src="assets/logo.webp" alt="Cygnet House Dental Studio &amp; Implant Centre — home" width="374" height="166">
     </a>
     <div class="header__actions">
@@ -931,36 +915,7 @@ body{padding-bottom:88px}
 </section>
 
 <!-- ============================================================
-     5 · WHILE YOU WAIT
-     ============================================================ -->
-<section class="section section--surface" aria-labelledby="explore-title">
-  <div class="container">
-    <div class="section-head reveal">
-      <h2 id="explore-title">While you wait</h2>
-    </div>
-    <div class="explore reveal">
-      <a href="index.html#results">
-        Real before &amp; after results
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="index.html#faq">
-        Implant questions, answered
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="index.html#clinicians">
-        Meet the team treating you
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="index.html#pricing">
-        Treatment options &amp; prices
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     6 · REASSURANCE
+     5 · REASSURANCE
      ============================================================ -->
 <section class="section" aria-labelledby="ty-reviews-title">
   <div class="container">
@@ -1024,10 +979,10 @@ body{padding-bottom:88px}
       <div>
         <h3>Treatments</h3>
         <ul>
-          <li><a href="index.html#pricing">Single dental implants</a></li>
-          <li><a href="index.html#pricing">All-on-4 full-arch implants</a></li>
-          <li><a href="index.html#pricing">All-on-6 full-arch implants</a></li>
-          <li><a href="index.html#faq">Implant FAQs</a></li>
+          <li><a class="js-funnel" data-hash="#pricing" href="index.html#pricing">Single dental implants</a></li>
+          <li><a class="js-funnel" data-hash="#pricing" href="index.html#pricing">All-on-4 full-arch implants</a></li>
+          <li><a class="js-funnel" data-hash="#pricing" href="index.html#pricing">All-on-6 full-arch implants</a></li>
+          <li><a class="js-funnel" data-hash="#faq" href="index.html#faq">Implant FAQs</a></li>
         </ul>
       </div>
       <div>
@@ -1079,7 +1034,11 @@ body{padding-bottom:88px}
      ========================================================== */
   var SITE_CONFIG = {
     phoneDisplay: '07450 302990',
-    phoneHref:    '+447450302990'
+    phoneHref:    '+447450302990',
+    /* Every link back to the funnel resolves from here. A relative path is
+       right when the two files sit side by side; once the funnel lives at a
+       GHL URL, set that here and the logo and footer links follow. */
+    funnelUrl:    'index.html'
   };
 
   if (SITE_CONFIG.phoneDisplay) {
@@ -1094,6 +1053,12 @@ body{padding-bottom:88px}
   }
 
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  if (SITE_CONFIG.funnelUrl) {
+    document.querySelectorAll('.js-funnel').forEach(function (el) {
+      el.setAttribute('href', SITE_CONFIG.funnelUrl + (el.dataset.hash || ''));
+    });
+  }
 
   /* ==========================================================
      GREETING BY NAME

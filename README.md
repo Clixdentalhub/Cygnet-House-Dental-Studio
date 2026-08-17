@@ -30,8 +30,10 @@ Open any of them in a browser or drop them on any static host.
       `/terms/`. Confirm those paths exist, or repoint them at the equivalent
       pages once the funnel is up in GHL.
 - [ ] **Set the canonical URL** to the funnel's GHL address once it has one.
-- [ ] **Point `SITE_CONFIG.thankYouUrl`** at the thank-you page's real URL once
-      both pages are up in GHL (it is a relative path today).
+- [ ] **Point `SITE_CONFIG.thankYouUrl`** (in `index.html`) at the thank-you
+      page's real URL, and **`SITE_CONFIG.funnelUrl`** (in `thank-you.html`) at
+      the funnel's — both are relative paths today, which only works while the
+      two files sit side by side.
 - [ ] **Add the conversion tag** to `thank-you.html` — the marked block at the
       bottom of its script takes the Google Ads / Meta snippet.
 
@@ -189,8 +191,10 @@ mapping to list what it found and which slots are open.
 
 **`thank-you.html`** — confirmation seal, what-happens-next in three steps, a
 call band (they are as warm as they will ever be at that moment), four things
-worth thinking about before the call, links back into the funnel, and two
-reviews. One mobile action, not two: they have already filled the form in.
+worth thinking about before the call, and two reviews. One mobile action, not
+two: they have already filled the form in. Every link back to the funnel
+resolves through `SITE_CONFIG.funnelUrl`, so moving the page in GHL is one
+edit rather than five.
 
 **Qualifier form (Ink Atelier):** 3 steps, hairline progress rail, per-step
 validation, inline errors wired with `aria-invalid` / `aria-describedby`, back
