@@ -516,6 +516,35 @@ whether they also replace the ten is the client's call.
 
 ## Images
 
+**Where they have to come from.** Google hosts are blocked by this environment's
+network policy — `drive.google.com` returns a 403 at the proxy — so images
+cannot be pulled from Drive directly. The Drive *connector* can read them, but
+it returns each file as base64 into the conversation, which is not viable for
+2–4 MB photographs. `github.com` and `raw.githubusercontent.com` are both
+reachable. So the two working routes are:
+
+1. **Attach the files in the Claude chat** — they land on disk here, then
+   `tools/ingest-images.py` crops, strips EXIF and files them in one command.
+2. **Drag them into `assets/bonding/` via GitHub's web UI** on this branch.
+
+No pre-resizing or renaming needed — send the raw files and say which goes
+where.
+
+**What already exists and is in use:** the April 2026 Cygnet shoot
+(`2026-04-22_CygnetHouse/pics` on Drive, ~100 frames) was ingested during the
+implants build. The logo, the team photo, all six roster portraits and the two
+section backgrounds come from it and render on this page today. Roughly 85 of
+those frames are still unused and several would suit the hero and the four §4
+cards — they just have to travel by one of the two routes above.
+
+**What does not exist anywhere:** Cygnet has no bonding or whitening
+before/after cases on Drive. The only `B&A` folder under the practice is
+`B&A/implants`. There *are* bonding and whitening B&A folders on the Drive, but
+they belong to **other practices** (Deepcar, ABC, BrightSmile, Smile Success) —
+using one here would be the same category of error as the Gedling Dental
+reviews in the source funnel, so those six slots stay empty until Cygnet
+supplies consented cases of its own.
+
 Eleven new files, all in `assets/bonding/`, none of them supplied yet. Until a
 file exists its slot renders as a labelled striped block naming the file it
 wants — never a broken-image icon.

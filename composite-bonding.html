@@ -817,10 +817,13 @@ fieldset{border:0; padding:0; margin:0}
   padding:4px 10px; border-radius:var(--radius-pill);
 }
 .price-card__body{display:flex; flex-direction:column; gap:10px; margin-bottom:var(--space-3); flex:1}
-.price-card__head{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-2)}
+/* No glyph here. On the implants page the arch with 1 / 4 / 6 posts encoded a
+   real difference the heading did not state, which earned it the space. Bonding
+   versus whitening has no equivalent quantity, so the same device was carrying
+   nothing — and in a 76x33 box two of the three read as the same cluster of
+   marks. Dropping it gives the heading the full card width, which puts all
+   three on one line and lines the three price figures up with each other. */
 .price-card__head h3{margin:0}
-.price-card__glyph{width:76px; flex:none; color:var(--color-border-strong); margin-top:2px}
-.glyph-post{fill:var(--color-accent)}
 .price-card__figure{
   font-family:var(--font-heading); font-weight:700;
   font-size:2rem; line-height:1.1; color:var(--color-primary);
@@ -1766,7 +1769,6 @@ body{padding-bottom:88px}
         <div class="price-card__body">
           <div class="price-card__head">
             <h3>Composite Bonding</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><rect x="33.7" y="12.3" width="11" height="13" rx="3" class="glyph-post"/><rect x="54.5" y="7.5" width="11" height="13" rx="3" class="glyph-post"/><rect x="75.3" y="12.3" width="11" height="13" rx="3" class="glyph-post"/></svg>
           </div>
           <p class="price-card__figure">From £220 <small>per tooth</small></p>
           <p class="price-card__was"><s>Normally £280 per tooth</s> <span class="save-pill">Save £80 per tooth</span></p>
@@ -1783,7 +1785,6 @@ body{padding-bottom:88px}
         <div class="price-card__body">
           <div class="price-card__head">
             <h3>Smile Makeover Package</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M60,2 L63.4,10.6 L72,14 L63.4,17.4 L60,26 L56.6,17.4 L48,14 L56.6,10.6 Z" class="glyph-post"/></svg>
           </div>
           <p class="price-card__figure">Save £245<small>+</small></p>
           <p class="price-card__sub">Bonding, whitening and your examination together</p>
@@ -1798,7 +1799,6 @@ body{padding-bottom:88px}
         <div class="price-card__body">
           <div class="price-card__head">
             <h3>Teeth Whitening</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><rect x="33.7" y="12.3" width="11" height="13" rx="3" class="glyph-post" opacity=".3"/><rect x="54.5" y="7.5" width="11" height="13" rx="3" class="glyph-post" opacity=".62"/><rect x="75.3" y="12.3" width="11" height="13" rx="3" class="glyph-post"/></svg>
           </div>
           <p class="price-card__figure">From £300</p>
           <p class="price-card__was"><s>Normally £450</s> <span class="save-pill">Save £150</span></p>
@@ -2027,8 +2027,8 @@ body{padding-bottom:88px}
 <section class="section section--surface" id="clinicians" aria-labelledby="clinicians-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="clinicians-title">Meet Dr Triantafyllia (Rose) Kantzioura</h2>
-      <p>Dentist · GDC No. 290358 · cosmetic and restorative dentistry. Dr Rose leads smile makeovers here, backed by a team that has looked after this community for decades. Select anyone to read their story.</p>
+      <h2 id="clinicians-title">Meet the team</h2>
+      <p>Your smile makeover is led by <strong>Dr Triantafyllia (Rose) Kantzioura</strong> — Dentist, GDC No. 290358, cosmetic and restorative dentistry — backed by a team that has looked after this community for decades. Select anyone to read their story.</p>
       <ul class="chips" style="justify-content:center;margin-top:var(--space-2)">
         <li class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Calm, caring approach</li>
         <li class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Advanced clinical training</li>
