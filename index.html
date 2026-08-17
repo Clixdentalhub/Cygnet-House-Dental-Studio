@@ -655,30 +655,38 @@ fieldset{border:0; padding:0; margin:0}
    10 · PRICING
    ========================================================================== */
 .price-card{display:flex; flex-direction:column; height:100%; position:relative}
-.price-card--featured{border-color:var(--color-accent); box-shadow:var(--shadow-md)}
+.price-card--featured{border-color:var(--color-accent); border-width:2px; box-shadow:var(--shadow-md)}
 .price-card__tag{
   position:absolute; top:-12px; left:var(--space-3);
   background:var(--color-accent); color:var(--color-on-accent);
   font-size:.75rem; font-weight:600; letter-spacing:.02em;
   padding:4px 10px; border-radius:var(--radius-pill);
 }
-.price-card__monthly{
+.price-card__body{display:flex; flex-direction:column; gap:10px; margin-bottom:var(--space-3); flex:1}
+.price-card__head{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-2)}
+.price-card__head h3{margin:0}
+.price-card__glyph{width:76px; flex:none; color:var(--color-border-strong); margin-top:2px}
+.glyph-post{fill:var(--color-accent)}
+.price-card__figure{
   font-family:var(--font-heading); font-weight:700;
-  font-size:1.75rem; color:var(--color-primary);
-  font-variant-numeric:tabular-nums;
-  margin:var(--space) 0 2px;
+  font-size:2rem; line-height:1.1; color:var(--color-primary);
+  font-variant-numeric:tabular-nums; margin:0;
 }
-.price-card__monthly small{font-family:var(--font-body); font-size:.875rem; font-weight:400; color:var(--color-foreground-mut)}
-.price-card__total{
-  font-size:.9375rem; color:var(--color-foreground-mut);
-  font-variant-numeric:tabular-nums;
-  padding-bottom:var(--space-2); margin-bottom:var(--space-2);
-  border-bottom:1px solid var(--color-border);
+.price-card__figure small{font-family:var(--font-body); font-size:.9375rem; font-weight:400; color:var(--color-foreground-mut); white-space:nowrap}
+.price-card__sub{
+  font-size:.875rem; font-weight:600; color:var(--color-accent);
+  font-variant-numeric:tabular-nums; margin:0;
+  padding-bottom:12px; border-bottom:1px solid var(--color-border);
 }
-.price-card p{font-size:.9375rem; color:var(--color-foreground-mut)}
-.price-card__note{font-size:.8125rem!important; padding-top:10px; margin-top:10px; border-top:1px dashed var(--color-border)}
+.price-card__lead{font-size:.9375rem; color:var(--color-foreground-mut); margin:0}
+.price-card__ticks{display:grid; gap:8px; margin-top:2px}
+.price-card__ticks li{display:flex; gap:8px; align-items:flex-start; font-size:.875rem; color:var(--color-foreground)}
+.price-card__ticks svg{color:var(--color-success); margin-top:2px; flex:none}
+.price-card__note{
+  font-size:.8125rem; color:var(--color-foreground-mut); margin:0;
+  padding-top:10px; margin-top:auto; border-top:1px dashed var(--color-border);
+}
 .price-card .btn{margin-top:auto}
-.price-card__body{margin-bottom:var(--space-3)}
 .note-block{
   max-width:var(--container-narrow); margin:var(--space-4) auto 0;
   background:var(--color-surface); border:1px solid var(--color-border);
@@ -1274,33 +1282,47 @@ body{padding-bottom:88px}
       <li class="card price-card price-card--featured">
         <span class="price-card__tag">Most enquired about</span>
         <div class="price-card__body">
-          <h3>Single Dental Implant</h3>
-          <p class="price-card__monthly">From £250 <small>/month</small></p>
-          <p class="price-card__total">12 payments at 0% · £3,000–£3,500 total</p>
-          <p>Replace a single missing tooth with a permanent, natural-looking result that stands alone — no damage to neighbouring teeth.</p>
-          <p class="price-card__note">Your exact cost depends on your case — additional treatment such as a bone graft or an extraction can affect the final price. You'll get it in writing before anything begins.</p>
+          <div class="price-card__head">
+            <h3>Single Dental Implant</h3>
+            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="60.0" cy="14.0" r="5" class="glyph-post"/></svg>
+          </div>
+          <p class="price-card__figure">From £250 <small>/month</small></p>
+          <p class="price-card__sub">12 payments at 0% interest · £3,000–£3,500 total</p>
+          <p class="price-card__lead">Replace a single missing tooth with a permanent, natural-looking result.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> One implant, one crown — a complete tooth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> No damage to neighbouring teeth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Planned on a CBCT 3D scan</li></ul>
+          <p class="price-card__note">Your exact cost depends on your case — additional treatment such as a bone graft or an extraction can affect the final price. You’ll get it in writing before anything begins.</p>
         </div>
         <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
       </li>
-
       <li class="card price-card">
+        
         <div class="price-card__body">
-          <h3>All-on-4 Full-Arch Implants</h3>
-          <p class="price-card__monthly">From £1,000 <small>/month</small></p>
-          <p class="price-card__total">12 payments at 0% · from £12,000 per arch</p>
-          <p>A complete set of fixed teeth supported by four implants — a life-changing alternative to dentures.</p>
+          <div class="price-card__head">
+            <h3>All-on-4 Full-Arch</h3>
+            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="28.8" cy="24.8" r="5" class="glyph-post"/><circle cx="49.6" cy="15.2" r="5" class="glyph-post"/><circle cx="70.4" cy="15.2" r="5" class="glyph-post"/><circle cx="91.2" cy="24.8" r="5" class="glyph-post"/></svg>
+          </div>
+          <p class="price-card__figure">From £12,000 <small>per arch</small></p>
+          <p class="price-card__sub">or spread it: 12 × £1,000 at 0% interest</p>
+          <p class="price-card__lead">A complete set of fixed teeth supported by four implants — a life-changing alternative to dentures.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Four implants support a full fixed arch</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Eat, speak and smile without slipping</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Placed and restored by our two-dentist team</li></ul>
+          
         </div>
-        <a class="btn btn--secondary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
+        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
       </li>
-
       <li class="card price-card">
+        
         <div class="price-card__body">
-          <h3>All-on-6 Full-Arch Implants</h3>
-          <p class="price-card__monthly">From £1,250 <small>/month</small></p>
-          <p class="price-card__total">12 payments at 0% · from £15,000 per arch</p>
-          <p>Our premium full-arch solution — six implants for maximum stability, function and confidence.</p>
+          <div class="price-card__head">
+            <h3>All-on-6 Full-Arch</h3>
+            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="20.5" cy="31.3" r="5" class="glyph-post"/><circle cx="35.5" cy="20.7" r="5" class="glyph-post"/><circle cx="51.7" cy="14.8" r="5" class="glyph-post"/><circle cx="68.3" cy="14.8" r="5" class="glyph-post"/><circle cx="84.5" cy="20.7" r="5" class="glyph-post"/><circle cx="99.5" cy="31.3" r="5" class="glyph-post"/></svg>
+          </div>
+          <p class="price-card__figure">From £15,000 <small>per arch</small></p>
+          <p class="price-card__sub">or spread it: 12 × £1,250 at 0% interest</p>
+          <p class="price-card__lead">Our premium full-arch solution — six implants for maximum stability, function and confidence.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Six implants for maximum stability</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Our most robust full-arch option</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Placed and restored by our two-dentist team</li></ul>
+          
         </div>
-        <a class="btn btn--secondary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
+        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
       </li>
     </ul>
 
