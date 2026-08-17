@@ -177,6 +177,16 @@ response is opaque by design, so a resolved promise means delivered and a
 rejection means a real network failure (the visitor then gets an inline error
 inviting them to call instead).
 
+**Field names are a contract.** Once a name is mapped in a GHL workflow, that
+mapping survives every future paste — GHL matches on the name, and pasting new
+HTML does not touch the workflow. Re-mapping is only ever needed when a field
+is **added**, and then only for the new one. Nothing here will be renamed or
+removed without it being called out, because a silent rename is a mapping that
+keeps working and quietly stops carrying data.
+
+History so far: the eight original fields have never changed. `lastName` was
+added later and is the only one that has ever needed a fresh mapping.
+
 **The payload**, captured from a real submission:
 
 ```
