@@ -104,10 +104,22 @@ h1,h2,h3,h4{
 /* Balance multi-line headlines, but not card headings — in a narrow card,
    balance forces early two-line splits ("Living with / failing teeth"). */
 h1,h2{text-wrap:balance}
+/* A hyphen is a break opportunity, so at 360px headings split compounds
+   down the middle: "Ready for a full-" / "mouth solution". Nothing in CSS
+   suppresses that — word-break:keep-all only covers implicit opportunities,
+   and it was tested here doing nothing. .nb holds a phrase together.
+
+   Two rules for using it: the phrase must be short enough that it cannot
+   overflow its box, and the container must not be a flex row — inside one,
+   the span becomes a flex item laid out beside the surrounding text rather
+   than flowing with it, which scrambles the reading order. That rules out
+   .ticks li, .check-list li and .price-card__ticks li. */
+.nb{white-space:nowrap}
 h1{font-size:clamp(1.875rem,1.35rem + 2.2vw,3rem)}
 h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,2.25rem)}
 h3{font-size:clamp(1.125rem,1.05rem + .4vw,1.375rem); font-weight:600}
 h4{font-size:1.0625rem; font-weight:600}
+p,li,blockquote,figcaption,label,legend{text-wrap:pretty}
 p{margin:0 0 var(--space-2)}
 p:last-child{margin-bottom:0}
 a{color:var(--color-secondary)}
@@ -766,7 +778,14 @@ fieldset{border:0; padding:0; margin:0}
    10 · PRICING
    ========================================================================== */
 .price-card{display:flex; flex-direction:column; height:100%; position:relative}
-.price-card--featured{border-color:var(--color-accent); border-width:2px; box-shadow:var(--shadow-md)}
+/* Emphasis without geometry: a wider border would push this card's content
+   1px right of the two beside it, and three headings on three different left
+   edges is exactly the kind of misalignment nobody can name but everybody
+   sees. An inset ring paints inside the existing box. */
+.price-card--featured{
+  border-color:var(--color-accent);
+  box-shadow:inset 0 0 0 1px var(--color-accent), var(--shadow-md);
+}
 .price-card__tag{
   position:absolute; top:-12px; left:var(--space-3);
   background:var(--color-accent); color:var(--color-on-accent);
@@ -985,7 +1004,7 @@ fieldset{border:0; padding:0; margin:0}
 /* The one finance fact worth a box of its own. Ink ground so it reads as a
    statement, not another card in the stack. */
 /* The badge sits AFTER the copy. Leading it pushed the heading 82px right of
-   "Your £50 consultation deposit" and "Spreading the cost" directly above and
+   "Your £50 consultation deposit" and "Spreading the cost" directly above and
    below — three stacked cards whose headings started at three different
    places. Copy first keeps all three on one left edge. */
 .finance-box{
@@ -1386,7 +1405,7 @@ body{padding-bottom:88px}
             <!-- Step 1 -->
             <div class="step" data-step="1">
               <fieldset>
-                <legend class="step__legend">What best describes your situation?</legend>
+                <legend class="step__legend">What best describes your situation?</legend>
                 <div class="options">
                   <label class="option">
                     <input type="radio" name="situation" value="Missing 1 tooth" required>
@@ -1599,8 +1618,8 @@ body{padding-bottom:88px}
       </li>
       <li class="stack">
         <div class="stack__media" data-file="assets/is-loose-dentures.webp"><img src="assets/is-loose-dentures.webp" alt="A relaxed patient in the consultation room discussing denture problems" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Struggling with loose dentures</h3>
-          <p>That move, click or make eating uncomfortable.</p></div>
+        <div class="card"><h3>Struggling with loose dentures</h3>
+          <p>That move, click or make eating uncomfortable.</p></div>
       </li>
       <li class="stack">
         <div class="stack__media" data-file="assets/is-failing-teeth.webp"><img src="assets/is-failing-teeth.webp" alt="A clinician examining a patient in the treatment room" loading="lazy" decoding="async"></div>
@@ -1609,8 +1628,8 @@ body{padding-bottom:88px}
       </li>
       <li class="stack">
         <div class="stack__media" data-file="assets/is-full-mouth.webp"><img src="assets/is-full-mouth.webp" alt="A patient reviewing a full-mouth treatment plan with the team" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Ready for a full-mouth solution</h3>
-          <p>Fixed teeth in as few as one set of implants.</p></div>
+        <div class="card"><h3>Ready for a <span class="nb">full-mouth solution</span></h3>
+          <p>Fixed teeth in as few as one set of implants.</p></div>
       </li>
     </ul>
 
@@ -1637,7 +1656,7 @@ body{padding-bottom:88px}
         <span class="price-card__tag">Most enquired about</span>
         <div class="price-card__body">
           <div class="price-card__head">
-            <h3>Single Dental Implant</h3>
+            <h3>Single Dental Implant</h3>
             <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="60.0" cy="14.0" r="5" class="glyph-post"/></svg>
           </div>
           <p class="price-card__figure">From £250 <small>/month</small></p>
@@ -1680,12 +1699,10 @@ body{padding-bottom:88px}
       </li>
     </ul>
 
-    <!-- BUILD NOTE (remove before launch):
-         If the "Save" claims are substantiated with a genuine prior price, reintroduce here as
-         "£[amount] off until [date]". Otherwise omit entirely — see brief §4 (ASA). -->
-    <p class="note-block reveal">
-      <strong>Build note (remove before launch):</strong> these monthlies are the confirmed prices divided across the only plan currently offered — 0% over 12 months. That works beautifully for a single implant (£250) but produces £1,000 and £1,250 for full-arch, which is too high to work as an anchor. Securing a longer-term plan for full-arch is the single highest-value change available to this page. Savings claims (“Save up to £1,000” / “SAVE £500”) remain omitted pending substantiation.
-    </p>
+    <!-- Savings claims ("Save up to £1,000" / "SAVE £500") stay omitted until
+         a genuine prior price can substantiate them — brief §4, ASA. If that
+         evidence arrives, they belong here as "£[amount] off until [date]".
+         Full-arch finance rationale lives in the README, not on the page. -->
   </div>
 </section>
 
@@ -1843,7 +1860,7 @@ body{padding-bottom:88px}
     <ol class="steps reveal">
       <li class="card step-card">
         <span class="step-card__num" aria-hidden="true">1</span>
-        <h3>Consultation &amp; 3D assessment</h3>
+        <h3>Consultation &amp; 3D assessment</h3>
         <p>A thorough exam, digital scans and a CBCT scan to check your suitability and answer your questions.</p>
       </li>
       <li class="card step-card">
@@ -1911,20 +1928,20 @@ body{padding-bottom:88px}
     <div class="included-grid reveal">
       <div class="card">
         <ul class="check-list anim-trace">
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Comprehensive oral examination</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Comprehensive oral examination</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Digital X-rays</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> CBCT 3D scan</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Intraoral digital scan</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Personalised treatment plan</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Time with an experienced treatment coordinator</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> A clear, written breakdown of options and costs</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance over 12 months explained</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance over 12 months explained</li>
         </ul>
       </div>
 
       <div>
         <div class="callout">
-          <h3>Your £50 consultation deposit</h3>
+          <h3>Your £50 consultation deposit</h3>
           <p>A <strong>£50 consultation deposit</strong> secures your appointment and covers your full assessment and scans.</p>
         </div>
 
@@ -2001,7 +2018,7 @@ body{padding-bottom:88px}
       <div class="faq__item">
         <h3 style="margin:0">
           <button type="button" class="faq__q" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">
-            How long does treatment take?
+            How long does treatment take?
             <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
           </button>
         </h3>
