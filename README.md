@@ -31,10 +31,12 @@ Open any of them in a browser or drop them on any static host.
       `/terms/`. Confirm those paths exist, or repoint them at the equivalent
       pages once the funnel is up in GHL.
 - [ ] **Set the canonical URL** to the funnel's GHL address once it has one.
-- [ ] **Point `SITE_CONFIG.thankYouUrl`** (in `index.html`) at the thank-you
-      page's real URL, and **`SITE_CONFIG.funnelUrl`** (in `thank-you.html`) at
-      the funnel's — both are relative paths today, which only works while the
-      two files sit side by side.
+- [ ] **Set `SITE_CONFIG.funnelUrl`** in `thank-you.html` to the funnel's GHL
+      URL. It is `null` today, which leaves the footer logo as a plain image
+      rather than a link that 404s.
+- [ ] **Swap `SITE_CONFIG.thankYouUrl`** off the preview URL. It points at
+      `…/preview/d7eCNYHJ8bPcsjqpLcyP?notrack=true`; `notrack=true` disables
+      GHL's own tracking, so the published address is what should go live.
 - [ ] **Add the conversion tag** to `thank-you.html` — the marked block at the
       bottom of its script takes the Google Ads / Meta snippet.
 
