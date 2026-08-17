@@ -735,6 +735,51 @@ fieldset{border:0; padding:0; margin:0}
 @keyframes mq-up{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
 @keyframes mq-down{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
 
+
+/* ==========================================================================
+   11c · BEFORE / AFTER SLIDERS
+   Native range input drives --pos; the after layer is clip-path'd to it.
+   Keyboard-operable by construction. Until both images exist, the striped
+   slot underneath names the files it wants.
+   ========================================================================== */
+.ba{
+  position:relative; border-radius:var(--radius); overflow:hidden;
+  background:var(--color-muted); aspect-ratio:4/3;
+  border:1px solid var(--color-border);
+}
+.ba::before{
+  content:attr(data-files); position:absolute; inset:0; z-index:0;
+  display:grid; place-items:center; padding:var(--space-2); text-align:center;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.75rem; font-weight:600;
+  color:var(--color-foreground-mut);
+  background:repeating-linear-gradient(45deg,var(--color-muted),var(--color-muted) 10px,#E7DEEE 10px,#E7DEEE 20px);
+}
+.ba__layer{position:absolute; inset:0; z-index:1; width:100%; height:100%; object-fit:cover; color:transparent}
+.ba__layer--after{z-index:2; clip-path:inset(0 0 0 var(--pos,50%))}
+.ba__badge{
+  position:absolute; z-index:3; top:10px; padding:3px 10px; border-radius:var(--radius-pill);
+  background:rgba(31,16,36,.62); color:#fff;
+  font-size:.6875rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+}
+.ba__badge--l{left:10px} .ba__badge--r{right:10px}
+.ba__line{
+  position:absolute; z-index:3; top:0; bottom:0; left:var(--pos,50%); width:3px;
+  background:#fff; transform:translateX(-50%);
+  box-shadow:0 0 0 1px rgba(31,16,36,.25); pointer-events:none;
+}
+.ba__knob{
+  position:absolute; z-index:3; top:50%; left:var(--pos,50%); width:44px; height:44px;
+  transform:translate(-50%,-50%); border-radius:50%;
+  background:#fff; color:var(--color-primary);
+  display:grid; place-items:center; box-shadow:var(--shadow-md); pointer-events:none;
+}
+.ba input[type="range"]{
+  position:absolute; inset:0; z-index:4; width:100%; height:100%;
+  margin:0; opacity:0; cursor:ew-resize;
+}
+.ba input[type="range"]:focus-visible ~ .ba__knob{outline:3px solid var(--color-secondary); outline-offset:3px}
+.ba-caption{margin-top:10px; font-size:.875rem; color:var(--color-foreground-mut); text-align:center}
+
 /* ==========================================================================
    12 · JOURNEY
    ========================================================================== */
@@ -1335,31 +1380,54 @@ body{padding-bottom:88px}
   <div class="container">
     <div class="section-head reveal">
       <h2 id="results-title">Real results from real patients</h2>
-      <p>Genuine before-and-after photos of implant treatments carried out at Cygnet House Dental Studio.</p>
+      <p>Genuine before-and-after photos of implant treatments carried out at Cygnet House Dental Studio — drag the handle to compare. Shown with each patient’s written consent.</p>
     </div>
 
     <ul class="grid grid--3 reveal">
       <li>
-        <!-- TODO: replace with consented before/after image. Written patient consent must be on file. -->
-        <div class="placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><circle cx="7.5" cy="9" r="1.2"/><circle cx="16.5" cy="9" r="1.2"/></svg>
-          <span class="placeholder-label">Before / After — Single implant</span>
-          <span>Consented image required</span>
+        <div class="ba" data-files="assets/case1-before.webp + case1-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/case1-before.webp" alt="Before treatment — case 1" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/case1-after.webp" alt="After treatment — case 1" loading="lazy" decoding="async">
+          <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
+          <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
+          <label class="sr-only" for="ba-range-1">Reveal the after image for case 1</label>
+          <input type="range" id="ba-range-1" min="0" max="100" value="50" step="1">
+          <span class="ba__line" aria-hidden="true"></span>
+          <span class="ba__knob" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
+          </span>
         </div>
+        <p class="ba-caption"><span class="ph">[Case 1 — what was treated, e.g. “Single implant, upper right”]</span></p>
       </li>
       <li>
-        <div class="placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><circle cx="7.5" cy="9" r="1.2"/><circle cx="16.5" cy="9" r="1.2"/></svg>
-          <span class="placeholder-label">Before / After — Dentures → All-on-4</span>
-          <span>Consented image required</span>
+        <div class="ba" data-files="assets/case3-before.webp + case3-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/case3-before.webp" alt="Before treatment — case 3" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/case3-after.webp" alt="After treatment — case 3" loading="lazy" decoding="async">
+          <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
+          <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
+          <label class="sr-only" for="ba-range-3">Reveal the after image for case 3</label>
+          <input type="range" id="ba-range-3" min="0" max="100" value="50" step="1">
+          <span class="ba__line" aria-hidden="true"></span>
+          <span class="ba__knob" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
+          </span>
         </div>
+        <p class="ba-caption"><span class="ph">[Case 3 — what was treated, e.g. “Single implant, upper right”]</span></p>
       </li>
       <li>
-        <div class="placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><circle cx="7.5" cy="9" r="1.2"/><circle cx="16.5" cy="9" r="1.2"/></svg>
-          <span class="placeholder-label">Before / After — Full-mouth rehabilitation</span>
-          <span>Consented image required</span>
+        <div class="ba" data-files="assets/case4-before.webp + case4-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/case4-before.webp" alt="Before treatment — case 4" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/case4-after.webp" alt="After treatment — case 4" loading="lazy" decoding="async">
+          <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
+          <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
+          <label class="sr-only" for="ba-range-4">Reveal the after image for case 4</label>
+          <input type="range" id="ba-range-4" min="0" max="100" value="50" step="1">
+          <span class="ba__line" aria-hidden="true"></span>
+          <span class="ba__knob" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
+          </span>
         </div>
+        <p class="ba-caption"><span class="ph">[Case 4 — what was treated, e.g. “Single implant, upper right”]</span></p>
       </li>
     </ul>
   </div>
@@ -2149,6 +2217,15 @@ body{padding-bottom:88px}
 
     show(PEOPLE[0]);
   }
+
+  /* ==========================================================
+     BEFORE / AFTER SLIDERS
+     ========================================================== */
+  document.querySelectorAll('.ba input[type="range"]').forEach(function (range) {
+    range.addEventListener('input', function () {
+      range.closest('.ba').style.setProperty('--pos', range.value + '%');
+    });
+  });
 
   /* ==========================================================
      REVIEW MARQUEE

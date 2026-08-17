@@ -36,6 +36,12 @@ SLOTS = {
     "section-trust":       (1920, 600),
     "section-nervous":     (1920, 1000),
     "section-contact":     (1920, 1000),
+    "case1-before":        (800, 600),
+    "case1-after":         (800, 600),
+    "case3-before":        (800, 600),
+    "case3-after":         (800, 600),
+    "case4-before":        (800, 600),
+    "case4-after":         (800, 600),
 }
 
 def ingest(src: pathlib.Path, slot: str) -> None:
