@@ -17,6 +17,35 @@ showing the filename it wants — never a broken-image icon.
 | `section-nervous.webp` | §8 "Feeling nervous?" background | 1920 × 1000 | wide |
 | `section-contact.webp` | §13 final CTA background | 1920 × 1000 | wide |
 
+## Composite bonding campaign — `assets/bonding/`
+
+Used by `composite-bonding.html`. Same rules as above; they live in their own
+folder so the two campaigns can never fight over a filename.
+
+| Filename | Used in | Suggested size | Crop |
+|----------|---------|----------------|------|
+| `bonding/hero.webp` | Hero, beside the qualifier form | 1600 × 900 | 16:9 |
+| `bonding/why-natural.webp` | §4 card 1 — "Natural-looking results" | 800 × 500 | 16:10 |
+| `bonding/why-minimal.webp` | §4 card 2 — "Minimally invasive treatment" | 800 × 500 | 16:10 |
+| `bonding/why-one-visit.webp` | §4 card 3 — "Often completed in one visit" | 800 × 500 | 16:10 |
+| `bonding/why-clinicians.webp` | §4 card 4 — "Skilled cosmetic clinicians" | 800 × 500 | 16:10 |
+| `bonding/case-chipped-before.webp` | §6 slider 1 | 800 × 600 | 4:3 |
+| `bonding/case-chipped-after.webp` | §6 slider 1 | 800 × 600 | 4:3 |
+| `bonding/case-gaps-before.webp` | §6 slider 2 | 800 × 600 | 4:3 |
+| `bonding/case-gaps-after.webp` | §6 slider 2 | 800 × 600 | 4:3 |
+| `bonding/case-discolouration-before.webp` | §6 slider 3 | 800 × 600 | 4:3 |
+| `bonding/case-discolouration-after.webp` | §6 slider 3 | 800 × 600 | 4:3 |
+
+**The before/after pairs need signed patient consent on file before they are
+published.** Shoot both frames at the same angle, distance and lighting — the
+comparison slider is unforgiving, and a pair whose framing drifts reads as two
+unrelated photographs rather than one result.
+
+The bonding funnel reuses `logo.webp`, `team-wide.webp`, the `people/`
+portraits and the two section backgrounds (`section-nervous.webp`,
+`section-contact.webp`) from the implants shoot. Only the eleven files above
+are new.
+
 ## Notes
 
 **Section backgrounds** sit under a dark scrim (~85% opacity) so white text keeps
