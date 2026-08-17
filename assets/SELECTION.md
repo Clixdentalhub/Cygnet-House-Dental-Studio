@@ -60,3 +60,36 @@ Unavailable Y numbers — no file in the shared folder: **5, 13, 24, 27, 29.**
 `assets/team-wide.webp` (1600×760, q78) is from `Y#-40` — of the two team
 frames on disk (Y#-40/Y#-41) it has all six faces most clearly turned to
 camera. Y#-39/Y#-42 remain unfetchable (connector timeouts).
+
+## Before/after cases
+
+Sourced from the client's Drive case folders (filenames are UUIDs; images were
+classified visually). All six ingested at 800×600 WebP q80, EXIF stripped.
+
+### Case 1 (folder "Case 1")
+- **case1-before.webp** ← `688f3b4e-aebf-497c-bf20-0cdb74349e00.JPG` — retracted
+  frontal view: upper front teeth missing with healing gum ridge, remaining
+  upper canines and lower teeth heavily stained/worn.
+- **case1-after.webp** ← `4b7997d1-e872-4b2e-8c51-b61ac067d46a.JPG` — same
+  retracted frontal view: upper front span restored with an implant-supported
+  bridge, gap closed.
+- No extras; the folder holds exactly these two photos, same angle/framing.
+
+### Case 3 (folder "Case 3")
+- **case3-before.webp** ← `542b0c12-c829-4514-be9b-99758baa06ff.JPG` — right
+  lateral retracted view: upper back teeth missing behind the canine, decayed
+  lower molar visible in the gap.
+- **case3-after.webp** ← `b97f2c1a-7e06-4a29-b453-a5caaa17781b.JPG` — same
+  lateral view: implant crowns restoring the upper posterior span, arch
+  complete.
+- No extras; two photos, matching angle/framing — reads cleanly in the slider.
+
+### Case 4 (folder "Case 4")
+- **case4-before.webp** ← `75d5e8e6-1d31-4f41-a777-ee7bea959aa9.JPG` — retracted
+  open view: upper arch with no teeth, six implant abutments exposed in the
+  gum (pre-restoration stage).
+- **case4-after.webp** ← `555b8c57-6a4d-4717-8991-6b815fade8d6.JPG` — natural
+  close-up smile: full upper and lower arches restored.
+- No extras. Note: the pair's framing differs (retracted intraoral vs natural
+  smile) — only two photos exist for this case, so the slider comparison is
+  looser here than for Cases 1 and 3.
