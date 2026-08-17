@@ -49,3 +49,14 @@ screen — more clinical in tone).
   microscope work) — usable later if a "day of surgery" section is added.
 - `clinician-rose.webp` remains reserved per the ingest script (profile returns
   when GDC number arrives); good candidates for it exist in `Y#-15 – Y#-18`.
+
+## People export
+
+Individual portraits for the clickable team roster, keyed by Y-number:
+`assets/people/y01–y04, y06–y12, y14–y23, y25, y26, y28, y30–y37.webp`
+(32 files, 600×600 WebP q75, cover-cropped centred slightly high).
+Unavailable Y numbers — no file in the shared folder: **5, 13, 24, 27, 29.**
+
+`assets/team-wide.webp` (1600×760, q78) is from `Y#-40` — of the two team
+frames on disk (Y#-40/Y#-41) it has all six faces most clearly turned to
+camera. Y#-39/Y#-42 remain unfetchable (connector timeouts).
