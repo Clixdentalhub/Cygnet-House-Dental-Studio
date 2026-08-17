@@ -99,8 +99,10 @@ h1,h2,h3,h4{
   letter-spacing:-0.01em;
   margin:0 0 var(--space-2);
   color:var(--color-primary);
-  text-wrap:balance;
 }
+/* Balance multi-line headlines, but not card headings — in a narrow card,
+   balance forces early two-line splits ("Living with / failing teeth"). */
+h1,h2{text-wrap:balance}
 h1{font-size:clamp(1.875rem,1.35rem + 2.2vw,3rem)}
 h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,2.25rem)}
 h3{font-size:clamp(1.125rem,1.05rem + .4vw,1.375rem); font-weight:600}
@@ -281,7 +283,6 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   content:""; position:absolute; inset:0;
   background:linear-gradient(180deg,rgba(26,18,32,.86) 0%,rgba(26,18,32,.78) 55%,rgba(26,18,32,.90) 100%);
 }
-.trust-strip .photo::after{background:rgba(26,18,32,.88)}
 
 /* ==========================================================================
    2c · SECTION CUT — layered wave
@@ -329,7 +330,8 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .section--primary{background:var(--color-primary); color:var(--color-on-primary)}
 .section--primary h2,.section--primary h3{color:var(--color-on-primary)}
 
-.section-head{max-width:var(--container-narrow); margin:0 auto var(--space-4); text-align:center}
+.section-head{max-width:1000px; margin:0 auto var(--space-4); text-align:center}
+.section-head p{max-width:62ch; margin-inline:auto}
 .section-head p{color:var(--color-foreground-mut); font-size:1.0625rem; margin-bottom:0}
 .section--primary .section-head p{color:var(--color-on-primary-mut)}
 
@@ -697,6 +699,36 @@ fieldset{border:0; padding:0; margin:0}
   background:var(--color-muted); color:var(--color-primary);
   font-size:.75rem; font-weight:600; padding:3px 10px; border-radius:var(--radius-pill);
 }
+
+/* ==========================================================================
+   11b · REVIEW MARQUEE
+   Three columns drifting down / up / down. The track holds the list plus an
+   aria-hidden clone (added by JS); translating the track by half its height
+   loops seamlessly. Without JS — or under prefers-reduced-motion — the
+   marquee never goes "live" and renders as a static list instead.
+   ========================================================================== */
+.marquee{position:relative; display:grid; grid-template-columns:1fr; gap:var(--space-3)}
+.marquee__col{min-width:0}
+.marquee__track{display:flex; flex-direction:column}
+.marquee__track ul{display:flex; flex-direction:column; gap:var(--space-3); padding-bottom:var(--space-3)}
+/* one column on mobile; the other two stay in the DOM for crawlers */
+.marquee__col--up,.marquee__col--down ~ .marquee__col--down{display:none}
+@media (min-width:900px){
+  .marquee{grid-template-columns:repeat(3,1fr)}
+  .marquee__col--up,.marquee__col--down ~ .marquee__col--down{display:block}
+}
+/* live = JS ran and the user accepts motion */
+.marquee--live{max-height:560px; overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 7%,#000 93%,transparent);
+}
+@media (min-width:900px){ .marquee--live{max-height:640px} }
+.marquee--live .marquee__col--up .marquee__track{animation:mq-up var(--mq-d,55s) linear infinite}
+.marquee--live .marquee__col--down .marquee__track{animation:mq-down var(--mq-d,55s) linear infinite}
+/* hovering anywhere pauses every column — reading beats spectacle */
+.marquee--live:hover .marquee__track{animation-play-state:paused}
+@keyframes mq-up{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
+@keyframes mq-down{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
 
 /* ==========================================================================
    12 · JOURNEY
@@ -1113,8 +1145,8 @@ body{padding-bottom:88px}
      3 · TRUST STRIP
      ============================================================ -->
 <section class="trust-strip has-bg" aria-label="Why patients choose us">
-  <div class="photo" style="background-image:url('assets/section-trust.webp')" aria-hidden="true"></div>
-  <!-- A6 · Quiet Premium (zero motion) -->
+  <!-- A6 · Quiet Premium (zero motion). No photo here: the band is ~90px
+       tall, so an image reads as unidentifiable smudges through the scrim. -->
   <div class="bg bg-quiet" aria-hidden="true"></div>
   <div class="container">
     <ul>
@@ -1281,56 +1313,42 @@ body{padding-bottom:88px}
       <p>Genuine, unedited reviews published by our patients on Google, where the practice is rated <strong>4.9 out of 5 from 122 reviews</strong>.</p>
     </div>
 
-    <ul class="grid grid--3 reveal">
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>I recently had an Implant placed by Dimitrios and crown fitted by Rose. The fit and finish of which I am very happy with — it is hard to tell it apart from my own teeth.</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">Tim Lovelock</p>
-          <span class="review-card__treatment">Single implant</span>
+    <div class="marquee reveal" data-marquee>
+      <div class="marquee__col marquee__col--down" style="--mq-d:48s">
+        <div class="marquee__track">
+          <ul>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I recently had an Implant placed by Dimitrios and crown fitted by Rose. The fit and finish of which I am very happy with — it is hard to tell it apart from my own teeth.</blockquote><div class="review-card__meta"><p class="review-card__name">Tim Lovelock</p><span class="review-card__treatment">Single implant</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Never really liked going to the dentist, was always feeling uneasy and nervous.. it's been 2 years approx since I started coming to Cygnet House and I have never felt more comfortable. The staff are friendly, professional and most importantly the prices are affordable.</blockquote><div class="review-card__meta"><p class="review-card__name">Aaron Thompson</p><span class="review-card__treatment">Nervous patient</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I was greeted by the new dentist Rose she is very welcoming and put me at ease straight away. I was fitted with a crown with a no fuss no problems it was very easy and straight forward and Rose is a true professional.</blockquote><div class="review-card__meta"><p class="review-card__name">Susan Atkinson</p><span class="review-card__treatment">Crown</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Excellent practice, recently had a double wisdom tooth extraction and both the care and precision when completing the procedure along with after care have been exceptional, the practice has a real family feel to it and everyone is so warm and welcoming, highly recommend to anyone in the area!</blockquote><div class="review-card__meta"><p class="review-card__name">Dominic Ball</p><span class="review-card__treatment">Oral surgery</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I've been a patient at Cygnet House for 8 years and I've never had cause for complaint. The staff are lovely from the girls on reception right through to the hygienist and dentists all are professional and friendly. I would highly recommend them.</blockquote><div class="review-card__meta"><p class="review-card__name">Valerie Greig</p><span class="review-card__treatment">Long-term patient</span></div></li>
+          </ul>
         </div>
-      </li>
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>Today I completed my first implant journey with Dimitrios. Thank you Dimitrios and all of your amazing team for giving me my smile back. The journey was a little longer than I expected due to the requirement of a bone graft…</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">MR S</p>
-          <span class="review-card__treatment">Single implant + bone graft</span>
+      </div>
+      <div class="marquee__col marquee__col--up" style="--mq-d:62s">
+        <div class="marquee__track">
+          <ul>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Today I completed my first implant journey with Dimitrios. Thank you Dimitrios and all of your amazing team for giving me my smile back. The journey was a little longer than I expected due to the requirement of a bone graft…</blockquote><div class="review-card__meta"><p class="review-card__name">MR S</p><span class="review-card__treatment">Single implant + bone graft</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Absolutely fantastic dental practice. Staff are amazing. Highly recommend these guys especially if you're nervous or have a fear of dentists. They are so gentle and so professional.</blockquote><div class="review-card__meta"><p class="review-card__name">Hollie Cheffings</p><span class="review-card__treatment">Fear of dentists</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Can't thank Dimitrios and his team enough for their prompt and efficient service! I had the most horrific tooth pain and they got me booked in and sorted with a root canal so quickly. The procedure was completely painless and I felt comfortable throughout every part. Would definitely recommend.</blockquote><div class="review-card__meta"><p class="review-card__name">Katie Alice</p><span class="review-card__treatment">Urgent root canal</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Was seeing Dimitris for regular dental check ups at his last place of work. So it was a must to transfer to his new practice. Worth the 45 minute drive. What a lovely place with all staff very friendly</blockquote><div class="review-card__meta"><p class="review-card__name">liz james</p><span class="review-card__treatment">Worth the 45-minute drive</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Had another wonderful experience at the dentist, got my new dentures a week ago and have had no problems at all — so natural looking. Thank you to everyone for everything, really do appreciate what has been done.</blockquote><div class="review-card__meta"><p class="review-card__name">Ann Chester</p><span class="review-card__treatment">New dentures</span></div></li>
+          </ul>
         </div>
-      </li>
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>A fantastic dental surgery that did everything I needed dentistry wise from root canal treatment to implants without being referred. All the staff are lovely, friendly and polite and made me feel at ease…</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">Tony Ward</p>
-          <span class="review-card__treatment">Implants</span>
+      </div>
+      <div class="marquee__col marquee__col--down" style="--mq-d:55s">
+        <div class="marquee__track">
+          <ul>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>A fantastic dental surgery that did everything I needed dentistry wise from root canal treatment to implants without being referred. All the staff are lovely, friendly and polite and made me feel at ease…</blockquote><div class="review-card__meta"><p class="review-card__name">Tony Ward</p><span class="review-card__treatment">Implants</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Such a lovely practice, the staff all incredibly helpful and chatty. Dimitrios has restored our faith in dentists after years of bad experiences and anxiety from previous practices.</blockquote><div class="review-card__meta"><p class="review-card__name">Cassie Bennett</p><span class="review-card__treatment">Nervous patient</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I have been coming to see Dimitrios and Rose for over a year now. They have always been professional, but also friendly, and have made me feel at ease even though I am a nervous wreck.</blockquote><div class="review-card__meta"><p class="review-card__name">Helen Edwards</p><span class="review-card__treatment">Regular patient</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Fantastic people. I had dental problem needed urgent treatment it was sorted within the hour and the staff were polite the receptionist helpful. It's all ground floor and easy parking outside..I would recommend to family and friends..</blockquote><div class="review-card__meta"><p class="review-card__name">Sylvia Yarwood</p><span class="review-card__treatment">Urgent care</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Always a lovely reassuring greeting from Dimitrios, Katie, and all the staff. Very understanding of nervous patients.</blockquote><div class="review-card__meta"><p class="review-card__name">Kimberley Barnes</p><span class="review-card__treatment">Nervous patients welcome</span></div></li>
+          </ul>
         </div>
-      </li>
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>Absolutely fantastic dental practice. Staff are amazing. Highly recommend these guys especially if you're nervous or have a fear of dentists. They are so gentle and so professional.</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">Hollie Cheffings</p>
-          <span class="review-card__treatment">Nervous patient</span>
-        </div>
-      </li>
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>Had another wonderful experience at the dentist, got my new dentures a week ago and have had no problems at all — so natural looking. Thank you to everyone for everything, really do appreciate what has been done.</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">Ann Chester</p>
-          <span class="review-card__treatment">New dentures</span>
-        </div>
-      </li>
-      <li class="card review-card">
-        <span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span>
-        <blockquote>Such a lovely practice, the staff all incredibly helpful and chatty. Dimitrios has restored our faith in dentists after years of bad experiences and anxiety from previous practices.</blockquote>
-        <div class="review-card__meta">
-          <p class="review-card__name">Cassie Bennett</p>
-          <span class="review-card__treatment">Nervous patient</span>
-        </div>
-      </li>
-    </ul>
+      </div>
+    </div>
+    <p class="center" style="margin-top:var(--space-3)"><a href="https://share.google/lbSSOORl3bOCNBqQZ" rel="noopener">Read all 122 reviews on Google</a></p>
   </div>
 
   <div class="cut" aria-hidden="true">
@@ -1922,6 +1940,21 @@ body{padding-bottom:88px}
       document.getElementById(btn.getAttribute('aria-controls')).hidden = expanded;
     });
   });
+
+  /* ==========================================================
+     REVIEW MARQUEE
+     Clone each column's list (aria-hidden) so the -50% translate loops
+     seamlessly, then go live — but only when the user accepts motion.
+     ========================================================== */
+  var marquee = document.querySelector('[data-marquee]');
+  if (marquee && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    marquee.querySelectorAll('.marquee__track').forEach(function (track) {
+      var clone = track.querySelector('ul').cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+    marquee.classList.add('marquee--live');
+  }
 
   /* Cosmetic only: the CSS slot already shows through, but Chrome still
      paints a small broken-image glyph. Dropping the failed element leaves
