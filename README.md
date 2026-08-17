@@ -174,7 +174,7 @@ mapping to list what it found and which slots are open.
 
 | § | Section |
 |---|---------|
-| 1 | Sticky header — logo, click-to-call, primary CTA |
+| 1 | Sticky header — logo, section nav, click-to-call, primary CTA, scroll-progress bar |
 | 2 | Hero — H1, subhead, 4 benefit ticks, finance anchor, trust chips, embedded multi-step form, practice photo |
 | 3 | Trust strip |
 | 4 | "Is this you?" — 4 problem cards with photos above them |
@@ -200,6 +200,23 @@ edit rather than five.
 **Qualifier form (Ink Atelier):** 3 steps, hairline progress rail, per-step
 validation, inline errors wired with `aria-invalid` / `aria-describedby`, back
 navigation that preserves answers, honeypot, and a success state.
+
+### Header nav and progress
+
+Six section links, plus a 3px scroll-progress bar painted over the header's
+own bottom border so it costs no height. The links scroll-spy: whichever
+section you are in is the one lit up, and on the mobile rail that chip is
+scrolled to centre automatically.
+
+Below **1280px** the links drop to their own scrollable rail under the logo
+row — six links cannot share a row with a logo, a phone number and a CTA
+without the row collapsing. `--header-h` changes with the layout (136px on
+two rows, 76px on one) and every anchor offset resolves from that token, so
+a link never drops a heading behind the header.
+
+Progress and scroll-spy share one `requestAnimationFrame`-throttled scroll
+listener. A scroll event can fire dozens of times per frame, and doing layout
+reads in each one is how a smooth page starts to feel sticky.
 
 ### Section motion
 

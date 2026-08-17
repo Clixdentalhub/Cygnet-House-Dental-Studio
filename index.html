@@ -72,7 +72,9 @@
   /* Layout */
   --container: 1200px;
   --container-narrow: 820px;
-  --header-h: 64px;
+  /* Both header rows. The section rail sits under the logo row below
+     1024px, so anchor offsets have to grow with it. */
+  --header-h: 136px;
   --motion: 200ms;
 }
 
@@ -315,6 +317,7 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 /* ==========================================================================
    3 · LAYOUT PRIMITIVES
    ========================================================================== */
+@media (min-width:1280px){ :root{--header-h:76px} }
 .container{
   width:100%; max-width:var(--container);
   margin-inline:auto;
@@ -429,10 +432,11 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   box-shadow:var(--shadow-sm);
 }
 .header__inner{
-  display:flex; align-items:center; justify-content:space-between; gap:var(--space-2);
-  min-height:var(--header-h);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:var(--space-2);
   padding-block:var(--space);
 }
+.header{position:sticky; top:0}
 .logo{display:flex; align-items:center; text-decoration:none}
 .logo img{height:52px; width:auto; display:block}
 .logo__mark{
@@ -453,6 +457,59 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 /* The header CTA is redundant next to the sticky mobile bar */
 .header .btn{display:none}
 @media (min-width:768px){ .header .btn{display:inline-flex} }
+
+/* --- Section nav ---------------------------------------------------------
+   Below 1024px the links cannot share a row with the logo, the phone and the
+   CTA without crushing all four, so they drop to their own rail underneath
+   and scroll sideways. --header-h changes with them, which is what keeps
+   every anchor landing below the header rather than behind it. */
+.section-nav{
+  order:3; width:100%;
+  overflow-x:auto; overflow-y:hidden;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  border-top:1px solid var(--color-border);
+  /* Fades at both edges so a half-scrolled rail reads as "more this way"
+     rather than as a link chopped in half. */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);
+}
+.section-nav::-webkit-scrollbar{display:none}
+.section-nav ul{display:flex; gap:4px; padding:6px 0; width:max-content; min-width:100%}
+.section-nav a{
+  display:inline-flex; align-items:center; white-space:nowrap;
+  min-height:36px; padding:6px 14px; border-radius:var(--radius-pill);
+  font-size:.875rem; font-weight:600; text-decoration:none;
+  color:var(--color-foreground-mut); border:1px solid transparent;
+  transition:color var(--motion) ease, background-color var(--motion) ease,
+             border-color var(--motion) ease;
+}
+.section-nav a:hover{color:var(--color-accent); background:var(--color-muted); text-decoration:none}
+.section-nav a[aria-current="true"]{
+  color:var(--color-on-accent); background:var(--color-accent);
+  border-color:var(--color-accent);
+}
+@media (min-width:1280px){
+  .section-nav{
+    order:0; width:auto; flex:1; min-width:0; border-top:0;
+    -webkit-mask-image:none; mask-image:none;
+  }
+  /* width:max-content + min-width:100% is what keeps centred items from
+     overflowing to the LEFT when the row is tight — they grow the track and
+     scroll instead of sliding under the logo. */
+  .section-nav ul{justify-content:center; padding:0}
+}
+
+/* --- Scroll progress ----------------------------------------------------
+   Painted over the header's own bottom border, so it costs no height. */
+.scroll-progress{
+  position:absolute; left:0; right:0; bottom:-1px; height:3px;
+  background:var(--color-muted); overflow:hidden;
+}
+.scroll-progress span{
+  display:block; height:100%; width:100%;
+  background:linear-gradient(90deg,var(--color-accent),#9B4DD6);
+  transform:scaleX(var(--p,0)); transform-origin:left center;
+}
 
 /* ==========================================================================
    6 · HERO
@@ -1211,6 +1268,19 @@ body{padding-bottom:88px}
       <img src="assets/logo.webp" alt="Cygnet House Dental Studio &amp; Implant Centre — home" width="374" height="166">
     </a>
 
+    <!-- Section nav. Sits inline on wide screens; below 1024px it drops to
+         its own scrollable rail so the links never squeeze the CTA out. -->
+    <nav class="section-nav" aria-label="Page sections">
+      <ul>
+        <li><a href="#is-this-you">Is this you?</a></li>
+        <li><a href="#pricing">Prices</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#clinicians">Team</a></li>
+        <li><a href="#faq">FAQs</a></li>
+      </ul>
+    </nav>
+
     <div class="header__actions">
       <!-- CONFIGURE: phone number — see SITE_CONFIG at the bottom of this file -->
       <a class="link-call js-tel" href="tel:[Phone]">
@@ -1221,6 +1291,11 @@ body{padding-bottom:88px}
       <a class="btn btn--primary js-scroll-form" href="#qualifier">Check My Suitability</a>
     </div>
   </div>
+
+  <!-- How far through the page you are. Decorative — it restates what the
+       scrollbar already says, so it is hidden from assistive tech rather
+       than announced twice. -->
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 </header>
 
 <main id="main">
@@ -2614,6 +2689,80 @@ body{padding-bottom:88px}
 
     reveals.forEach(function (el) { observer.observe(el); });
   }
+
+  /* ==========================================================
+     HEADER — SCROLL PROGRESS + SECTION SPY
+
+     Both read the same numbers, so they share one rAF-throttled listener:
+     a scroll event can fire dozens of times per frame, and doing layout
+     work in each one is how a smooth page starts to feel sticky.
+     ========================================================== */
+  var progressFillBar = document.querySelector('.scroll-progress span');
+  var navLinks = Array.prototype.slice.call(
+    document.querySelectorAll('.section-nav a'));
+  var navTargets = navLinks.map(function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  });
+  var railEl = document.querySelector('.section-nav');
+  var activeNav = null;
+  var ticking = false;
+
+  function headerOffset() {
+    /* Read the token rather than hard-coding it, so the two breakpoints
+       cannot drift apart from the CSS. */
+    var v = parseInt(getComputedStyle(document.documentElement)
+      .getPropertyValue('--header-h'), 10);
+    return (isNaN(v) ? 76 : v) + 24;
+  }
+
+  function setActive(link) {
+    if (link === activeNav) return;
+    if (activeNav) activeNav.removeAttribute('aria-current');
+    activeNav = link;
+    if (!link) return;
+    link.setAttribute('aria-current', 'true');
+
+    /* Keep the current chip in view on the mobile rail. Only scroll the
+       rail itself — scrollIntoView would drag the whole page with it. */
+    if (railEl && railEl.scrollWidth > railEl.clientWidth) {
+      var want = link.offsetLeft - (railEl.clientWidth - link.offsetWidth) / 2;
+      railEl.scrollTo({ left: Math.max(want, 0), behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+  }
+
+  function onScroll() {
+    var doc = document.documentElement;
+
+    if (progressFillBar) {
+      var scrollable = doc.scrollHeight - window.innerHeight;
+      var ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+      progressFillBar.style.setProperty('--p', Math.min(Math.max(ratio, 0), 1));
+    }
+
+    if (navTargets.length) {
+      var line = window.scrollY + headerOffset();
+      var current = null;
+      for (var i = 0; i < navTargets.length; i++) {
+        var t = navTargets[i];
+        if (t && t.offsetTop <= line) current = navLinks[i];
+      }
+      /* Within a screen of the bottom the last section can never reach the
+         line, so the final link would never light up. */
+      if (window.innerHeight + window.scrollY >= doc.scrollHeight - 4) {
+        current = navLinks[navLinks.length - 1];
+      }
+      setActive(current);
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(onScroll);
+  }, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
 
   /* ==========================================================
      U1 · COUNT UP  (§7 reviews)
