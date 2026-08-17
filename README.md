@@ -41,8 +41,8 @@ Open any of them in a browser or drop them on any static host.
 ### After it is live
 
 - [ ] **Submit one real test lead** and confirm the field mapping in GHL.
-      Posted fields: `situation`, `timing`, `firstName`, `phone`, `email`,
-      `pageUrl`, `treatment`, plus a `website` honeypot.
+      Posted fields: `situation`, `timing`, `firstName`, `lastName`,
+      `phone`, `email`, `pageUrl`, `treatment`, plus a `website` honeypot.
 - [ ] **Filter the honeypot in GHL** — any lead with a non-empty `website`
       field is a bot. One workflow condition bins them.
 - [ ] Real-device testing and a screen-reader pass. Neither has been done; the
@@ -132,26 +132,34 @@ Set both and every phone reference and `tel:` link on the page updates.
 
 ### Where a submission lands
 
-`SITE_CONFIG.thankYouUrl` in `index.html` decides what a successful send does:
+`SITE_CONFIG.thankYouUrl` in `index.html` decides what a successful send does.
+It currently points at the GHL page:
 
 ```js
-thankYouUrl: 'thank-you.html'   // redirect (default)
-thankYouUrl: null               // stay put, show the inline success state
+thankYouUrl: 'https://sites.leadconnectorhq.com/preview/d7eCNYHJ8bPcsjqpLcyP?notrack=true'
 ```
 
-The two are mutually exclusive, and **only one of them should carry a
-conversion pixel**. As shipped, the thank-you page is the conversion event —
-`thank-you.html` pushes `generate_lead` to the dataLayer and has a marked
-block for Google Ads / Meta / GTM tags. Do not also fire one on submit in
-`index.html`, or every lead counts twice.
+Set it to `null` to keep the visitor here and show the inline success state
+instead. The two are mutually exclusive, and **only one of them should carry a
+conversion pixel**, or every lead counts twice.
 
-The lead's first name rides along as `?firstName=…` so the page can greet them
-by name. It is encoded on the way out and screened on the way in — written
-with `textContent`, and dropped entirely unless it looks like a name — so a
-crafted URL cannot put anything into the page.
+> **That is a preview URL, and `notrack=true` disables GHL's own tracking.**
+> Fine while testing; swap both for the published address before running
+> traffic, or the page will not record a thing.
 
-If you would rather GHL own the redirect, set `thankYouUrl` to the full GHL
-URL of the thank-you page.
+The lead's first name rides along as `firstName=…`. The separator is chosen
+rather than assumed — this destination already has a query string, so a second
+`?` would collapse the whole thing into one unparseable value. Verified: the
+visitor lands on `…?notrack=true&firstName=Margaret` with both parameters
+readable.
+
+**This URL lives in the HTML.** Pasting a fresh build into GHL overwrites
+whatever is in the block, including any endpoint you edited there by hand — so
+change it here and rebuild, rather than in GHL. `index.html` is the source of
+truth; `dist/` is disposable output.
+
+If `thank-you.html` is used instead of a GHL page, it reads `firstName` from
+the query string, screens it, and greets the visitor by name.
 
 ### Form endpoint
 
@@ -173,7 +181,7 @@ inviting them to call instead).
 
 ```
 situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
-&phone=07700+900123&email=margaret%40example.co.uk&website=
+&lastName=O%E2%80%99Sullivan&phone=07700+900123&email=margaret%40example.co.uk&website=
 &pageUrl=https%3A%2F%2F…&treatment=Dental+Implants
 ```
 
@@ -182,6 +190,7 @@ situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
 | `situation` | `Missing several teeth` | One of: *Missing 1 tooth · Missing several teeth · Loose or uncomfortable dentures · Failing teeth / considering full-mouth* |
 | `timing` | `As soon as possible` | One of: *As soon as possible · In the next few months · Just researching for now* |
 | `firstName` | `Margaret` | Validated: 2+ characters |
+| `lastName` | `O’Sullivan` | Validated: 2+ characters |
 | `phone` | `07700 900123` | Validated: 10–15 digits, punctuation preserved as typed |
 | `email` | `margaret@example.co.uk` | Validated |
 | `website` | *(empty)* | **Honeypot.** Always empty from a human. Non-empty = bot — bin it. |

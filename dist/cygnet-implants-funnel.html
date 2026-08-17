@@ -687,6 +687,11 @@ fieldset{border:0; padding:0; margin:0}
 .option input:focus-visible + .option__box{outline:3px solid var(--color-flourish); outline-offset:2px}
 
 .field{margin-bottom:var(--space-2)}
+/* min-width:0 or a long autofill value forces the column wider than its
+   track and the row overflows the card. */
+.field-row{display:grid; gap:0 var(--space-2)}
+.field-row > .field{min-width:0}
+@media (min-width:480px){ .field-row{grid-template-columns:1fr 1fr} }
 .field label{
   display:block; margin-bottom:6px;
   font-size:.75rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
@@ -1476,13 +1481,27 @@ body{padding-bottom:88px}
             <div class="step" data-step="3" hidden>
               <p class="step__legend">Where shall we send your suitability answer?</p>
 
-              <div class="field">
-                <label for="firstName">First name</label>
-                <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" aria-describedby="err-firstName">
-                <p class="field__error" id="err-firstName" data-error-for="firstName">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                  <span>Please enter your first name.</span>
-                </p>
+              <!-- Two names side by side from 480px up. Each keeps its own
+                   label, input and error so a validation message never
+                   applies to the wrong box. -->
+              <div class="field-row">
+                <div class="field">
+                  <label for="firstName">First name</label>
+                  <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" aria-describedby="err-firstName">
+                  <p class="field__error" id="err-firstName" data-error-for="firstName">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                    <span>Please enter your first name.</span>
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label for="lastName">Last name</label>
+                  <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" aria-describedby="err-lastName">
+                  <p class="field__error" id="err-lastName" data-error-for="lastName">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                    <span>Please enter your last name.</span>
+                  </p>
+                </div>
               </div>
 
               <div class="field">
@@ -2243,7 +2262,7 @@ body{padding-bottom:88px}
        on this page and show the inline success state instead — the two are
        mutually exclusive, and only one of them should ever fire a
        conversion pixel. */
-    thankYouUrl:  'thank-you.html'
+    thankYouUrl:  'https://sites.leadconnectorhq.com/preview/d7eCNYHJ8bPcsjqpLcyP?notrack=true'
   };
 
   /* ---------- Apply config ---------- */
@@ -2308,10 +2327,13 @@ body{padding-bottom:88px}
     function validateDetails() {
       var ok = true;
 
-      var firstName = form.firstName;
-      var nameOk = firstName.value.trim().length >= 2;
-      showError('firstName', !nameOk);
-      if (!nameOk) ok = false;
+      var firstOk = form.firstName.value.trim().length >= 2;
+      showError('firstName', !firstOk);
+      if (!firstOk) ok = false;
+
+      var lastOk = form.lastName.value.trim().length >= 2;
+      showError('lastName', !lastOk);
+      if (!lastOk) ok = false;
 
       var phone = form.phone;
       var digits = phone.value.replace(/[^0-9]/g, '');
@@ -2384,7 +2406,7 @@ body{padding-bottom:88px}
         }, beat);
       });
     });
-    ['firstName', 'phone', 'email'].forEach(function (name) {
+    ['firstName', 'lastName', 'phone', 'email'].forEach(function (name) {
       var input = form.querySelector('#' + name);
       if (input) {
         input.addEventListener('input', function () {
@@ -2430,10 +2452,18 @@ body{padding-bottom:88px}
         if (SITE_CONFIG.thankYouUrl) {
           /* The first name rides along so the thank-you page can greet them.
              It is encoded here and screened again on arrival — never trust a
-             value that has been through a URL. */
+             value that has been through a URL.
+
+             The separator has to be chosen, not assumed: this destination
+             already carries ?notrack=true, and a second "?" would collapse
+             the whole thing into one unparseable query string. */
           var name = (form.firstName.value || '').trim();
-          window.location.href = SITE_CONFIG.thankYouUrl +
-            (name ? '?firstName=' + encodeURIComponent(name) : '');
+          var dest = SITE_CONFIG.thankYouUrl;
+          if (name) {
+            dest += (dest.indexOf('?') === -1 ? '?' : '&') +
+                    'firstName=' + encodeURIComponent(name);
+          }
+          window.location.href = dest;
           return;
         }
         formView.hidden = true;
