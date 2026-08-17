@@ -243,6 +243,13 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   border-radius:0 0 var(--radius) var(--radius);
   flex:1; display:flex; flex-direction:column; gap:10px;
 }
+/* People shots get a taller frame than the 16:10 cards, and the crop is
+   biased toward the top of the image so heads stay in frame when the square
+   source is cropped to fill. */
+.stack__media--person{aspect-ratio:4/3}
+.stack__media--person img{object-position:50% 28%}
+@media (min-width:768px){ .stack__media--person{aspect-ratio:3/2} }
+
 /* Standalone media (hero, clinicians) keeps all four corners */
 .card__media{position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid var(--color-border)}
 .hero__media .card__media{aspect-ratio:16/9}
@@ -1398,26 +1405,26 @@ body{padding-bottom:88px}
     </div>
 
     <div class="grid grid--2 reveal">
-      <div class="card">
-        <div class="clinician">
-          <div class="card__media" data-file="assets/clinician-sourtzis.webp"><img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis, implant treatment provider" loading="lazy" decoding="async"></div>
-          <div>
-            <h3>Dr Dimitrios Sourtzis</h3>
-            <p class="clinician__cred">Implant treatment provider · Dentist · GDC No. 287145</p>
-            <p>MSc Endodontics (King's College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.</p>
-            <p>My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what's possible before anything begins.</p>
-          </div>
+      <div class="stack">
+        <div class="stack__media stack__media--person" data-file="assets/clinician-sourtzis.webp">
+          <img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis, implant treatment provider" loading="lazy" decoding="async">
+        </div>
+        <div class="card">
+          <h3>Dr Dimitrios Sourtzis</h3>
+          <p class="clinician__cred">Implant treatment provider · Dentist · GDC No. 287145</p>
+          <p>MSc Endodontics (King's College London), Diploma in Implant Dentistry, advanced training in Minor Oral Surgery.</p>
+          <p>My approach is careful, restoratively-driven and honest. Every case starts with a detailed assessment — including complex cases other practices have declined — so you get a clear, realistic picture of what's possible before anything begins.</p>
         </div>
       </div>
 
-      <div class="card">
-        <div class="clinician">
-          <div class="card__media" data-file="assets/practice.webp"><img src="assets/practice.webp" alt="The treatment room at Cygnet House Dental Studio" loading="lazy" decoding="async"></div>
-          <div>
-            <h3>A family-run practice in Spilsby</h3>
-            <p class="clinician__cred">Cygnet House Dental Studio Ltd</p>
-            <p>Every case is planned restoratively, so both function and aesthetics are considered from the very start — and you always see the full plan and the exact cost in writing before treatment begins.</p>
-          </div>
+      <div class="stack">
+        <div class="stack__media stack__media--person" data-file="assets/practice.webp">
+          <img src="assets/practice.webp" alt="The Cygnet House Dental Studio team outside the practice" loading="lazy" decoding="async">
+        </div>
+        <div class="card">
+          <h3>A family-run practice in Spilsby</h3>
+          <p class="clinician__cred">Cygnet House Dental Studio Ltd</p>
+          <p>Every case is planned restoratively, so both function and aesthetics are considered from the very start — and you always see the full plan and the exact cost in writing before treatment begins.</p>
         </div>
       </div>
     </div>
