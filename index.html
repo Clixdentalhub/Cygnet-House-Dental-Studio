@@ -512,30 +512,59 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .stars{display:inline-flex; gap:1px; color:var(--color-star)}
 
 /* ==========================================================================
-   7 · MULTI-STEP FORM
+   7 · MULTI-STEP FORM — "Ink Atelier"
+
+   The card carries ink, not the section. It sits on the light hero, so the
+   form stops reading as a widget laid over the page and becomes the thing
+   the hero is pointing at. Everything inside therefore needs on-dark
+   treatment: text, borders, focus rings, error colour and the CTA all
+   invert. --color-error is 3.0:1 on this ground and cannot be used here;
+   --form-ink-error is its on-dark twin.
    ========================================================================== */
 .form-card{
-  background:var(--color-surface);
-  border:1px solid var(--color-border);
-  border-top:4px solid var(--color-accent);
+  --form-ink-line:  rgba(196,165,232,.26);  /* hairline on ink */
+  --form-ink-line-2:rgba(196,165,232,.55);  /* hover / active hairline */
+  --form-ink-fill:  rgba(255,255,255,.05);  /* glass ground for rows + fields */
+  --form-ink-error: #FFB4AD;                /* 8.6:1 on the card ground */
+
+  background:linear-gradient(165deg,#2C1B3A 0%,#1D1428 100%);
+  border:1px solid var(--form-ink-line);
   border-radius:var(--radius);
-  box-shadow:var(--shadow-lg);
+  box-shadow:0 24px 60px rgba(24,10,34,.45);
   padding:var(--space-3) var(--space-2) var(--space-2);
+  position:relative; overflow:hidden; isolation:isolate;
 }
 @media (min-width:768px){ .form-card{padding:var(--space-4) var(--space-3) var(--space-3)} }
-.form-card__title{font-size:1.25rem; margin-bottom:var(--space)}
-.form-card__intro{font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:var(--space-2)}
-
-.progress{margin-bottom:var(--space-3)}
-.progress__track{display:flex; gap:6px; margin-bottom:var(--space)}
-.progress__seg{
-  height:6px; flex:1; border-radius:var(--radius-pill);
-  background:var(--color-muted);
-  transition:background-color var(--motion) ease;
+/* One soft amethyst bloom, weighted to the base — never behind the headline. */
+.form-card::before{
+  content:""; position:absolute; z-index:-1; pointer-events:none;
+  width:130%; height:70%; left:-32%; bottom:-42%; border-radius:50%;
+  background:radial-gradient(circle,rgba(155,77,214,.32) 0%,transparent 68%);
+  filter:blur(60px);
 }
-.progress__seg[data-state="done"],
-.progress__seg[data-state="current"]{background:var(--color-accent)}
-.progress__label{font-size:.8125rem; font-weight:600; color:var(--color-foreground-mut)}
+.form-card__eyebrow{
+  font-size:.6875rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--color-flourish); margin-bottom:10px;
+}
+.form-card__title{color:#fff; font-size:1.375rem; letter-spacing:-.01em; margin-bottom:var(--space)}
+.form-card__intro{font-size:.9375rem; color:var(--color-on-primary-mut); margin-bottom:var(--space-2)}
+
+/* Progress: a hairline rail and a counter, not three chunky segments. */
+.progress{display:flex; align-items:center; gap:12px; margin-bottom:var(--space-3)}
+.progress__label{
+  margin:0; flex:none;
+  font-size:.75rem; font-weight:600; letter-spacing:.1em;
+  color:var(--color-flourish); font-variant-numeric:tabular-nums;
+}
+.progress__track{
+  flex:1; height:2px; border-radius:2px; overflow:hidden;
+  background:rgba(196,165,232,.24);
+}
+.progress__seg{
+  display:block; height:100%; width:0;
+  background:var(--color-flourish);
+  transition:width 420ms cubic-bezier(.4,0,.2,1);
+}
 
 .step[hidden]{display:none}
 /* Selection → advance: the step settles back while the tick registers, so the
@@ -548,8 +577,8 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 }
 .step__legend{
   display:block; width:100%; padding:0; border:0;
-  font-family:var(--font-heading); font-weight:600; font-size:1.0625rem;
-  color:var(--color-primary); margin-bottom:var(--space-2);
+  font-family:var(--font-heading); font-weight:600; font-size:1.125rem;
+  color:#fff; margin-bottom:var(--space-2);
 }
 fieldset{border:0; padding:0; margin:0}
 
@@ -562,71 +591,91 @@ fieldset{border:0; padding:0; margin:0}
 .option__box{
   display:flex; align-items:center; gap:12px;
   min-height:56px; padding:12px var(--space-2);
-  background:var(--color-surface);
-  border:2px solid var(--color-border);
+  background:var(--form-ink-fill);
+  border:1px solid var(--form-ink-line);
   border-radius:var(--radius-sm);
-  font-weight:600; font-size:.9375rem;
+  color:#fff; font-weight:600; font-size:.9375rem;
   transition:border-color var(--motion) ease, background-color var(--motion) ease,
-             transform var(--motion) ease;
+             box-shadow var(--motion) ease, transform var(--motion) ease;
 }
 .option__radio{
   width:20px; height:20px; border-radius:50%;
-  border:2px solid var(--color-border-strong);
+  border:1.5px solid rgba(196,165,232,.6);
   display:grid; place-items:center; flex:none;
   transition:border-color var(--motion) ease;
 }
 .option__radio::after{
   content:""; width:10px; height:10px; border-radius:50%;
-  background:var(--color-accent); transform:scale(0);
+  background:var(--color-flourish); transform:scale(0);
   transition:transform var(--motion) ease;
 }
-.option input:hover + .option__box{border-color:var(--color-border-strong); background:var(--color-background)}
-.option input:checked + .option__box{border-color:var(--color-accent); background:#F6EFFA}
-.option input:checked + .option__box .option__radio{border-color:var(--color-accent)}
+.option input:hover + .option__box{background:rgba(255,255,255,.09); border-color:var(--form-ink-line-2)}
+.option input:checked + .option__box{
+  background:rgba(155,77,214,.20); border-color:var(--color-flourish);
+  box-shadow:inset 0 0 0 1px rgba(196,165,232,.45);
+}
+.option input:checked + .option__box .option__radio{border-color:var(--color-flourish)}
 .option input:checked + .option__box .option__radio::after{transform:scale(1)}
-.option input:focus-visible + .option__box{outline:3px solid var(--color-secondary); outline-offset:2px}
+.option input:focus-visible + .option__box{outline:3px solid var(--color-flourish); outline-offset:2px}
 
 .field{margin-bottom:var(--space-2)}
-.field label{display:block; font-weight:600; font-size:.9375rem; margin-bottom:6px}
+.field label{
+  display:block; margin-bottom:6px;
+  font-size:.75rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--color-on-primary-mut);
+}
 .field input{
   width:100%; min-height:48px; padding:12px var(--space-2);
-  font-family:var(--font-body); font-size:1rem; color:var(--color-foreground);
-  background:var(--color-surface);
-  border:2px solid var(--color-border); border-radius:var(--radius-sm);
-  transition:border-color var(--motion) ease, box-shadow var(--motion) ease;
+  font-family:var(--font-body); font-size:1rem; color:#fff;
+  background:var(--form-ink-fill);
+  border:1px solid var(--form-ink-line); border-radius:var(--radius-sm);
+  transition:border-color var(--motion) ease, box-shadow var(--motion) ease,
+             background-color var(--motion) ease;
 }
-.field input:hover{border-color:var(--color-border-strong)}
-.field input:focus{outline:none; border-color:var(--color-secondary); box-shadow:0 0 0 3px rgba(37,99,235,.2)}
-.field input[aria-invalid="true"]{border-color:var(--color-error)}
+.field input::placeholder{color:rgba(213,202,222,.5)}
+.field input:hover{border-color:var(--form-ink-line-2)}
+.field input:focus{
+  outline:none; background:rgba(255,255,255,.08);
+  border-color:var(--color-flourish); box-shadow:0 0 0 3px rgba(155,77,214,.32);
+}
+.field input[aria-invalid="true"]{border-color:var(--form-ink-error)}
 .field__error{
   display:none; align-items:center; gap:6px;
-  margin-top:6px; font-size:.875rem; font-weight:600; color:var(--color-error);
+  margin-top:6px; font-size:.875rem; font-weight:600; color:var(--form-ink-error);
 }
 .field__error.is-visible{display:flex}
 
 .form-nav{display:flex; gap:var(--space); margin-top:var(--space-3)}
 .form-nav .btn--primary{flex:1}
+/* The card is a dark band, so the CTA follows the same inversion rule the
+   .section--primary bands use. */
+.form-card .btn--primary{
+  background:var(--cta-on-dark); color:var(--cta-on-dark-text); border-color:var(--cta-on-dark);
+}
+.form-card .btn--primary:hover{background:#A961DE; border-color:#A961DE; filter:none}
 .form-back{
   display:inline-flex; align-items:center; gap:6px;
   background:none; border:0; padding:8px 4px; min-height:44px;
   font-family:var(--font-body); font-size:.875rem; font-weight:600;
-  color:var(--color-foreground-mut); cursor:pointer;
+  color:var(--color-on-primary-mut); cursor:pointer;
 }
-.form-back:hover{color:var(--color-primary); text-decoration:underline}
+.form-back:hover{color:#fff; text-decoration:underline}
 .form-note{
   display:flex; gap:8px; align-items:flex-start;
-  margin-top:var(--space-2); font-size:.8125rem; color:var(--color-foreground-mut);
+  margin-top:var(--space-2); font-size:.8125rem; color:var(--color-on-primary-mut);
 }
-.form-note svg{color:var(--color-success); margin-top:2px}
+.form-note svg{color:var(--color-flourish); margin-top:2px}
 .form-call{
   margin-top:var(--space-2); padding-top:var(--space-2);
-  border-top:1px solid var(--color-border);
-  text-align:center; font-size:.9375rem; color:var(--color-foreground-mut);
+  border-top:1px solid var(--form-ink-line);
+  text-align:center; font-size:.9375rem; color:var(--color-on-primary-mut);
+  text-wrap:balance;
 }
-.form-success{text-align:center; padding:var(--space-2) 0}
+.form-card .link-call{color:#fff}
+.form-success{text-align:center; padding:var(--space-2) 0; color:var(--color-on-primary-mut)}
 .form-success__icon{
   width:56px; height:56px; margin:0 auto var(--space-2);
-  border-radius:50%; background:#E6F4EC; color:var(--color-success);
+  border-radius:50%; background:rgba(155,77,214,.22); color:var(--color-flourish);
   display:grid; place-items:center;
 }
 /* Honeypot */
@@ -1085,16 +1134,16 @@ body{padding-bottom:88px}
       <div class="form-card">
 
         <div class="js-form-view">
+          <p class="form-card__eyebrow">Implant suitability</p>
           <h2 class="form-card__title">Check if dental implants are right for you</h2>
           <p class="form-card__intro">Two quick questions, then your details. Takes under a minute.</p>
 
           <div class="progress">
-            <div class="progress__track" aria-hidden="true">
-              <span class="progress__seg" data-seg="1" data-state="current"></span>
-              <span class="progress__seg" data-seg="2"></span>
-              <span class="progress__seg" data-seg="3"></span>
-            </div>
-            <p class="progress__label" id="progress-label" role="status">Step 1 of 3</p>
+            <!-- The numerals are decorative — "01 / 03" is read as "zero one
+                 slash zero three". The status message below carries the words. -->
+            <p class="progress__label" aria-hidden="true"><span class="js-step-num">01</span> / 03</p>
+            <div class="progress__track" aria-hidden="true"><span class="progress__seg"></span></div>
+            <p class="sr-only" id="progress-label" role="status">Step 1 of 3</p>
           </div>
 
           <!-- CONFIGURE: replace action with the real form endpoint (CRM / Make webhook / GHL) -->
@@ -1953,7 +2002,8 @@ body{padding-bottom:88px}
   var form = document.getElementById('qualifier-form');
   if (form) {
     var steps       = Array.prototype.slice.call(form.querySelectorAll('.step'));
-    var segments    = document.querySelectorAll('.progress__seg');
+    var progressFill = document.querySelector('.progress__seg');
+    var stepNum      = document.querySelector('.js-step-num');
     var progressLbl = document.getElementById('progress-label');
     var formView    = document.querySelector('.js-form-view');
     var successView = document.querySelector('.js-form-success');
@@ -1972,10 +2022,8 @@ body{padding-bottom:88px}
       steps.forEach(function (step) {
         step.hidden = Number(step.dataset.step) !== n;
       });
-      segments.forEach(function (seg) {
-        var i = Number(seg.dataset.seg);
-        seg.setAttribute('data-state', i < n ? 'done' : (i === n ? 'current' : ''));
-      });
+      if (progressFill) progressFill.style.width = (n / TOTAL * 100) + '%';
+      if (stepNum) stepNum.textContent = n < 10 ? '0' + n : String(n);
       progressLbl.textContent = 'Step ' + n + ' of ' + TOTAL;
 
       if (focus) {
