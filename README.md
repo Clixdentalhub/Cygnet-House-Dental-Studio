@@ -207,8 +207,25 @@ situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
 | `pageUrl` | full page URL | Useful for attribution if the funnel is ever duplicated |
 | `treatment` | `Dental Implants` | Constant, for routing when other funnels share the workflow |
 
-To capture a live sample for GHL's "listen for new request" step, submit the
-form once from the published page.
+#### Capturing the reference payload in GHL
+
+The Inbound Webhook trigger stores one captured request as its **reference**,
+and every downstream action can only pick from the keys in that stored sample.
+So:
+
+- **Existing mappings are unaffected by a paste.** They resolve by key name,
+  and the key names do not change.
+- **Re-capture only when a field is added** — after `lastName`, for example.
+  Re-running "listen for new request" replaces the stored sample; every key
+  still present keeps working, and the new one becomes selectable.
+- **Make the capture submission complete.** Fill every field, because a key
+  missing from the stored sample cannot be picked afterwards. All nine keys
+  are transmitted on every send, including `website` with an empty value
+  (verified: the body always contains `website=`), so one ordinary submission
+  is enough.
+
+Submit from the published page rather than a local copy, so `pageUrl` holds
+the real address.
 
 **First workflow condition should be the honeypot:** if `website` `is not
 empty` → stop. Everything downstream then only ever sees real people.
