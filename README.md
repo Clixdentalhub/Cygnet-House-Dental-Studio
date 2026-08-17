@@ -201,6 +201,29 @@ edit rather than five.
 validation, inline errors wired with `aria-invalid` / `aria-describedby`, back
 navigation that preserves answers, honeypot, and a success state.
 
+### Section motion
+
+Ten patterns from `motion-lab.html`, each with exactly one home. No section
+carries two — a page where every band moves differently reads as nervous
+rather than considered.
+
+| Pattern | Where | What moves |
+|---|---|---|
+| **H1 · Line Mask** | §2 hero | the H1, masked and revealed word by word |
+| **M2 · Zoom Settle** | §4 Is this you? | the four card photos ease back from 114% |
+| **C2 · Centre Out** | §5 pricing | three cards, the middle one first |
+| **S3 · Rule First** | §6 before & after | an accent rule draws, then the head arrives |
+| **U1 · Count Up** | §7 reviews | 4.9 and 122 climb over 2.2s |
+| **S4 · Settle** | §8 nervous | the head scales from 97% |
+| **I1 + I2** | §10 clinicians | roster tiles lift, portraits zoom inside — hover only |
+| **U3 · Icon Trace** | §11 consultation | the check-list ticks draw in sequence |
+| **U2 · Tick Draw** | form success | the seal draws itself once |
+| **U4 · Bar Entrance** | sticky mobile bar | arrives once the hero is behind you |
+
+Every element has a defined resting state, so nothing depends on JavaScript to
+look right — only to know when to begin. `prefers-reduced-motion` puts all ten
+straight into their finished state rather than running them faster.
+
 **Selection auto-advances** — tap an answer and the step moves itself after a
 260 ms beat. Pointer input only: arrow keys move between radios in a group and
 fire a `change` event at every stop, so advancing on keyboard selection would

@@ -1028,6 +1028,134 @@ body{padding-bottom:88px}
 @media (min-width:768px){ body{padding-bottom:0} }
 
 /* ==========================================================================
+   18b · SECTION MOTION
+
+   Ten patterns from the motion lab, each with exactly one home. No section
+   carries two of them, which is the whole point — a page where every band
+   moves differently reads as nervous rather than considered.
+
+     H1 Line Mask   §2  hero H1
+     M2 Zoom Settle §4  the four problem-card photos
+     C2 Centre Out  §5  the three pricing cards
+     S3 Rule First  §6  before & after section head
+     U1 Count Up    §7  the 4.9 / 122 figures
+     S4 Settle      §8  "Nervous about implants?" section head
+     I1 + I2        §10 roster tiles — one hover gesture, lift plus zoom
+     U3 Icon Trace  §11 the consultation check-list
+     U2 Tick Draw   —   the form's success seal
+     U4 Bar Entry   —   the sticky mobile CTA bar
+
+   Everything animates transform, opacity or stroke-dashoffset only, and
+   every element has a defined resting state, so nothing depends on JS to
+   look right — only to know when to begin.
+   ========================================================================== */
+:root{
+  --ease-out:cubic-bezier(.22,1,.36,1);   /* no overshoot, ever */
+  --t-base:460ms;
+  --t-slow:680ms;
+}
+
+/* --- H1 · Line Mask ---------------------------------------------------- */
+.anim-linemask .lm{
+  display:inline-block; overflow:hidden; vertical-align:bottom;
+  /* Room for descenders, taken straight back off the flow so the line
+     rhythm is untouched. Without it, overflow:hidden shaves the p and g. */
+  padding-bottom:.12em; margin-bottom:-.12em;
+}
+.anim-linemask .lm > span{
+  display:inline-block; transform:translateY(105%);
+  transition:transform var(--t-slow) var(--ease-out) var(--d,0ms);
+}
+.is-visible.anim-linemask .lm > span{transform:none}
+
+/* --- M2 · Zoom Settle (§4) ---------------------------------------------
+   The container's own reveal is switched off so the photograph easing back
+   to true is the only thing that moves in this section. */
+.anim-zoom.reveal{opacity:1; transform:none; transition:none}
+.anim-zoom .stack__media img{transform:scale(1.14);
+  transition:transform 900ms var(--ease-out) var(--d,0ms)}
+.anim-zoom > li:nth-child(2) .stack__media img{--d:80ms}
+.anim-zoom > li:nth-child(3) .stack__media img{--d:160ms}
+.anim-zoom > li:nth-child(4) .stack__media img{--d:240ms}
+.is-visible.anim-zoom .stack__media img{transform:none}
+
+/* --- C2 · Centre Out (§5) ---------------------------------------------- */
+.anim-centreout.reveal{opacity:1; transform:none; transition:none}
+.anim-centreout > li{opacity:0; transform:translateY(18px);
+  transition:opacity var(--t-base) ease var(--d,0ms),
+             transform var(--t-base) var(--ease-out) var(--d,0ms)}
+.anim-centreout > li:nth-child(2){--d:0ms}          /* the middle card lands first */
+.anim-centreout > li:nth-child(1),
+.anim-centreout > li:nth-child(3){--d:130ms}
+.is-visible.anim-centreout > li{opacity:1; transform:none}
+
+/* --- S3 · Rule First (§6) ---------------------------------------------- */
+.anim-rule.reveal{opacity:1; transform:none; transition:none}
+.anim-rule .rule{
+  display:block; width:64px; height:3px; margin:0 auto var(--space-2);
+  background:var(--color-accent); border-radius:2px;
+  transform:scaleX(0); transform-origin:center;
+  transition:transform var(--t-slow) var(--ease-out);
+}
+.anim-rule h2,.anim-rule p{opacity:0; transform:translateY(10px);
+  transition:opacity var(--t-base) ease 260ms, transform var(--t-base) var(--ease-out) 260ms}
+.anim-rule p{transition-delay:340ms}
+.is-visible.anim-rule .rule{transform:scaleX(1)}
+.is-visible.anim-rule h2,
+.is-visible.anim-rule p{opacity:1; transform:none}
+
+/* --- S4 · Settle (§8) --------------------------------------------------- */
+.anim-settle.reveal{opacity:0; transform:scale(.97);
+  transition:opacity var(--t-slow) ease, transform var(--t-slow) var(--ease-out)}
+.anim-settle.reveal.is-visible{opacity:1; transform:none}
+
+/* --- U1 · Count Up (§7) ------------------------------------------------- */
+.anim-count{font-variant-numeric:tabular-nums}
+
+/* --- I1 + I2 · Lift and Media Zoom (§10 roster) -------------------------
+   One gesture: the tile rises, the portrait grows inside a frame that does
+   not. Pointer only — on touch neither fires, which is why nothing is
+   hidden behind them. */
+.anim-hover .person{transition:border-color var(--motion) ease,
+                               box-shadow var(--motion) ease,
+                               transform var(--motion) var(--ease-out)}
+.anim-hover .person__avatar{overflow:hidden}
+.anim-hover .person__avatar img{transition:transform var(--t-slow) var(--ease-out)}
+@media (hover:hover){
+  .anim-hover .person:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+  .anim-hover .person:hover .person__avatar img{transform:scale(1.09)}
+}
+
+/* --- U3 · Icon Trace (§11) ---------------------------------------------- */
+.anim-trace li{opacity:0; transform:translateX(-6px);
+  transition:opacity var(--t-base) ease var(--d,0ms),
+             transform var(--t-base) var(--ease-out) var(--d,0ms)}
+.anim-trace li svg path{stroke-dasharray:26; stroke-dashoffset:26;
+  transition:stroke-dashoffset var(--t-base) var(--ease-out) var(--d,0ms)}
+.anim-trace li:nth-child(1){--d:0ms}    .anim-trace li:nth-child(2){--d:90ms}
+.anim-trace li:nth-child(3){--d:180ms}  .anim-trace li:nth-child(4){--d:270ms}
+.anim-trace li:nth-child(5){--d:360ms}  .anim-trace li:nth-child(6){--d:450ms}
+.anim-trace li:nth-child(7){--d:540ms}  .anim-trace li:nth-child(8){--d:630ms}
+.is-visible .anim-trace li{opacity:1; transform:none}
+.is-visible .anim-trace li svg path{stroke-dashoffset:0}
+
+/* --- U2 · Tick Draw (form success) -------------------------------------- */
+.anim-tick{transform:scale(.8); opacity:0;
+  transition:transform var(--t-base) var(--ease-out), opacity 240ms ease}
+.anim-tick path{stroke-dasharray:32; stroke-dashoffset:32;
+  transition:stroke-dashoffset var(--t-slow) var(--ease-out) 220ms}
+.is-visible.anim-tick{transform:none; opacity:1}
+.is-visible.anim-tick path{stroke-dashoffset:0}
+
+/* --- U4 · Bar Entrance --------------------------------------------------
+   The bar arrives once the visitor has read past the hero, rather than
+   being present from the first paint. The body padding that reserves its
+   height is unchanged, so nothing shifts when it appears. */
+.anim-bar{transform:translateY(120%);
+  transition:transform var(--t-base) var(--ease-out)}
+.anim-bar.is-visible{transform:none}
+
+/* ==========================================================================
    19 · MOTION
    ========================================================================== */
 .reveal{opacity:0; transform:translateY(16px); transition:opacity 500ms ease, transform 500ms ease}
@@ -1040,6 +1168,19 @@ body{padding-bottom:88px}
   }
   .reveal{opacity:1; transform:none}
   .btn:hover{transform:none}
+  /* Section motion: finished state, not a faster animation. */
+  .anim-linemask .lm > span,
+  .anim-zoom .stack__media img,
+  .anim-centreout > li,
+  .anim-rule h2,.anim-rule p,
+  .anim-settle.reveal,
+  .anim-trace li,
+  .anim-tick,
+  .anim-bar{opacity:1!important; transform:none!important}
+  .anim-rule .rule{transform:scaleX(1)!important}
+  .anim-trace li svg path,
+  .anim-tick path{stroke-dashoffset:0!important}
+  .anim-hover .person:hover{transform:none!important}
   /* Backgrounds hold a still frame rather than vanishing — the composition
      stays, only the movement stops. */
   .bg-drift::before,.bg-drift::after,
@@ -1094,7 +1235,12 @@ body{padding-bottom:88px}
   <div class="container hero__grid">
 
     <div class="hero__copy">
-      <h1 class="hero__title" id="hero-title">Replace Missing Teeth With Permanent Dental Implants in Spilsby</h1>
+      <!-- H1 · Line Mask. Masking hand-written LINES meant hard-coding the line
+           breaks, and the headline then re-wrapped inside them — five ragged
+           lines at 1280px. The mask is applied per word by JS instead: same
+           reveal from behind an edge, natural wrapping preserved at every
+           width, and the plain text stands if the script never runs. -->
+      <h1 class="hero__title anim-linemask" id="hero-title">Replace Missing Teeth With Permanent Dental Implants in Spilsby</h1>
 
       <p class="hero__sub">Whether you're missing one tooth, several teeth, or tired of loose dentures, our advanced implant treatments give you fixed, natural-looking teeth — so you can eat, speak and smile with confidence again.</p>
 
@@ -1282,7 +1428,7 @@ body{padding-bottom:88px}
 
         <!-- Success state -->
         <div class="form-success js-form-success" hidden tabindex="-1">
-          <div class="form-success__icon" aria-hidden="true">
+          <div class="form-success__icon anim-tick" aria-hidden="true">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
           <h2 class="form-card__title">Thank you — we've got your details.</h2>
@@ -1355,7 +1501,8 @@ body{padding-bottom:88px}
       <h2 id="is-this-you-title">Dental implants could be the answer if you're…</h2>
     </div>
 
-    <ul class="grid grid--4 reveal">
+    <!-- M2 · Zoom Settle lives here and only here. -->
+    <ul class="grid grid--4 reveal anim-zoom">
       <li class="stack">
         <div class="stack__media" data-file="assets/is-missing-teeth.webp"><img src="assets/is-missing-teeth.webp" alt="A patient smiling after single-tooth implant treatment at the practice" loading="lazy" decoding="async"></div>
         <div class="card"><h3>Missing one or more teeth</h3>
@@ -1395,7 +1542,8 @@ body{padding-bottom:88px}
       <p>Every price is shown up front. Spread the cost with 0% finance.</p>
     </div>
 
-    <ul class="grid grid--3 reveal">
+    <!-- C2 · Centre Out. The middle card lands first. -->
+    <ul class="grid grid--3 reveal anim-centreout">
       <li class="card price-card price-card--featured">
         <span class="price-card__tag">Most enquired about</span>
         <div class="price-card__body">
@@ -1457,7 +1605,8 @@ body{padding-bottom:88px}
      ============================================================ -->
 <section class="section" id="results" aria-labelledby="results-title">
   <div class="container">
-    <div class="section-head reveal">
+    <div class="section-head reveal anim-rule">
+      <span class="rule" aria-hidden="true"></span>
       <h2 id="results-title">Real results from real patients</h2>
       <p>Genuine before-and-after photos of implant treatments carried out at Cygnet House Dental Studio — drag the handle to compare. Shown with each patient’s consent.</p>
     </div>
@@ -1519,7 +1668,7 @@ body{padding-bottom:88px}
   <div class="container">
     <div class="section-head reveal">
       <h2 id="reviews-title">What our implant patients say</h2>
-      <p>Genuine, unedited reviews published by our patients on Google, where the practice is rated <strong>4.9 out of 5 from 122 reviews</strong>.</p>
+      <p>Genuine, unedited reviews published by our patients on Google, where the practice is rated <strong><span class="anim-count" data-count="4.9" data-dp="1">4.9</span> out of 5 from <span class="anim-count" data-count="122">122</span> reviews</strong>.</p>
     </div>
 
     <div class="marquee reveal" data-marquee>
@@ -1578,7 +1727,7 @@ body{padding-bottom:88px}
   <!-- A2 · Aurora Wash -->
   <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container">
-    <div class="section-head reveal">
+    <div class="section-head reveal anim-settle">
       <h2 id="nervous-title">Feeling nervous? You're in good hands.</h2>
       <p>It's completely normal to feel anxious about implant treatment — most of our patients did too. From your first visit, we take the time to explain everything clearly, answer every question, and never rush you. Our calm, family-run approach and gentle techniques are designed to make the whole experience as comfortable and reassuring as possible.</p>
     </div>
@@ -1638,7 +1787,8 @@ body{padding-bottom:88px}
         <img src="assets/team-wide.webp" alt="The Cygnet House Dental Studio team outside the practice" loading="lazy" decoding="async">
       </div>
 
-      <div class="roster" id="roster" aria-label="Team members"></div>
+      <!-- I1 + I2 · one hover gesture: the tile lifts, the portrait grows inside it. -->
+      <div class="roster anim-hover" id="roster" aria-label="Team members"></div>
 
       <article class="card panel" id="person-panel" aria-live="polite">
         <div class="card__media panel__photo" data-file="assets/clinician-sourtzis.webp">
@@ -1671,7 +1821,7 @@ body{padding-bottom:88px}
 
     <div class="included-grid reveal">
       <div class="card">
-        <ul class="check-list">
+        <ul class="check-list anim-trace">
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Comprehensive oral examination</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Digital X-rays</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> CBCT 3D scan</li>
@@ -1922,7 +2072,7 @@ body{padding-bottom:88px}
 <!-- ============================================================
      STICKY MOBILE CTA BAR
      ============================================================ -->
-<div class="mobile-bar">
+<div class="mobile-bar anim-bar">
   <a class="btn btn--ghost js-tel" href="tel:[Phone]">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
     Call
@@ -2178,6 +2328,10 @@ body{padding-bottom:88px}
         }
         formView.hidden = true;
         successView.hidden = false;
+        /* The seal is inside a hidden element, so the scroll observer never
+           saw it — it has to be triggered at the moment it becomes visible. */
+        var seal = successView.querySelector('.anim-tick');
+        if (seal) requestAnimationFrame(function () { seal.classList.add('is-visible'); });
         successView.focus();
         successView.scrollIntoView({ block: 'center', behavior: 'smooth' });
         /* Analytics hook: window.dataLayer && window.dataLayer.push({event:'implant_lead'}); */
@@ -2422,7 +2576,29 @@ body{padding-bottom:88px}
   /* ==========================================================
      SCROLL REVEAL (respects prefers-reduced-motion)
      ========================================================== */
-  var reveals = document.querySelectorAll('.reveal');
+  /* H1 · Line Mask — build the masks from the live text so the headline
+     wraps exactly as it always did. Each word gets its own clipping box and
+     lifts from behind it; the stagger is capped so a long headline cannot
+     turn into a queue. */
+  var maskTitle = document.querySelector('.anim-linemask');
+  if (maskTitle && !reduceMotion) {
+    var words = maskTitle.textContent.trim().split(/\s+/);
+    maskTitle.textContent = '';
+    words.forEach(function (word, i) {
+      var mask = document.createElement('span');
+      mask.className = 'lm';
+      var inner = document.createElement('span');
+      inner.textContent = word;
+      inner.style.setProperty('--d', Math.min(i * 45, 400) + 'ms');
+      mask.appendChild(inner);
+      maskTitle.appendChild(mask);
+      if (i < words.length - 1) maskTitle.appendChild(document.createTextNode(' '));
+    });
+  }
+
+  /* The hero H1 is above the fold, so it plays on load rather than waiting
+     for a scroll it may never get. Everything else waits its turn. */
+  var reveals = document.querySelectorAll('.reveal, .anim-linemask');
 
   if (reduceMotion || !('IntersectionObserver' in window)) {
     reveals.forEach(function (el) { el.classList.add('is-visible'); });
@@ -2437,6 +2613,70 @@ body{padding-bottom:88px}
     }, { rootMargin: '0px 0px -60px 0px', threshold: 0.05 });
 
     reveals.forEach(function (el) { observer.observe(el); });
+  }
+
+  /* ==========================================================
+     U1 · COUNT UP  (§7 reviews)
+
+     Deliberately unhurried — a rating that snaps into place reads as a
+     graphic, one that climbs reads as a tally. The last frame assigns the
+     exact target, so the figure on screen is always the real one, and the
+     resting markup already contains it in case this never runs.
+     ========================================================== */
+  function countUp(el) {
+    var target = parseFloat(el.dataset.count);
+    var dp = parseInt(el.dataset.dp || '0', 10);
+    var DURATION = 2200;
+    var started = null;
+
+    el.textContent = (0).toFixed(dp);
+    requestAnimationFrame(function step(now) {
+      if (started === null) started = now;
+      var t = Math.min((now - started) / DURATION, 1);
+      el.textContent = (target * (1 - Math.pow(1 - t, 3))).toFixed(dp);
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = target.toFixed(dp);
+    });
+  }
+
+  var counters = document.querySelectorAll('.anim-count');
+  if (counters.length && !reduceMotion && 'IntersectionObserver' in window) {
+    var countObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        countUp(entry.target);
+        countObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { countObserver.observe(el); });
+  }
+
+  /* ==========================================================
+     U4 · BAR ENTRANCE
+
+     The sticky bar arrives once the hero has been read rather than sitting
+     there from the first paint. The body padding reserving its height never
+     changes, so nothing shifts underneath when it appears. Sentinel over
+     scroll maths: it costs nothing per frame.
+     ========================================================== */
+  var bar = document.querySelector('.anim-bar');
+  if (bar) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      bar.classList.add('is-visible');
+    } else {
+      var hero = document.querySelector('.hero');
+      if (!hero) {
+        bar.classList.add('is-visible');
+      } else {
+        new IntersectionObserver(function (entries) {
+          /* Past the hero — and stays put once shown, so it cannot flicker
+             on the way back up. */
+          if (!entries[0].isIntersecting && entries[0].boundingClientRect.top < 0) {
+            bar.classList.add('is-visible');
+          }
+        }, { threshold: 0 }).observe(hero);
+      }
+    }
   }
 })();
 </script>
