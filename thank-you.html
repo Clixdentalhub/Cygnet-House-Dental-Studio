@@ -712,10 +712,26 @@ body{padding-bottom:88px}
 }
 .confirm__ref svg{color:var(--color-flourish); flex:none}
 
-/* Steps — numbered, connected, and honest about what is actually promised. */
+/* Steps — numbered, connected, and honest about what is actually promised.
+
+   The block choreographs itself once, on entry: each badge pops, its
+   connector draws toward the next step, and the copy rises a beat behind.
+   Read left to right, the motion tells you the same thing the numbers do —
+   this is a sequence, and you are at the start of it. Transform and opacity
+   only, so it stays on the compositor. */
 .next{counter-reset:next; display:grid; gap:var(--space-3); max-width:var(--container-narrow); margin-inline:auto}
 @media (min-width:768px){ .next{grid-template-columns:repeat(3,1fr); gap:var(--space-2)} }
+
+/* The container itself must not animate — its children do. Without this the
+   shared .reveal rule would fade the whole block in and the stagger inside
+   would be invisible. */
+.next.reveal{opacity:1; transform:none; transition:none}
+
 .next__item{position:relative; padding-top:var(--space-4)}
+.next__item h3{font-size:1.0625rem; margin-bottom:6px}
+.next__item p{font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:0}
+
+/* --- badge --- */
 .next__item::before{
   counter-increment:next; content:counter(next);
   position:absolute; top:0; left:0;
@@ -723,17 +739,46 @@ body{padding-bottom:88px}
   display:grid; place-items:center;
   background:var(--color-accent); color:#fff;
   font-family:var(--font-heading); font-weight:700; font-size:.9375rem;
+  opacity:0; transform:scale(.4);
+  transition:opacity 260ms ease var(--d,0ms),
+             transform 460ms cubic-bezier(.34,1.56,.64,1) var(--d,0ms);
 }
-/* The connector stops at the last item and only exists where the steps sit
-   side by side. */
+.next.is-visible .next__item::before{opacity:1; transform:scale(1)}
+
+/* --- copy --- */
+.next__item h3,.next__item p{
+  opacity:0; transform:translateY(10px);
+  transition:opacity 460ms ease calc(var(--d,0ms) + 120ms),
+             transform 460ms cubic-bezier(.22,1,.36,1) calc(var(--d,0ms) + 120ms);
+}
+.next__item p{transition-delay:calc(var(--d,0ms) + 200ms)}
+.next.is-visible .next__item h3,
+.next.is-visible .next__item p{opacity:1; transform:none}
+
+/* --- connector: only exists where the steps sit side by side --- */
 @media (min-width:768px){
   .next__item:not(:last-child)::after{
     content:""; position:absolute; top:17px; left:44px; right:var(--space-2);
     height:2px; background:var(--color-border);
+    transform:scaleX(0); transform-origin:left center;
+    transition:transform 560ms cubic-bezier(.22,1,.36,1) calc(var(--d,0ms) + 300ms);
   }
+  .next.is-visible .next__item:not(:last-child)::after{transform:scaleX(1)}
 }
-.next__item h3{font-size:1.0625rem; margin-bottom:6px}
-.next__item p{font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:0}
+
+/* The stagger. One custom property per step drives badge, copy and
+   connector together, so re-timing the sequence is a single number. */
+.next__item:nth-child(1){--d:0ms}
+.next__item:nth-child(2){--d:180ms}
+.next__item:nth-child(3){--d:360ms}
+
+/* Nothing to choreograph if the visitor has asked for stillness — every
+   element is simply in its final state. */
+@media (prefers-reduced-motion:reduce){
+  .next__item::before,
+  .next__item h3,.next__item p{opacity:1; transform:none; transition:none}
+  .next__item:not(:last-child)::after{transform:scaleX(1); transition:none}
+}
 
 /* Call band — they are as warm now as they will ever be. */
 .call-band{
