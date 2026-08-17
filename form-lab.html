@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Form Lab — Cygnet House Implants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   TOKENS — identical names to index.html, so any variant pastes straight over
+   ========================================================================== */
+:root{
+  --color-primary:        #241730;
+  --color-primary-dark:   #1A1220;
+  --color-on-primary:     #FFFFFF;
+  --color-secondary:      #6A2383;
+  --color-accent:         #6A2383;
+  --color-accent-dark:    #521B66;
+  --color-on-accent:      #FFFFFF;
+  --cta-on-dark:          #9B4DD6;
+  --cta-on-dark-text:     #FFFFFF;
+  --color-flourish:       #C4A5E8;
+  --color-on-primary-mut: #D5CADE;
+  --color-background:     #FAF8FB;
+  --color-surface:        #FFFFFF;
+  --color-foreground:     #1F1024;
+  --color-foreground-mut: #57496B;
+  --color-muted:          #EFEAF2;
+  --color-border:         #D8CFE0;
+  --color-border-strong:  #94879E;
+  --color-success:        #16794A;
+  --color-error:          #B42318;
+
+  --radius:      12px;
+  --radius-sm:   8px;
+  --radius-lg:   20px;
+  --radius-pill: 999px;
+
+  --space:    8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+
+  --font-heading: "Lexend", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.08);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg: 0 12px 32px rgba(15,23,42,.12), 0 4px 8px rgba(15,23,42,.05);
+
+  --motion: 200ms;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; font-family:var(--font-body); font-size:16px; line-height:1.6;
+  color:var(--color-foreground); background:var(--color-background);
+}
+h1,h2,h3,h4{font-family:var(--font-heading); font-weight:700; line-height:1.2; margin:0 0 var(--space-2)}
+p{margin:0 0 var(--space-2)}
+fieldset{border:0; padding:0; margin:0}
+button{font:inherit}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+
+/* ==========================================================================
+   LAB CHROME
+   ========================================================================== */
+.lab-head{
+  background:var(--color-primary); color:#fff;
+  padding:var(--space-6) var(--space-3);
+}
+.wrap{max-width:1180px; margin-inline:auto}
+.lab-head h1{color:#fff; font-size:1.75rem}
+.lab-head p{color:var(--color-on-primary-mut); max-width:70ch; margin-bottom:0}
+.lab-head .kicker{
+  font-size:.75rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--color-flourish); margin-bottom:var(--space);
+}
+
+.lab-section{padding:var(--space-6) var(--space-3)}
+.lab-note{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-left:4px solid var(--color-accent);
+  border-radius:var(--radius-sm); padding:var(--space-2) var(--space-3);
+  font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:var(--space-6);
+}
+.lab-note strong{color:var(--color-foreground)}
+
+.variants{display:grid; gap:var(--space-6)}
+@media (min-width:1000px){ .variants{grid-template-columns:1fr 1fr; gap:var(--space-8) var(--space-6)} }
+
+.variant__head{margin-bottom:var(--space-3)}
+.variant__name{font-size:1.1875rem; margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.tag{
+  display:inline-block; font-family:var(--font-body); font-size:.6875rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; padding:3px 9px;
+  border-radius:var(--radius-pill); background:var(--color-muted); color:var(--color-foreground-mut);
+}
+.tag--pick{background:var(--color-accent); color:#fff}
+.variant__why{font-size:.9375rem; color:var(--color-foreground-mut); margin-bottom:0}
+.variant__why b{color:var(--color-foreground); font-weight:600}
+.variant__stage{padding:var(--space-3); border-radius:var(--radius-lg)}
+.stage--light{background:linear-gradient(160deg,#F3ECF7 0%,#FAF8FB 60%)}
+.stage--dark{background:linear-gradient(160deg,#2E1C3C 0%,#1A1220 100%)}
+
+/* ==========================================================================
+   SHARED FORM SKELETON — every variant restyles these, none renames them
+   ========================================================================== */
+.fc{border-radius:var(--radius); padding:var(--space-3) var(--space-2) var(--space-2)}
+@media (min-width:768px){ .fc{padding:var(--space-4) var(--space-3) var(--space-3)} }
+.fc__title{font-size:1.25rem; margin-bottom:var(--space)}
+.fc__intro{font-size:.9375rem; margin-bottom:var(--space-2)}
+.step[hidden]{display:none}
+.step--advancing{opacity:.55; transition:opacity 200ms ease}
+.step__legend{
+  display:block; width:100%; padding:0; border:0;
+  font-family:var(--font-heading); font-weight:600; font-size:1.0625rem;
+  margin-bottom:var(--space-2);
+}
+.options{display:grid; gap:10px}
+.option{position:relative}
+.option input{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; margin:0}
+.option__box{
+  display:flex; align-items:center; gap:12px; min-height:56px;
+  padding:12px var(--space-2); font-weight:600; font-size:.9375rem;
+  transition:border-color var(--motion) ease, background-color var(--motion) ease,
+             box-shadow var(--motion) ease, transform var(--motion) ease;
+}
+.option__mark{flex:none; display:grid; place-items:center; transition:all var(--motion) ease}
+.field{margin-bottom:var(--space-2)}
+.field label{display:block; font-weight:600; font-size:.9375rem; margin-bottom:6px}
+.field input{
+  width:100%; min-height:48px; padding:12px var(--space-2);
+  font-family:var(--font-body); font-size:1rem;
+  transition:border-color var(--motion) ease, box-shadow var(--motion) ease;
+}
+.fnav{margin-top:var(--space-3)}
+.cta{
+  width:100%; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:52px; padding:14px var(--space-3); border:0; cursor:pointer;
+  font-family:var(--font-heading); font-weight:700; font-size:1rem;
+  transition:background-color var(--motion) ease, transform var(--motion) ease,
+             box-shadow var(--motion) ease;
+}
+.cta:active{transform:translateY(1px)}
+.fback{
+  display:inline-flex; align-items:center; gap:6px; margin-top:var(--space);
+  background:none; border:0; padding:8px 4px; min-height:44px;
+  font-family:var(--font-body); font-size:.875rem; font-weight:600; cursor:pointer;
+}
+.fback:hover{text-decoration:underline}
+.fnote{display:flex; gap:8px; align-items:flex-start; margin-top:var(--space-2); font-size:.8125rem}
+.fdone{text-align:center; padding:var(--space-3) 0}
+.fdone__icon{width:56px; height:56px; margin:0 auto var(--space-2); border-radius:50%; display:grid; place-items:center}
+
+/* ==========================================================================
+   F1 · INK ATELIER — the card itself goes ink. Reads like a private clinic.
+   ========================================================================== */
+.f1{
+  background:linear-gradient(165deg,#2C1B3A 0%,#1D1428 100%);
+  border:1px solid rgba(196,165,232,.28);
+  box-shadow:0 24px 60px rgba(24,10,34,.45);
+  position:relative; overflow:hidden;
+}
+.f1::before{ /* single soft amethyst bloom, weighted to the base */
+  content:""; position:absolute; z-index:0; width:120%; height:70%;
+  left:-30%; bottom:-40%; border-radius:50%;
+  background:radial-gradient(circle,rgba(155,77,214,.30) 0%,transparent 68%);
+  filter:blur(60px); pointer-events:none;
+}
+.f1 > *{position:relative; z-index:1}
+.f1 .fc__eyebrow{
+  font-size:.6875rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--color-flourish); margin-bottom:10px;
+}
+.f1 .fc__title{color:#fff; font-size:1.375rem; letter-spacing:-.01em}
+.f1 .fc__intro{color:var(--color-on-primary-mut)}
+.f1 .rail{display:flex; align-items:center; gap:12px; margin-bottom:var(--space-3)}
+.f1 .rail__bar{flex:1; height:2px; background:rgba(196,165,232,.24); border-radius:2px; overflow:hidden}
+.f1 .rail__fill{display:block; height:100%; width:33.33%; background:var(--color-flourish); transition:width 420ms cubic-bezier(.4,0,.2,1)}
+.f1 .rail__count{font-size:.75rem; font-weight:600; letter-spacing:.1em; color:var(--color-flourish); font-variant-numeric:tabular-nums}
+.f1 .step__legend{color:#fff; font-size:1.125rem}
+.f1 .option__box{
+  background:rgba(255,255,255,.05); border:1px solid rgba(196,165,232,.26);
+  border-radius:var(--radius-sm); color:#fff;
+}
+.f1 .option__mark{width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(196,165,232,.6)}
+.f1 .option__mark::after{content:""; width:10px; height:10px; border-radius:50%; background:var(--color-flourish); transform:scale(0); transition:transform var(--motion) ease}
+.f1 .option input:hover + .option__box{background:rgba(255,255,255,.09); border-color:rgba(196,165,232,.5)}
+.f1 .option input:checked + .option__box{
+  background:rgba(155,77,214,.20); border-color:var(--color-flourish);
+  box-shadow:inset 0 0 0 1px rgba(196,165,232,.45);
+}
+.f1 .option input:checked + .option__box .option__mark{border-color:var(--color-flourish)}
+.f1 .option input:checked + .option__box .option__mark::after{transform:scale(1)}
+.f1 .option input:focus-visible + .option__box{outline:3px solid var(--color-flourish); outline-offset:2px}
+.f1 .field label{color:var(--color-on-primary-mut); font-size:.8125rem; letter-spacing:.04em; text-transform:uppercase}
+.f1 .field input{
+  background:rgba(255,255,255,.05); color:#fff;
+  border:1px solid rgba(196,165,232,.26); border-radius:var(--radius-sm);
+}
+.f1 .field input::placeholder{color:rgba(213,202,222,.5)}
+.f1 .field input:focus{outline:none; border-color:var(--color-flourish); box-shadow:0 0 0 3px rgba(155,77,214,.28)}
+.f1 .cta{background:var(--cta-on-dark); color:#fff; border-radius:var(--radius-sm)}
+.f1 .cta:hover{background:#A961DE}
+.f1 .fback{color:var(--color-on-primary-mut)}
+.f1 .fnote{color:rgba(213,202,222,.8)}
+.f1 .fnote svg{color:var(--color-flourish)}
+.f1 .fdone{color:#fff}
+.f1 .fdone__icon{background:rgba(155,77,214,.22); color:var(--color-flourish)}
+.f1 .fdone p{color:var(--color-on-primary-mut)}
+
+/* ==========================================================================
+   F2 · GILDED HAIRLINE — light card, 1px lines, small-caps counter.
+   Luxury by restraint: less ink, more space, nothing shouting.
+   ========================================================================== */
+.f2{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  box-shadow:0 20px 48px rgba(36,23,48,.10);
+  position:relative; overflow:hidden;
+}
+.f2::before{ /* gradient hairline instead of a 4px slab */
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--color-accent),var(--color-flourish) 55%,rgba(196,165,232,0));
+}
+.f2 .fc__eyebrow{
+  font-size:.6875rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--color-accent); margin-bottom:10px;
+}
+.f2 .fc__title{font-size:1.5rem; letter-spacing:-.015em; color:var(--color-primary); line-height:1.15}
+.f2 .fc__intro{color:var(--color-foreground-mut)}
+.f2 .rail{display:flex; align-items:center; gap:12px; margin-bottom:var(--space-4)}
+.f2 .rail__bar{flex:1; height:1px; background:var(--color-border)}
+.f2 .rail__fill{display:block; height:1px; width:33.33%; background:var(--color-accent); transition:width 420ms cubic-bezier(.4,0,.2,1)}
+.f2 .rail__count{
+  font-size:.6875rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--color-foreground-mut); font-variant-numeric:tabular-nums;
+}
+.f2 .step__legend{color:var(--color-primary); font-size:1.125rem}
+.f2 .options{gap:0; border-top:1px solid var(--color-border)}
+.f2 .option{border-bottom:1px solid var(--color-border)}
+.f2 .option__box{
+  background:transparent; border:0; padding:16px 12px 16px 2px;
+  border-left:2px solid transparent; color:var(--color-foreground);
+  justify-content:space-between; border-radius:0;
+}
+.f2 .option__box .txt{display:flex; align-items:center; gap:12px}
+.f2 .option__mark{
+  width:22px; height:22px; border-radius:50%; border:1px solid var(--color-border-strong);
+}
+.f2 .option__mark::after{content:""; width:11px; height:11px; border-radius:50%; background:var(--color-accent); transform:scale(0); transition:transform var(--motion) ease}
+.f2 .option__chev{color:var(--color-border-strong); opacity:0; transform:translateX(-6px); transition:all var(--motion) ease}
+.f2 .option input:hover + .option__box{background:#FBF8FD; padding-left:12px}
+.f2 .option input:hover + .option__box .option__chev{opacity:1; transform:translateX(0)}
+.f2 .option input:checked + .option__box{
+  border-left-color:var(--color-accent); background:#F8F2FB; padding-left:12px;
+}
+.f2 .option input:checked + .option__box .option__mark{border-color:var(--color-accent)}
+.f2 .option input:checked + .option__box .option__mark::after{transform:scale(1)}
+.f2 .option input:checked + .option__box .option__chev{opacity:1; transform:translateX(0); color:var(--color-accent)}
+.f2 .option input:focus-visible + .option__box{outline:3px solid var(--color-secondary); outline-offset:-3px}
+.f2 .field label{
+  font-size:.6875rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--color-foreground-mut);
+}
+.f2 .field input{border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-surface)}
+.f2 .field input:focus{outline:none; border-color:var(--color-accent); box-shadow:0 0 0 3px rgba(106,35,131,.14)}
+.f2 .cta{background:var(--color-accent); color:#fff; border-radius:var(--radius-sm); letter-spacing:.01em}
+.f2 .cta:hover{background:var(--color-accent-dark)}
+.f2 .fback{color:var(--color-foreground-mut)}
+.f2 .fnote{color:var(--color-foreground-mut)}
+.f2 .fnote svg{color:var(--color-success)}
+.f2 .fdone__icon{background:#EAF6F0; color:var(--color-success)}
+.f2 .fdone p{color:var(--color-foreground-mut)}
+
+/* ==========================================================================
+   F3 · CONCIERGE TILES — lettered chips, rows that lift. Warmest of the four.
+   ========================================================================== */
+.f3{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius-lg); box-shadow:0 20px 48px rgba(36,23,48,.10);
+}
+.f3 .fc__crest{
+  width:44px; height:44px; border-radius:50%; margin-bottom:var(--space-2);
+  display:grid; place-items:center;
+  background:linear-gradient(140deg,var(--color-accent),#8E3AAE);
+  color:#fff; box-shadow:0 4px 14px rgba(106,35,131,.32);
+}
+.f3 .fc__title{font-size:1.375rem; color:var(--color-primary); letter-spacing:-.01em}
+.f3 .fc__intro{color:var(--color-foreground-mut)}
+.f3 .dots{display:flex; align-items:center; gap:0; margin-bottom:var(--space-3)}
+.f3 .dot{
+  width:26px; height:26px; flex:none; border-radius:50%; display:grid; place-items:center;
+  font-size:.75rem; font-weight:700; font-family:var(--font-heading);
+  background:var(--color-muted); color:var(--color-foreground-mut);
+  transition:all var(--motion) ease;
+}
+.f3 .dot[data-state="current"]{background:var(--color-accent); color:#fff; box-shadow:0 0 0 4px rgba(106,35,131,.14)}
+.f3 .dot[data-state="done"]{background:var(--color-accent); color:#fff}
+.f3 .dot__link{flex:1; height:2px; background:var(--color-muted); transition:background-color var(--motion) ease}
+.f3 .dot__link[data-state="done"]{background:var(--color-accent)}
+.f3 .step__legend{color:var(--color-primary); font-size:1.125rem}
+.f3 .option__box{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius); color:var(--color-foreground); box-shadow:var(--shadow-sm);
+}
+.f3 .option__mark{
+  width:30px; height:30px; border-radius:50%;
+  background:var(--color-muted); color:var(--color-foreground-mut);
+  font-family:var(--font-heading); font-weight:700; font-size:.8125rem;
+}
+.f3 .option__mark svg{display:none}
+.f3 .option input:hover + .option__box{transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--color-border-strong)}
+.f3 .option input:checked + .option__box{
+  border-color:var(--color-accent); background:#FCF9FD;
+  box-shadow:0 6px 18px rgba(106,35,131,.16);
+}
+.f3 .option input:checked + .option__box .option__mark{background:var(--color-accent); color:#fff}
+.f3 .option input:checked + .option__box .option__mark .ltr{display:none}
+.f3 .option input:checked + .option__box .option__mark svg{display:block}
+.f3 .option input:focus-visible + .option__box{outline:3px solid var(--color-secondary); outline-offset:2px}
+.f3 .field input{border:1px solid var(--color-border); border-radius:var(--radius); background:var(--color-background)}
+.f3 .field input:focus{outline:none; background:var(--color-surface); border-color:var(--color-accent); box-shadow:0 0 0 3px rgba(106,35,131,.14)}
+.f3 .cta{
+  background:linear-gradient(140deg,var(--color-accent),#8E3AAE); color:#fff;
+  border-radius:var(--radius-pill); box-shadow:0 6px 18px rgba(106,35,131,.28);
+}
+.f3 .cta:hover{box-shadow:0 10px 26px rgba(106,35,131,.36)}
+.f3 .fback{color:var(--color-foreground-mut)}
+.f3 .fnote{color:var(--color-foreground-mut)}
+.f3 .fnote svg{color:var(--color-success)}
+.f3 .fdone__icon{background:#EAF6F0; color:var(--color-success)}
+.f3 .fdone p{color:var(--color-foreground-mut)}
+
+/* ==========================================================================
+   F4 · EDITORIAL — no boxes on the inputs, big headline, air. Most "magazine".
+   ========================================================================== */
+.f4{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:4px; box-shadow:0 20px 48px rgba(36,23,48,.08);
+  padding:var(--space-4) var(--space-3) var(--space-3);
+}
+@media (min-width:768px){ .f4{padding:var(--space-6) var(--space-4) var(--space-4)} }
+.f4 .fc__eyebrow{
+  font-size:.6875rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--color-accent); margin-bottom:var(--space-2);
+  padding-bottom:var(--space-2); border-bottom:1px solid var(--color-border);
+}
+.f4 .fc__title{font-size:1.75rem; line-height:1.1; letter-spacing:-.02em; color:var(--color-primary)}
+@media (min-width:768px){ .f4 .fc__title{font-size:2rem} }
+.f4 .fc__intro{color:var(--color-foreground-mut); margin-bottom:var(--space-4)}
+.f4 .rail{margin-bottom:var(--space-4)}
+.f4 .rail__count{
+  display:block; font-size:.6875rem; font-weight:600; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--color-border-strong); font-variant-numeric:tabular-nums;
+}
+.f4 .step__legend{color:var(--color-primary); font-size:1.1875rem; margin-bottom:var(--space-3)}
+.f4 .options{gap:0}
+.f4 .option + .option .option__box{border-top:1px solid var(--color-border)}
+.f4 .option__box{
+  background:transparent; border:0; border-radius:0; padding:18px 0;
+  justify-content:space-between; font-weight:400; font-size:1.0625rem;
+  color:var(--color-foreground);
+}
+.f4 .option__mark{
+  width:24px; height:24px; color:transparent;
+  transition:color var(--motion) ease, transform var(--motion) ease;
+}
+.f4 .option input:hover + .option__box{color:var(--color-accent)}
+.f4 .option input:hover + .option__box .option__mark{color:var(--color-border-strong)}
+.f4 .option input:checked + .option__box{font-weight:600; color:var(--color-accent)}
+.f4 .option input:checked + .option__box .option__mark{color:var(--color-accent); transform:scale(1.08)}
+.f4 .option input:focus-visible + .option__box{outline:3px solid var(--color-secondary); outline-offset:2px}
+.f4 .field{margin-bottom:var(--space-3)}
+.f4 .field label{
+  font-size:.6875rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--color-border-strong); margin-bottom:2px;
+}
+.f4 .field input{
+  border:0; border-bottom:1px solid var(--color-border); border-radius:0;
+  background:transparent; padding:10px 0; font-size:1.0625rem;
+  caret-color:var(--color-accent);
+}
+.f4 .field input:focus{outline:none; border-bottom-color:var(--color-accent); box-shadow:0 1px 0 0 var(--color-accent)}
+.f4 .cta{
+  background:var(--color-primary); color:#fff; border-radius:2px;
+  letter-spacing:.06em; text-transform:uppercase; font-size:.875rem;
+}
+.f4 .cta:hover{background:var(--color-accent)}
+.f4 .fback{color:var(--color-border-strong); letter-spacing:.06em; text-transform:uppercase; font-size:.75rem}
+.f4 .fnote{color:var(--color-foreground-mut)}
+.f4 .fnote svg{color:var(--color-success)}
+.f4 .fdone__icon{background:var(--color-muted); color:var(--color-accent)}
+.f4 .fdone p{color:var(--color-foreground-mut)}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important; transition-duration:.01ms !important}
+  .step--advancing{opacity:1}
+  .option input:checked + .option__box{transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<header class="lab-head">
+  <div class="wrap">
+    <p class="kicker">Cygnet House · Internal design reference</p>
+    <h1>Qualifier form — four luxury treatments</h1>
+    <p>All four are the same three-step form on the same token names as <code>index.html</code>, so whichever you pick pastes straight across. <strong style="color:#fff">Selection auto-advances</strong> in every variant — tap an answer and the step moves itself. Try each one; the differences are in how the choice feels, not in what it asks.</p>
+  </div>
+</header>
+
+<div class="lab-section">
+  <div class="wrap">
+    <p class="lab-note">
+      <strong>On auto-advance:</strong> it fires on tap and click only. Arrow keys move between radios in a group and fire a change event at every stop, so advancing on keyboard selection would throw a keyboard user past the question the instant they started reading it. Keyboard users get the Continue button — which is why it stays in all four. There is a 260&nbsp;ms beat before the step changes so the tick is visibly acknowledged rather than swallowed by the transition.
+    </p>
+
+    <div class="variants">
+
+      <!-- ================= F1 ================= -->
+      <section class="variant">
+        <div class="variant__head">
+          <h2 class="variant__name">F1 · Ink Atelier <span class="tag">Boldest</span></h2>
+          <p class="variant__why">The card itself goes ink, so the form stops being a widget on the hero and becomes the <b>centre of gravity</b> of the page. Reads private-clinic, not high-street. Costs you the white-card familiarity that makes forms feel safe to fill in — worth A/B testing rather than assuming.</p>
+        </div>
+        <div class="variant__stage stage--light" data-form="f1"></div>
+      </section>
+
+      <!-- ================= F2 ================= -->
+      <section class="variant">
+        <div class="variant__name-wrap variant__head">
+          <h2 class="variant__name">F2 · Gilded Hairline <span class="tag tag--pick">My pick</span></h2>
+          <p class="variant__why">Luxury by <b>restraint</b>: 1px hairlines instead of 2px boxes, a gradient rule replacing the 4px slab, a small-caps step counter, and answers as a divided list with a chevron that slides in. Keeps the white card working for you while removing everything that read as "form widget". Lowest-risk change of the four.</p>
+        </div>
+        <div class="variant__stage stage--light" data-form="f2"></div>
+      </section>
+
+      <!-- ================= F3 ================= -->
+      <section class="variant">
+        <div class="variant__head">
+          <h2 class="variant__name">F3 · Concierge Tiles <span class="tag">Warmest</span></h2>
+          <p class="variant__why">Lettered chips, rows that lift on hover, a pill CTA and a crest at the top. Feels like a <b>concierge questionnaire</b> rather than a lead form — the friendliest of the four for nervous patients, which is the audience §8 of the page is written for. Slightly more "app" than "atelier".</p>
+        </div>
+        <div class="variant__stage stage--light" data-form="f3"></div>
+      </section>
+
+      <!-- ================= F4 ================= -->
+      <section class="variant">
+        <div class="variant__head">
+          <h2 class="variant__name">F4 · Editorial <span class="tag">Quietest</span></h2>
+          <p class="variant__why">No boxes at all: underline-only fields, a large display headline, wide letter-spaced labels and a lot of air. The most <b>expensive-looking</b> of the four and the most demanding — thin borders and low-contrast labels need real discipline, and underline fields test slightly worse for completion on mobile than bordered ones.</p>
+        </div>
+        <div class="variant__stage stage--light" data-form="f4"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ICON = {
+    arrow: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    back:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
+    chev:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+    tick:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    tickL: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    lock:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    big:   '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    crest: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z"/><path d="M9 12l2 2 4-4"/></svg>'
+  };
+
+  var SITUATIONS = [
+    'Missing 1 tooth',
+    'Missing several teeth',
+    'Loose or uncomfortable dentures',
+    'Failing teeth / considering full-mouth'
+  ];
+  var TIMINGS = [
+    'As soon as possible',
+    'In the next few months',
+    'Just researching for now'
+  ];
+  var LETTERS = ['A', 'B', 'C', 'D'];
+
+  /* -- Progress markup differs per variant; the rest of the form does not. -- */
+  function progressFor(id) {
+    if (id === 'f3') {
+      return '<div class="dots" aria-hidden="true">' +
+        '<span class="dot" data-dot="1" data-state="current">1</span>' +
+        '<span class="dot__link" data-link="1"></span>' +
+        '<span class="dot" data-dot="2">2</span>' +
+        '<span class="dot__link" data-link="2"></span>' +
+        '<span class="dot" data-dot="3">3</span>' +
+        '</div>' +
+        '<p class="sr-only" data-count role="status">Step 1 of 3</p>';
+    }
+    if (id === 'f4') {
+      return '<div class="rail"><span class="rail__count" data-count role="status">Step 01 &nbsp;/&nbsp; 03</span></div>';
+    }
+    return '<div class="rail">' +
+      '<span class="rail__count" data-count role="status">01 / 03</span>' +
+      '<span class="rail__bar" aria-hidden="true"><span class="rail__fill" data-fill></span></span>' +
+      '</div>';
+  }
+
+  function optionsFor(id, name, values) {
+    return '<div class="options">' + values.map(function (v, i) {
+      var mark;
+      if (id === 'f3')      mark = '<span class="option__mark" aria-hidden="true"><span class="ltr">' + LETTERS[i] + '</span>' + ICON.tick + '</span>';
+      else if (id === 'f4') mark = '<span class="option__mark" aria-hidden="true">' + ICON.tickL + '</span>';
+      else                  mark = '<span class="option__mark" aria-hidden="true"></span>';
+
+      var inner;
+      if (id === 'f2')      inner = '<span class="txt">' + mark + v + '</span><span class="option__chev" aria-hidden="true">' + ICON.chev + '</span>';
+      else if (id === 'f4') inner = '<span>' + v + '</span>' + mark;
+      else                  inner = mark + ' ' + v;
+
+      return '<label class="option">' +
+        '<input type="radio" name="' + name + '-' + id + '" value="' + v + '">' +
+        '<span class="option__box">' + inner + '</span>' +
+        '</label>';
+    }).join('') + '</div>';
+  }
+
+  function headFor(id) {
+    var title = 'Check if dental implants are right for you';
+    var intro = 'Two quick questions, then your details. Takes under a minute.';
+    if (id === 'f1') return '<p class="fc__eyebrow">Implant suitability</p><h3 class="fc__title">' + title + '</h3><p class="fc__intro">' + intro + '</p>';
+    if (id === 'f2') return '<p class="fc__eyebrow">Implant suitability</p><h3 class="fc__title">' + title + '</h3><p class="fc__intro">' + intro + '</p>';
+    if (id === 'f3') return '<span class="fc__crest" aria-hidden="true">' + ICON.crest + '</span><h3 class="fc__title">' + title + '</h3><p class="fc__intro">' + intro + '</p>';
+    return '<p class="fc__eyebrow">Implant suitability</p><h3 class="fc__title">' + title + '</h3><p class="fc__intro">' + intro + '</p>';
+  }
+
+  function fieldsFor(id) {
+    var ph = id === 'f1' || id === 'f4';   // dark + editorial read better with placeholders
+    function f(nm, label, type, hint, mode) {
+      return '<div class="field">' +
+        '<label for="' + nm + '-' + id + '">' + label + '</label>' +
+        '<input type="' + type + '" id="' + nm + '-' + id + '" name="' + nm + '"' +
+        (mode ? ' inputmode="' + mode + '"' : '') +
+        (ph ? ' placeholder="' + hint + '"' : '') + '>' +
+        '</div>';
+    }
+    return f('firstName', 'First name', 'text', 'Jane', null) +
+           f('phone', 'Phone', 'tel', '07700 900123', 'tel') +
+           f('email', 'Email', 'email', 'jane@example.com', 'email');
+  }
+
+  function build(id) {
+    return '' +
+      '<div class="fc ' + id + '" data-card>' +
+        '<div data-view>' +
+          headFor(id) +
+          progressFor(id) +
+          '<form novalidate>' +
+
+            '<div class="step" data-step="1">' +
+              '<fieldset><legend class="step__legend">What best describes your situation?</legend>' +
+              optionsFor(id, 'situation', SITUATIONS) + '</fieldset>' +
+              '<div class="fnav"><button type="button" class="cta" data-next="2">Continue ' + ICON.arrow + '</button></div>' +
+            '</div>' +
+
+            '<div class="step" data-step="2" hidden>' +
+              '<fieldset><legend class="step__legend">How soon are you looking to start?</legend>' +
+              optionsFor(id, 'timing', TIMINGS) + '</fieldset>' +
+              '<div class="fnav"><button type="button" class="cta" data-next="3">Continue ' + ICON.arrow + '</button></div>' +
+              '<button type="button" class="fback" data-back="1">' + ICON.back + ' Back</button>' +
+            '</div>' +
+
+            '<div class="step" data-step="3" hidden>' +
+              '<p class="step__legend">Where shall we send your suitability answer?</p>' +
+              fieldsFor(id) +
+              '<div class="fnav"><button type="submit" class="cta">Check My Suitability</button></div>' +
+              '<button type="button" class="fback" data-back="2">' + ICON.back + ' Back</button>' +
+              '<p class="fnote">' + ICON.lock + '<span>We&rsquo;ll be in touch to arrange your consultation. Your details are kept private and never shared.</span></p>' +
+            '</div>' +
+
+          '</form>' +
+        '</div>' +
+
+        '<div class="fdone" data-done hidden>' +
+          '<span class="fdone__icon" aria-hidden="true">' + ICON.big + '</span>' +
+          '<h3 class="fc__title">Thank you &mdash; that&rsquo;s all we need</h3>' +
+          '<p>Preview only. On the live page this posts to the CRM.</p>' +
+          '<button type="button" class="fback" data-reset>' + ICON.back + ' Run it again</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ---- One controller drives every variant ---- */
+  function wire(card) {
+    var form   = card.querySelector('form');
+    var steps  = Array.prototype.slice.call(card.querySelectorAll('.step'));
+    var count  = card.querySelector('[data-count]');
+    var fill   = card.querySelector('[data-fill]');
+    var dots   = card.querySelectorAll('.dot');
+    var links  = card.querySelectorAll('.dot__link');
+    var view   = card.querySelector('[data-view]');
+    var done   = card.querySelector('[data-done]');
+    var TOTAL  = steps.length;
+    var current = 1;
+    var pointerPick = false;
+    var timer = null;
+    var pad = function (n) { return n < 10 ? '0' + n : String(n); };
+    var editorial = card.classList.contains('f4');
+    var tiles     = card.classList.contains('f3');
+
+    function setStep(n, focus) {
+      current = n;
+      steps.forEach(function (s) { s.hidden = Number(s.dataset.step) !== n; });
+
+      if (count) {
+        count.innerHTML = tiles ? ('Step ' + n + ' of ' + TOTAL)
+          : editorial ? ('Step ' + pad(n) + ' &nbsp;/&nbsp; ' + pad(TOTAL))
+          : (pad(n) + ' / ' + pad(TOTAL));
+      }
+      if (fill) fill.style.width = (n / TOTAL * 100) + '%';
+      dots.forEach(function (d) {
+        var i = Number(d.dataset.dot);
+        d.setAttribute('data-state', i < n ? 'done' : (i === n ? 'current' : ''));
+        if (i < n) d.innerHTML = ICON.tick; else d.textContent = String(i);
+      });
+      links.forEach(function (l) {
+        l.setAttribute('data-state', Number(l.dataset.link) < n ? 'done' : '');
+      });
+
+      if (focus) {
+        var t = steps[n - 1].querySelector('input, button');
+        if (t) t.focus({ preventScroll: true });
+      }
+    }
+
+    card.querySelectorAll('.option').forEach(function (o) {
+      o.addEventListener('pointerdown', function () { pointerPick = true; });
+    });
+
+    card.querySelectorAll('input[type="radio"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        if (!pointerPick) return;          // keyboard arrows must not advance
+        pointerPick = false;
+        var step = r.closest('.step');
+        var next = step && step.querySelector('[data-next]');
+        if (!next) return;
+        var beat = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 260;
+        step.classList.add('step--advancing');
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          step.classList.remove('step--advancing');
+          setStep(Number(next.dataset.next), true);
+        }, beat);
+      });
+    });
+
+    card.querySelectorAll('[data-next]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var picked = steps[current - 1].querySelector('input[type="radio"]:checked');
+        if (!picked) {
+          var first = steps[current - 1].querySelector('input[type="radio"]');
+          if (first) first.focus();
+          return;
+        }
+        setStep(Number(b.dataset.next), true);
+      });
+    });
+
+    card.querySelectorAll('[data-back]').forEach(function (b) {
+      b.addEventListener('click', function () { setStep(Number(b.dataset.back), true); });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      view.hidden = true;
+      done.hidden = false;
+    });
+
+    card.querySelector('[data-reset]').addEventListener('click', function () {
+      form.reset();
+      done.hidden = true;
+      view.hidden = false;
+      setStep(1, true);
+    });
+
+    setStep(1, false);
+  }
+
+  document.querySelectorAll('[data-form]').forEach(function (stage) {
+    stage.innerHTML = build(stage.dataset.form);
+    wire(stage.querySelector('[data-card]'));
+  });
+})();
+</script>
+
+</body>
+</html>

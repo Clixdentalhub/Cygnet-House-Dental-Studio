@@ -538,6 +538,14 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .progress__label{font-size:.8125rem; font-weight:600; color:var(--color-foreground-mut)}
 
 .step[hidden]{display:none}
+/* Selection → advance: the step settles back while the tick registers, so the
+   change of question reads as a consequence of the tap rather than a jump. */
+.step--advancing{opacity:.55; transition:opacity 200ms ease}
+.step--advancing .option input:checked + .option__box{transform:scale(1.015)}
+@media (prefers-reduced-motion:reduce){
+  .step--advancing{opacity:1; transition:none}
+  .step--advancing .option input:checked + .option__box{transform:none}
+}
 .step__legend{
   display:block; width:100%; padding:0; border:0;
   font-family:var(--font-heading); font-weight:600; font-size:1.0625rem;
@@ -558,7 +566,8 @@ fieldset{border:0; padding:0; margin:0}
   border:2px solid var(--color-border);
   border-radius:var(--radius-sm);
   font-weight:600; font-size:.9375rem;
-  transition:border-color var(--motion) ease, background-color var(--motion) ease;
+  transition:border-color var(--motion) ease, background-color var(--motion) ease,
+             transform var(--motion) ease;
 }
 .option__radio{
   width:20px; height:20px; border-radius:50%;
@@ -867,6 +876,28 @@ fieldset{border:0; padding:0; margin:0}
 .callout h3{margin-bottom:var(--space)}
 .callout p{font-size:.9375rem; color:var(--color-foreground-mut)}
 .callout--compliance{background:#FFFBEB; border-color:#FDE68A}
+
+/* The one finance fact worth a box of its own. Ink ground so it reads as a
+   statement, not another card in the stack. */
+.finance-box{
+  display:flex; align-items:center; gap:var(--space-2);
+  background:linear-gradient(135deg,var(--color-primary) 0%,#3A2148 100%);
+  border:1px solid var(--color-primary); border-radius:var(--radius);
+  padding:var(--space-2) var(--space-3); margin-bottom:var(--space-3);
+  box-shadow:var(--shadow-md);
+}
+.finance-box__badge{
+  flex:none; display:flex; align-items:baseline; justify-content:center;
+  width:68px; height:68px; border-radius:50%; white-space:nowrap;
+  background:rgba(255,255,255,.08); border:1px solid var(--color-flourish);
+  font-family:var(--font-heading); font-weight:700; font-size:1.625rem;
+  color:#fff; letter-spacing:-.03em;
+}
+.finance-box__badge small{font-size:1rem; font-weight:700; margin-left:1px}
+.finance-box h3{color:#fff; margin-bottom:4px; font-size:1.0625rem}
+.finance-box p{color:var(--color-on-primary-mut); font-size:.9375rem}
+.finance-box p strong{color:#fff}
+
 .rep-example{
   font-size:.8125rem; line-height:1.5; color:var(--color-foreground-mut);
   background:var(--color-background); border:1px solid var(--color-border);
@@ -1607,19 +1638,28 @@ body{padding-bottom:88px}
       <div>
         <div class="callout">
           <h3>Your £50 consultation deposit</h3>
-          <p>A <strong>£50 consultation deposit</strong> secures your appointment and covers your full assessment and scans. <span class="ph">[Confirm refundable / redeemable status]</span></p>
+          <p>A <strong>£50 consultation deposit</strong> secures your appointment and covers your full assessment and scans.</p>
+        </div>
+
+        <div class="finance-box">
+          <span class="finance-box__badge" aria-hidden="true">0<small>%</small></span>
+          <div class="finance-box__body">
+            <h3>Interest-free over 12 months</h3>
+            <p>0% interest over 12 months is available on <strong>every implant treatment</strong>.</p>
+          </div>
         </div>
 
         <div class="callout callout--compliance">
           <h3>Spreading the cost</h3>
-          <p style="margin-bottom:12px">0% interest over 12 months is available on every implant treatment.</p>
           <p class="rep-example">
             <strong>Representative example:</strong> Total amount of credit £3,000 for a single dental implant, repaid over 12 months at 0% APR representative. 12 monthly payments of £250. Total amount payable £3,000. Finance is subject to status and affordability checks.
           </p>
-          <p style="margin-top:12px;font-size:.8125rem">
-            <span class="ph">[Lender name + Cygnet House Dental Studio's FCA authorisation and credit-broker status required before this section can be published]</span>
-          </p>
         </div>
+        <!-- BUILD NOTE (do not publish without this): the lender name and Cygnet
+             House Dental Studio's FCA authorisation / credit-broker status + FRN
+             still have to appear somewhere on the page before this finance copy
+             goes live. The visible placeholder was removed at client request —
+             the legal requirement has not gone away. -->
       </div>
     </div>
   </div>
@@ -1996,9 +2036,39 @@ body{padding-bottom:88px}
       });
     });
 
-    /* Clear an error as soon as the user answers */
+    /* Clear an error as soon as the user answers, then advance.
+
+       Auto-advance fires only for pointer input. Arrow keys move between
+       radios in a group and fire `change` on every stop, so advancing on
+       keyboard selection would fling a keyboard user past the question the
+       moment they started reading it. Those users get the Continue button. */
+    var pointerPick = false;
+    var advanceTimer = null;
+
+    form.querySelectorAll('.option').forEach(function (opt) {
+      opt.addEventListener('pointerdown', function () { pointerPick = true; });
+    });
+
     form.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-      radio.addEventListener('change', function () { showError(radio.name, false); });
+      radio.addEventListener('change', function () {
+        showError(radio.name, false);
+        if (!pointerPick) return;
+        pointerPick = false;
+
+        var step = radio.closest('.step');
+        var next = step && step.querySelector('.js-next');
+        if (!next) return;
+
+        /* A beat so the tick lands before the step changes — the selection
+           should be visibly acknowledged, not swallowed by the transition. */
+        var beat = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 260;
+        step.classList.add('step--advancing');
+        clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(function () {
+          step.classList.remove('step--advancing');
+          setStep(Number(next.dataset.next), true);
+        }, beat);
+      });
     });
     ['firstName', 'phone', 'email'].forEach(function (name) {
       var input = form.querySelector('#' + name);
