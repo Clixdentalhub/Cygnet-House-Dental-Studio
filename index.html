@@ -434,11 +434,8 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   min-height:var(--header-h);
   padding-block:var(--space);
 }
-.logo{
-  display:flex; align-items:center; gap:10px;
-  text-decoration:none; color:var(--color-primary);
-  font-family:var(--font-heading); font-weight:700; line-height:1.15;
-}
+.logo{display:flex; align-items:center; text-decoration:none}
+.logo img{height:52px; width:auto; display:block}
 .logo__mark{
   width:36px; height:36px; border-radius:50%;
   background:var(--color-primary); color:var(--color-on-primary);
@@ -945,12 +942,8 @@ body{padding-bottom:88px}
      ============================================================ -->
 <header class="header">
   <div class="container header__inner">
-    <a class="logo" href="#top" aria-label="Cygnet House Dental Studio — home">
-      <!-- TODO: replace with the real practice logo (SVG preferred) -->
-      <span class="logo__mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5c-1.5-1.2-3-1.8-4.5-1.5C5 4.5 3.5 6.5 3.5 9.5c0 3 1 5 1.8 7.4.5 1.6 1 3.1 2.2 3.1 1.3 0 1.6-1.6 2-3.2.3-1.3.7-2.3 2.5-2.3s2.2 1 2.5 2.3c.4 1.6.7 3.2 2 3.2 1.2 0 1.7-1.5 2.2-3.1.8-2.4 1.8-4.4 1.8-7.4 0-3-1.5-5-4-5.5-1.5-.3-3 .3-4.5 1.5Z"/></svg>
-      </span>
-      <span class="logo__name">Cygnet House<span>Dental Studio · Spilsby</span></span>
+    <a class="logo" href="#top">
+      <img src="assets/logo.webp" alt="Cygnet House Dental Studio &amp; Implant Centre — home" width="374" height="166">
     </a>
 
     <div class="header__actions">
@@ -1709,6 +1702,7 @@ body{padding-bottom:88px}
   <div class="container">
     <div class="footer__grid">
       <div>
+        <img src="assets/logo.webp" alt="" width="187" height="83" style="height:56px;width:auto;margin-bottom:12px" loading="lazy">
         <h3>Cygnet House Dental Studio</h3>
         <p>Cygnet House, Grace Swan Close,<br>Hundleby, Spilsby, PE23 5LT</p>
         <p><a class="js-tel" href="tel:[Phone]"><span class="js-phone">[Phone]</span></a></p>
@@ -1785,6 +1779,7 @@ body{padding-bottom:88px}
   "name": "Cygnet House Dental Studio",
   "legalName": "Cygnet House Dental Studio Ltd",
   "url": "https://www.cygnethousedentalstudio.co.uk",
+  "telephone": "+447450302990",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Cygnet House, Grace Swan Close, Hundleby",
@@ -1824,8 +1819,8 @@ body{padding-bottom:88px}
      Leave a value as null to keep the visible [placeholder].
      ========================================================== */
   var SITE_CONFIG = {
-    phoneDisplay: null,   // e.g. '01790 123456'
-    phoneHref:    null    // e.g. '+441790123456'
+    phoneDisplay: '07450 302990',
+    phoneHref:    '+447450302990'
   };
 
   /* ---------- Apply config ---------- */
