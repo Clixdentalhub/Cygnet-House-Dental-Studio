@@ -10,6 +10,7 @@ Single-page, mobile-first lead-generation landing page for dental implants
 | `index.html` | The live funnel page. One self-contained file (HTML + CSS + vanilla JS). No frameworks, no build step, no external JS. |
 | `thank-you.html` | The post-submission confirmation page. Same tokens, same header and footer, self-contained in the same way. `noindex` on purpose. |
 | `design-lab.html` | Internal design reference — background motion options, section cuts and reusable funnel blocks, with copy-paste code. Not a public page. |
+| `motion-lab.html` | Internal reference — 27 motion patterns for sections, cards, headlines, media, hover and micro-interactions. Every case is live and replayable, with a reduced-motion toggle that shows exactly what a visitor with that preference gets. Ends with the shortlist I would actually apply. |
 | `form-lab.html` | Internal reference — four luxury treatments of the qualifier form. **F1 · Ink Atelier is the one shipped in `index.html`.** F2 · Gilded Hairline is the natural control to A/B test it against. |
 
 Open any of them in a browser or drop them on any static host.

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Motion Lab — Cygnet House Implants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   TOKENS — identical names to index.html, so anything here pastes straight in
+   ========================================================================== */
+:root{
+  --color-primary:        #241730;
+  --color-on-primary:     #FFFFFF;
+  --color-secondary:      #6A2383;
+  --color-accent:         #6A2383;
+  --color-accent-dark:    #521B66;
+  --cta-on-dark:          #9B4DD6;
+  --color-flourish:       #C4A5E8;
+  --color-on-primary-mut: #D5CADE;
+  --color-background:     #FAF8FB;
+  --color-surface:        #FFFFFF;
+  --color-foreground:     #1F1024;
+  --color-foreground-mut: #57496B;
+  --color-muted:          #EFEAF2;
+  --color-border:         #D8CFE0;
+  --color-border-strong:  #94879E;
+  --color-success:        #16794A;
+  --color-star:           #B45309;
+
+  --radius:12px; --radius-sm:8px; --radius-lg:20px; --radius-pill:999px;
+  --space:8px; --space-2:16px; --space-3:24px; --space-4:32px; --space-6:48px; --space-8:64px;
+
+  --font-heading:"Lexend","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.08);
+  --shadow-md:0 4px 12px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.12), 0 4px 8px rgba(15,23,42,.05);
+
+  /* Every duration and curve in this document resolves from here, so the
+     whole system re-times from one block. */
+  --ease-out:  cubic-bezier(.22,1,.36,1);   /* the workhorse — no overshoot */
+  --ease-soft: cubic-bezier(.4,0,.2,1);
+  --t-fast:   240ms;
+  --t-base:   460ms;
+  --t-slow:   680ms;
+  --stagger:  90ms;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0; font-family:var(--font-body); font-size:16px; line-height:1.6;
+     color:var(--color-foreground); background:var(--color-background)}
+h1,h2,h3,h4{font-family:var(--font-heading); font-weight:700; line-height:1.2; margin:0 0 var(--space-2)}
+p{margin:0 0 var(--space-2)}
+ul{margin:0; padding:0; list-style:none}
+button{font:inherit}
+img{max-width:100%; display:block}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+
+/* ==========================================================================
+   LAB CHROME
+   ========================================================================== */
+.wrap{max-width:1200px; margin-inline:auto; padding-inline:var(--space-3)}
+.lab-head{background:var(--color-primary); color:#fff; padding-block:var(--space-8) var(--space-6)}
+.lab-head h1{color:#fff; font-size:1.875rem; letter-spacing:-.02em}
+.lab-head p{color:var(--color-on-primary-mut); max-width:74ch}
+.kicker{font-size:.6875rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+        color:var(--color-flourish); margin-bottom:var(--space)}
+
+.controls{
+  position:sticky; top:0; z-index:50;
+  background:rgba(250,248,251,.92); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--color-border);
+  padding-block:12px;
+}
+.controls__inner{display:flex; flex-wrap:wrap; gap:var(--space); align-items:center}
+.ctl{
+  display:inline-flex; align-items:center; gap:8px; min-height:40px;
+  padding:8px 16px; border-radius:var(--radius-pill); cursor:pointer;
+  background:var(--color-surface); border:1px solid var(--color-border);
+  font-family:var(--font-body); font-size:.875rem; font-weight:600; color:var(--color-primary);
+  transition:border-color var(--t-fast) ease, background-color var(--t-fast) ease;
+}
+.ctl:hover{border-color:var(--color-accent)}
+.ctl[aria-pressed="true"]{background:var(--color-accent); border-color:var(--color-accent); color:#fff}
+.ctl svg{flex:none}
+.controls__note{font-size:.8125rem; color:var(--color-foreground-mut); margin:0 0 0 auto}
+
+.group{padding-block:var(--space-8) 0}
+.group__head{margin-bottom:var(--space-4); max-width:76ch}
+.group__head h2{font-size:1.5rem; letter-spacing:-.015em}
+.group__head p{color:var(--color-foreground-mut); margin-bottom:0}
+
+.cases{display:grid; gap:var(--space-3)}
+@media (min-width:900px){ .cases{grid-template-columns:1fr 1fr} }
+.cases--wide{grid-template-columns:1fr}
+
+.case{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column;
+}
+.case__bar{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:12px var(--space-2); border-bottom:1px solid var(--color-border);
+  background:var(--color-background);
+}
+.case__id{
+  font-family:var(--font-heading); font-weight:700; font-size:.75rem;
+  background:var(--color-primary); color:#fff; border-radius:var(--radius-sm);
+  padding:3px 8px; letter-spacing:.02em;
+}
+.case__name{font-family:var(--font-heading); font-weight:600; font-size:.9375rem; margin:0}
+.badge{
+  font-size:.625rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  padding:3px 8px; border-radius:var(--radius-pill);
+  background:var(--color-muted); color:var(--color-foreground-mut);
+}
+.badge--live{background:#E7F5EE; color:var(--color-success)}
+.badge--pick{background:var(--color-accent); color:#fff}
+.badge--cost{background:#FEF3C7; color:#713F12}
+.replay{
+  margin-left:auto; display:inline-flex; align-items:center; gap:6px;
+  min-height:34px; padding:6px 12px; border-radius:var(--radius-pill); cursor:pointer;
+  background:none; border:1px solid var(--color-border-strong);
+  font-size:.8125rem; font-weight:600; color:var(--color-foreground-mut);
+  transition:color var(--t-fast) ease, border-color var(--t-fast) ease;
+}
+.replay:hover{color:var(--color-accent); border-color:var(--color-accent)}
+.replay svg{transition:transform var(--t-base) var(--ease-out)}
+.replay:hover svg{transform:rotate(-180deg)}
+
+.case__stage{padding:var(--space-3); flex:1; min-height:200px; display:flex; align-items:center}
+.case__stage > *{width:100%}
+.stage--ink{background:linear-gradient(165deg,#2C1B3A 0%,#1D1428 100%); color:#fff}
+.stage--ink h3,.stage--ink h4{color:#fff}
+.case__why{
+  padding:12px var(--space-2) var(--space-2);
+  border-top:1px solid var(--color-border); background:var(--color-background);
+  font-size:.8125rem; color:var(--color-foreground-mut); margin:0;
+}
+.case__why b{color:var(--color-foreground); font-weight:600}
+
+/* Sample furniture used inside the stages */
+.s-card{
+  background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius); padding:var(--space-2); box-shadow:var(--shadow-sm);
+}
+.s-card h4{font-size:.9375rem; margin-bottom:4px}
+.s-card p{font-size:.8125rem; color:var(--color-foreground-mut); margin:0}
+.s-grid{display:grid; gap:12px; grid-template-columns:repeat(3,1fr)}
+.s-media{border-radius:var(--radius-sm); overflow:hidden; aspect-ratio:16/10; background:var(--color-muted)}
+.s-media img{width:100%; height:100%; object-fit:cover}
+.s-head h3{font-size:1.375rem; letter-spacing:-.015em; margin-bottom:6px}
+.s-head p{font-size:.9375rem; color:var(--color-foreground-mut); margin:0}
+.s-rule{height:2px; background:var(--color-accent); border-radius:2px; margin-bottom:14px}
+.s-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:12px 24px; border:0; border-radius:var(--radius-sm); cursor:pointer;
+  background:var(--color-accent); color:#fff;
+  font-family:var(--font-heading); font-weight:700; font-size:.9375rem;
+}
+
+/* ==========================================================================
+   THE MOTION
+
+   Every pattern below is written the same way: a resting state on the
+   element, and a finished state under `.is-in` on the case. JS adds `.is-in`
+   when the case scrolls into view and re-adds it on Replay. Nothing animates
+   anything but transform, opacity, clip-path and filter.
+   ========================================================================== */
+
+/* ---------- S · SECTION ENTRANCES ---------- */
+
+/* S1 · Rise — the one already on the funnel. Honest, cheap, invisible. */
+[data-anim="s1"] .s-head{opacity:0; transform:translateY(16px);
+  transition:opacity var(--t-slow) ease, transform var(--t-slow) var(--ease-out)}
+.is-in[data-anim="s1"] .s-head{opacity:1; transform:none}
+
+/* S2 · Clip Wipe — the section is uncovered from the bottom edge up, so the
+   content does not move at all. Reads as a reveal rather than an arrival. */
+[data-anim="s2"] .s-head{clip-path:inset(0 0 100% 0); opacity:.001;
+  transition:clip-path var(--t-slow) var(--ease-out), opacity 200ms ease}
+.is-in[data-anim="s2"] .s-head{clip-path:inset(0 0 0 0); opacity:1}
+
+/* S3 · Rule First — a hairline draws across, then the words arrive under it.
+   Cheapest way to make a section head feel deliberate. */
+[data-anim="s3"] .s-rule{transform:scaleX(0); transform-origin:left center;
+  transition:transform var(--t-slow) var(--ease-out)}
+[data-anim="s3"] .s-head{opacity:0; transform:translateY(10px);
+  transition:opacity var(--t-base) ease 260ms, transform var(--t-base) var(--ease-out) 260ms}
+.is-in[data-anim="s3"] .s-rule{transform:scaleX(1)}
+.is-in[data-anim="s3"] .s-head{opacity:1; transform:none}
+
+/* S4 · Settle — scale from 97%. Almost subliminal; the most "expensive" of
+   the five because you feel it without being able to name it. */
+[data-anim="s4"] .s-head{opacity:0; transform:scale(.97);
+  transition:opacity var(--t-slow) ease, transform var(--t-slow) var(--ease-out)}
+.is-in[data-anim="s4"] .s-head{opacity:1; transform:none}
+
+/* S5 · Focus Pull — blur to sharp. Beautiful, and the only pattern here that
+   can drop frames on a mid-range Android: filter:blur repaints every frame. */
+[data-anim="s5"] .s-head{opacity:0; filter:blur(12px); transform:scale(1.02);
+  transition:opacity var(--t-slow) ease, filter var(--t-slow) var(--ease-out),
+             transform var(--t-slow) var(--ease-out)}
+.is-in[data-anim="s5"] .s-head{opacity:1; filter:blur(0); transform:none}
+
+/* ---------- C · CARD CHOREOGRAPHY ---------- */
+/* All five share the same resting state; only the delay pattern differs. */
+[data-anim^="c"] .s-card{opacity:0;
+  transition:opacity var(--t-base) ease var(--d,0ms),
+             transform var(--t-base) var(--ease-out) var(--d,0ms)}
+.is-in[data-anim^="c"] .s-card{opacity:1; transform:none}
+
+/* C1 · Cascade — left to right. Matches reading order, so it never fights it. */
+[data-anim="c1"] .s-card{transform:translateY(18px)}
+[data-anim="c1"] .s-card:nth-child(1){--d:0ms}
+[data-anim="c1"] .s-card:nth-child(2){--d:var(--stagger)}
+[data-anim="c1"] .s-card:nth-child(3){--d:calc(var(--stagger) * 2)}
+
+/* C2 · Centre Out — middle first. Puts the emphasis on the card you want
+   chosen, which is why pricing tables use it. */
+[data-anim="c2"] .s-card{transform:translateY(18px)}
+[data-anim="c2"] .s-card:nth-child(2){--d:0ms}
+[data-anim="c2"] .s-card:nth-child(1),
+[data-anim="c2"] .s-card:nth-child(3){--d:120ms}
+
+/* C3 · Deal — a whisper of rotation, as if laid down by hand. Charming on
+   three cards, cheap-looking on nine. */
+[data-anim="c3"] .s-card{transform:translateY(26px) rotate(-1.5deg)}
+[data-anim="c3"] .s-card:nth-child(2){transform:translateY(26px) rotate(1deg)}
+[data-anim="c3"] .s-card:nth-child(3){transform:translateY(26px) rotate(-.75deg)}
+[data-anim="c3"] .s-card:nth-child(1){--d:0ms}
+[data-anim="c3"] .s-card:nth-child(2){--d:110ms}
+[data-anim="c3"] .s-card:nth-child(3){--d:220ms}
+
+/* C4 · Depth — each column rises a different distance, so the row gains a
+   shallow z-axis. Subtle enough to survive a fold. */
+[data-anim="c4"] .s-card:nth-child(1){transform:translateY(34px); --d:0ms}
+[data-anim="c4"] .s-card:nth-child(2){transform:translateY(20px); --d:70ms}
+[data-anim="c4"] .s-card:nth-child(3){transform:translateY(10px); --d:140ms}
+
+/* C5 · Mask Rise — each card wiped up in place. No movement at all, so it
+   holds up in a dense grid where translation would read as jitter. */
+[data-anim="c5"] .s-card{clip-path:inset(100% 0 0 0); opacity:1;
+  transition:clip-path var(--t-slow) var(--ease-out) var(--d,0ms)}
+[data-anim="c5"] .s-card:nth-child(1){--d:0ms}
+[data-anim="c5"] .s-card:nth-child(2){--d:var(--stagger)}
+[data-anim="c5"] .s-card:nth-child(3){--d:calc(var(--stagger) * 2)}
+.is-in[data-anim="c5"] .s-card{clip-path:inset(0 0 0 0)}
+
+/* ---------- H · HEADLINE REVEALS ---------- */
+
+/* H1 · Line Mask — each line lifts out from behind its own edge. The one
+   move that makes a headline feel typeset rather than dropped in. */
+.linemask{overflow:hidden; display:block}
+.linemask > span{display:block; transform:translateY(105%);
+  transition:transform var(--t-slow) var(--ease-out) var(--d,0ms)}
+.is-in [data-anim="h1"] .linemask > span,
+.is-in[data-anim="h1"] .linemask > span{transform:none}
+[data-anim="h1"] .linemask:nth-of-type(1) > span{--d:0ms}
+[data-anim="h1"] .linemask:nth-of-type(2) > span{--d:90ms}
+[data-anim="h1"] .linemask:nth-of-type(3) > span{--d:180ms}
+
+/* H2 · Word Rise — finer grain than H1. Use on one headline per page, never
+   on body copy, and never on more than about eight words. */
+[data-anim="h2"] .word{display:inline-block; opacity:0; transform:translateY(14px);
+  transition:opacity 340ms ease var(--d,0ms), transform 460ms var(--ease-out) var(--d,0ms)}
+.is-in[data-anim="h2"] .word{opacity:1; transform:none}
+
+/* H3 · Underline Draw — the headline is static; only the accent rule moves.
+   The most restrained option, and the easiest to reuse everywhere. */
+[data-anim="h3"] .s-head h3{position:relative; display:inline-block; padding-bottom:8px}
+[data-anim="h3"] .s-head h3::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background:var(--color-accent); border-radius:2px;
+  transform:scaleX(0); transform-origin:left center;
+  transition:transform var(--t-slow) var(--ease-out) 180ms;
+}
+.is-in[data-anim="h3"] .s-head h3::after{transform:scaleX(1)}
+
+/* H4 · Emphasis Sweep — a highlight wipes behind one phrase. Points at the
+   promise instead of animating the whole line. */
+[data-anim="h4"] .mark{position:relative; display:inline-block; z-index:0}
+[data-anim="h4"] .mark::before{
+  content:""; position:absolute; z-index:-1; left:-4px; right:-4px; bottom:0; top:8%;
+  background:rgba(196,165,232,.55); border-radius:3px;
+  transform:scaleX(0); transform-origin:left center;
+  transition:transform var(--t-slow) var(--ease-out) 300ms;
+}
+.is-in[data-anim="h4"] .mark::before{transform:scaleX(1)}
+
+/* ---------- M · MEDIA REVEALS ---------- */
+
+/* M1 · Curtain — an amethyst panel slides off the photo. The most branded of
+   the four; the colour is doing the work, not the photo. */
+[data-anim="m1"] .s-media{position:relative}
+[data-anim="m1"] .s-media::after{
+  content:""; position:absolute; inset:0; z-index:2;
+  background:linear-gradient(120deg,var(--color-accent),#8E3AAE);
+  transform:translateX(0);
+  transition:transform var(--t-slow) var(--ease-soft);
+}
+.is-in[data-anim="m1"] .s-media::after{transform:translateX(101%)}
+
+/* M2 · Zoom Settle — the image starts oversized and eases back to true. Adds
+   life to a still photo without a loop. */
+[data-anim="m2"] .s-media img{transform:scale(1.14);
+  transition:transform 900ms var(--ease-out)}
+.is-in[data-anim="m2"] .s-media img{transform:none}
+
+/* M3 · Clip Sweep — uncovered left to right. Pairs well with H1 because both
+   reveal rather than move. */
+[data-anim="m3"] .s-media{clip-path:inset(0 100% 0 0);
+  transition:clip-path var(--t-slow) var(--ease-out)}
+.is-in[data-anim="m3"] .s-media{clip-path:inset(0 0 0 0)}
+
+/* M4 · Split — two panels part from the centre. Showy. Worth it once, on a
+   before/after or a hero, and nowhere else. */
+[data-anim="m4"] .s-media{position:relative}
+[data-anim="m4"] .s-media::before,
+[data-anim="m4"] .s-media::after{
+  content:""; position:absolute; top:0; bottom:0; width:50%; z-index:2;
+  background:var(--color-primary);
+  transition:transform var(--t-slow) var(--ease-soft);
+}
+[data-anim="m4"] .s-media::before{left:0}
+[data-anim="m4"] .s-media::after{right:0}
+.is-in[data-anim="m4"] .s-media::before{transform:translateX(-101%)}
+.is-in[data-anim="m4"] .s-media::after{transform:translateX(101%)}
+
+/* ---------- I · HOVER & INTERACTION (always live, no scroll trigger) ---------- */
+.hov{cursor:pointer}
+
+/* I1 · Lift */
+[data-anim="i1"] .hov{transition:transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) ease}
+[data-anim="i1"] .hov:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+
+/* I2 · Media Zoom — the frame holds, the photo grows inside it. */
+[data-anim="i2"] .hov .s-media img{transition:transform var(--t-slow) var(--ease-out)}
+[data-anim="i2"] .hov:hover .s-media img{transform:scale(1.07)}
+
+/* I3 · Arrow Travel — the arrow leaves before the card does. */
+[data-anim="i3"] .hov{display:flex; align-items:center; justify-content:space-between; gap:var(--space-2);
+  transition:border-color var(--t-fast) ease}
+[data-anim="i3"] .hov svg{color:var(--color-accent); transition:transform var(--t-base) var(--ease-out)}
+[data-anim="i3"] .hov:hover{border-color:var(--color-accent)}
+[data-anim="i3"] .hov:hover svg{transform:translateX(6px)}
+
+/* I4 · Edge Sweep — an accent bar grows down the leading edge. Cheapest way
+   to say "this one" without moving the card at all. */
+[data-anim="i4"] .hov{position:relative; overflow:hidden}
+[data-anim="i4"] .hov::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--color-accent);
+  transform:scaleY(0); transform-origin:top center;
+  transition:transform var(--t-base) var(--ease-out);
+}
+[data-anim="i4"] .hov:hover::before{transform:scaleY(1)}
+
+/* I5 · Sheen — a soft band crosses the button once. Two seconds of shine per
+   hover is charm; a loop is a casino. */
+[data-anim="i5"] .s-btn{position:relative; overflow:hidden}
+[data-anim="i5"] .s-btn::after{
+  content:""; position:absolute; top:0; bottom:0; left:-60%; width:40%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
+  transform:translateX(0); transition:transform var(--t-slow) var(--ease-soft);
+}
+[data-anim="i5"] .s-btn:hover::after{transform:translateX(420%)}
+
+/* ---------- U · MICRO-INTERACTIONS ---------- */
+
+/* U1 · Count Up — driven by JS, eased, and it rounds to the real value. */
+.count{font-family:var(--font-heading); font-weight:700; font-size:2.25rem;
+       color:var(--color-primary); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.count small{font-size:.9375rem; font-weight:600; color:var(--color-foreground-mut)}
+.counts{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-2); text-align:center}
+.counts p{font-size:.75rem; color:var(--color-foreground-mut); margin:4px 0 0}
+
+/* U2 · Tick Draw — the stroke draws itself. Used on the thank-you page. */
+[data-anim="u2"] .seal{width:72px; height:72px; margin-inline:auto; border-radius:50%;
+  display:grid; place-items:center; background:rgba(155,77,214,.20);
+  border:1px solid var(--color-flourish); color:#fff;
+  transform:scale(.8); opacity:0;
+  transition:transform var(--t-base) var(--ease-out), opacity var(--t-fast) ease}
+[data-anim="u2"] .seal path{stroke-dasharray:32; stroke-dashoffset:32;
+  transition:stroke-dashoffset var(--t-slow) var(--ease-out) 220ms}
+.is-in[data-anim="u2"] .seal{transform:none; opacity:1}
+.is-in[data-anim="u2"] .seal path{stroke-dashoffset:0}
+
+/* U3 · Icon Trace — outline icons draw in sequence. Lovely on a benefits
+   list; do not put it on more than one list per page. */
+[data-anim="u3"] li{display:flex; gap:10px; align-items:center; font-size:.9375rem; padding:5px 0}
+[data-anim="u3"] li svg path{stroke-dasharray:26; stroke-dashoffset:26;
+  transition:stroke-dashoffset var(--t-base) var(--ease-out) var(--d,0ms)}
+[data-anim="u3"] li span{opacity:0; transform:translateX(-6px);
+  transition:opacity var(--t-base) ease var(--d,0ms), transform var(--t-base) var(--ease-out) var(--d,0ms)}
+[data-anim="u3"] li:nth-child(1){--d:0ms}
+[data-anim="u3"] li:nth-child(2){--d:110ms}
+[data-anim="u3"] li:nth-child(3){--d:220ms}
+[data-anim="u3"] li:nth-child(4){--d:330ms}
+.is-in[data-anim="u3"] li svg path{stroke-dashoffset:0}
+.is-in[data-anim="u3"] li span{opacity:1; transform:none}
+
+/* U4 · Sticky Bar Entrance — the mobile CTA bar arrives once, rather than
+   being there from the first paint. */
+[data-anim="u4"] .fauxbar{
+  display:flex; gap:10px; padding:10px; border-radius:var(--radius-sm);
+  background:var(--color-surface); box-shadow:0 -4px 16px rgba(15,23,42,.14);
+  border:1px solid var(--color-border);
+  transform:translateY(120%); opacity:0;
+  transition:transform var(--t-base) var(--ease-out), opacity var(--t-fast) ease;
+}
+[data-anim="u4"] .fauxbar .s-btn{flex:1; min-height:44px; font-size:.875rem}
+[data-anim="u4"] .fauxbar .s-btn--ghost{background:none; border:1px solid var(--color-border);
+  color:var(--color-primary)}
+.is-in[data-anim="u4"] .fauxbar{transform:none; opacity:1}
+[data-anim="u4"] .phone{border:1px solid var(--color-border); border-radius:var(--radius);
+  padding:12px; background:var(--color-background); overflow:hidden}
+[data-anim="u4"] .phone p{font-size:.75rem; color:var(--color-foreground-mut)}
+
+/* ---------- RECOMMENDATION PANEL ---------- */
+.rec{background:var(--color-primary); color:#fff; padding-block:var(--space-8); margin-top:var(--space-8)}
+.rec h2{color:#fff}
+.rec p{color:var(--color-on-primary-mut)}
+/* A three-column table cannot fit 375px. Scroll it in its own box rather
+   than let it push the whole page sideways. */
+.rec__scroll{overflow-x:auto; margin-top:var(--space-3); -webkit-overflow-scrolling:touch}
+.rec table{width:100%; min-width:560px; border-collapse:collapse; font-size:.9375rem}
+.rec th,.rec td{text-align:left; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.14); vertical-align:top}
+.rec th{color:#fff; font-family:var(--font-heading); font-size:.8125rem; letter-spacing:.06em; text-transform:uppercase}
+.rec td{color:var(--color-on-primary-mut)}
+.rec td b{color:#fff; font-weight:600}
+.rec code{background:rgba(255,255,255,.10); padding:1px 6px; border-radius:4px; font-size:.875rem}
+
+/* Used for a single frame while Replay resets a case — see replay() below. */
+.no-anim, .no-anim *, .no-anim *::before, .no-anim *::after{
+  transition:none !important; animation:none !important;
+}
+
+/* ==========================================================================
+   STILLNESS
+
+   `.rm` on the root mirrors prefers-reduced-motion. JS sets it from the OS
+   setting on load, and the toggle in the bar flips it, so what you see here
+   is what a visitor with that preference actually gets: the finished state,
+   not a faster version of the animation.
+   ========================================================================== */
+:root.rm *,
+:root.rm *::before,
+:root.rm *::after{
+  transition:none !important; animation:none !important;
+}
+:root.rm [data-anim] .s-head,
+:root.rm [data-anim] .s-card,
+:root.rm [data-anim] .word,
+:root.rm [data-anim] .seal,
+:root.rm [data-anim] li span,
+:root.rm [data-anim] .fauxbar,
+:root.rm [data-anim] .s-media,
+:root.rm [data-anim] .s-media img,
+:root.rm .linemask > span{
+  opacity:1 !important; transform:none !important;
+  clip-path:none !important; filter:none !important;
+}
+:root.rm [data-anim] .s-rule,
+:root.rm [data-anim="h3"] .s-head h3::after,
+:root.rm [data-anim="h4"] .mark::before{transform:scaleX(1) !important}
+:root.rm [data-anim] li svg path,
+:root.rm [data-anim] .seal path{stroke-dashoffset:0 !important}
+:root.rm [data-anim="m1"] .s-media::after,
+:root.rm [data-anim="m4"] .s-media::before,
+:root.rm [data-anim="m4"] .s-media::after{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="lab-head">
+  <div class="wrap">
+    <p class="kicker">Cygnet House · Internal design reference</p>
+    <h1>Motion lab — sections, cards and everything else</h1>
+    <p>Twenty-seven patterns for the implants funnel, all live and all replayable. Every one is written against the same token names as <code>index.html</code>, animates only transform, opacity, clip-path or filter, and has a defined resting state — so nothing here depends on JavaScript to look right, only to know when to start.</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap controls__inner">
+    <button type="button" class="ctl" id="replay-all">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      Replay everything
+    </button>
+    <button type="button" class="ctl" id="toggle-rm" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 15V9M14 15V9"/><circle cx="12" cy="12" r="9"/></svg>
+      Reduced motion
+    </button>
+    <p class="controls__note" id="rm-note">Following your system setting.</p>
+  </div>
+</div>
+
+<main>
+
+<!-- ============================ S ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>S · Section entrances</h2>
+      <p>How a band of the page announces itself as you scroll into it. Pick one and use it everywhere — a page where every section arrives differently reads as nervous, not rich.</p>
+    </div>
+    <div class="cases" id="grp-s"></div>
+  </div>
+</section>
+
+<!-- ============================ C ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>C · Card choreography</h2>
+      <p>Three cards entering together is a missed opportunity; entering in an order tells the visitor how to read them. Applies to the problem cards, the pricing row, the journey steps and the clinician tiles.</p>
+    </div>
+    <div class="cases" id="grp-c"></div>
+  </div>
+</section>
+
+<!-- ============================ H ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>H · Headline reveals</h2>
+      <p>Reserve these for the hero H1 and at most one section head. Used on every heading they stop being special and start being a tax on reading.</p>
+    </div>
+    <div class="cases" id="grp-h"></div>
+  </div>
+</section>
+
+<!-- ============================ M ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>M · Media reveals</h2>
+      <p>The funnel carries fourteen photographs. Giving them an entrance is the single biggest change available to how expensive the page feels.</p>
+    </div>
+    <div class="cases" id="grp-m"></div>
+  </div>
+</section>
+
+<!-- ============================ I ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>I · Hover &amp; interaction</h2>
+      <p>These run on pointer, not on scroll — hover the demos rather than replaying them. On touch they simply never fire, which is why none of them hides information.</p>
+    </div>
+    <div class="cases" id="grp-i"></div>
+  </div>
+</section>
+
+<!-- ============================ U ============================ -->
+<section class="group">
+  <div class="wrap">
+    <div class="group__head">
+      <h2>U · Micro-interactions</h2>
+      <p>Small, specific, and each tied to one job on the page rather than applied as a theme.</p>
+    </div>
+    <div class="cases" id="grp-u"></div>
+  </div>
+</section>
+
+<section class="rec">
+  <div class="wrap">
+    <h2>What I would actually put on the funnel</h2>
+    <p>Not all twenty-two. A landing page needs a small vocabulary used consistently — the goal is a page that feels considered, not one that performs. This set costs nothing in layout and reads as one system.</p>
+    <div class="rec__scroll">
+    <table>
+      <thead>
+        <tr><th scope="col">Where</th><th scope="col">Pattern</th><th scope="col">Why that one</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Every section head</b></td><td><b>S4 · Settle</b></td><td>Replaces the current S1 rise. Same cost, and scale reads as poise where translation reads as arrival.</td></tr>
+        <tr><td><b>Hero H1</b></td><td><b>H1 · Line Mask</b></td><td>One headline on the page gets the full treatment. It is the first thing seen and the only place worth spending it.</td></tr>
+        <tr><td><b>Problem cards, pricing, journey, clinicians</b></td><td><b>C1 · Cascade</b></td><td>Follows reading order, so it guides rather than competes. Pricing is the one exception — see below.</td></tr>
+        <tr><td><b>Pricing row only</b></td><td><b>C2 · Centre Out</b></td><td>Lands the middle card first. If a recommended plan is ever introduced, the motion is already pointing at it.</td></tr>
+        <tr><td><b>Every photograph</b></td><td><b>M2 · Zoom Settle</b></td><td>Works on any crop, needs no overlay in brand colour, and never leaves a coloured panel stuck on screen if a transition is interrupted.</td></tr>
+        <tr><td><b>Card hover</b></td><td><b>I1 + I2</b></td><td>Lift the card, zoom the photo inside it. Two rules, and the grid stops feeling like a document.</td></tr>
+        <tr><td><b>"4.9 from 122 reviews", price figures</b></td><td><b>U1 · Count Up</b></td><td>The only pattern here that makes a number easier to believe rather than just prettier.</td></tr>
+        <tr><td><b>Mobile CTA bar</b></td><td><b>U4 · Entrance</b></td><td>Arriving once is less intrusive than being present from the first paint, and it marks the moment the visitor has read enough to act.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin-top:var(--space-3)">Deliberately left out: <b>S5 Focus Pull</b> (<code>filter:blur</code> repaints every frame and will drop frames on a mid-range Android — the audience for this page skews older, and older phones), <b>M4 Split</b> and <b>C3 Deal</b> (both are showpieces; charming once, mannered on a page that already has fourteen sections), and <b>I5 Sheen</b> (it reads as a sale, and this practice is not selling a sale).</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var ICON = {
+    tick:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    seal:  '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    arrow: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    replay:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>'
+  };
+
+  /* Sample content, so every pattern is judged on real copy and real photos
+     rather than on lorem blocks. */
+  var HEAD = '<div class="s-head"><h3>Replace missing teeth for good</h3>' +
+             '<p>Fixed, natural-looking teeth planned with a CBCT 3D scan.</p></div>';
+  var HEAD_RULED = '<div><div class="s-rule"></div>' + HEAD + '</div>';
+
+  function card(t, p) {
+    return '<div class="s-card"><h4>' + t + '</h4><p>' + p + '</p></div>';
+  }
+  var CARDS = '<div class="s-grid">' +
+    card('Single implant', 'One tooth, replaced at the root.') +
+    card('All-on-4', 'A full arch on four implants.') +
+    card('All-on-6', 'A full arch on six, for more support.') +
+    '</div>';
+
+  function media(file, alt) {
+    return '<div class="s-media"><img src="assets/' + file + '" alt="' + alt + '" loading="lazy" decoding="async"></div>';
+  }
+
+  var CASES = [
+    /* --- S --- */
+    ['s', 's1', 'Rise', HEAD, 'Opacity plus a 16px lift. <b>What the funnel does today</b> — dependable, and the least memorable of the five.', ['live']],
+    ['s', 's2', 'Clip Wipe', HEAD, 'Uncovered from the bottom edge up. Nothing moves, so it never nudges the layout under a reader’s eye.', []],
+    ['s', 's3', 'Rule First', HEAD_RULED, 'A hairline draws, then the words arrive beneath it. <b>Cheapest way to make a section head feel deliberate.</b>', []],
+    ['s', 's4', 'Settle', HEAD, 'Scale from 97%. Almost subliminal — you feel it without being able to name it, which is what expensive usually means.', ['pick']],
+    ['s', 's5', 'Focus Pull', HEAD, '<b>Costly.</b> <code>filter:blur</code> repaints every frame; on a mid-range Android this is the one that stutters.', ['cost']],
+
+    /* --- C --- */
+    ['c', 'c1', 'Cascade', CARDS, 'Left to right, 90ms apart. Matches reading order, so it guides the eye instead of racing it.', ['pick']],
+    ['c', 'c2', 'Centre Out', CARDS, 'Middle card first. <b>Use on pricing</b> — the motion points at whichever plan you want chosen.', ['pick']],
+    ['c', 'c3', 'Deal', CARDS, 'A degree or two of rotation, as if laid down by hand. Charming on three cards, cheap on nine.', []],
+    ['c', 'c4', 'Depth', CARDS, 'Each column rises a different distance, so the row gains a shallow z-axis without any 3D.', []],
+    ['c', 'c5', 'Mask Rise', CARDS, 'Wiped up in place. No translation at all, so it holds together in a dense grid where movement would read as jitter.', []],
+
+    /* --- H --- */
+    ['h', 'h1', 'Line Mask',
+      '<div class="s-head"><h3><span class="linemask"><span>Replace missing teeth</span></span>' +
+      '<span class="linemask"><span>with permanent implants</span></span>' +
+      '<span class="linemask"><span>in Spilsby</span></span></h3></div>',
+      'Each line lifts from behind its own edge. <b>The move that makes a headline feel typeset</b> rather than dropped in. Lines are marked up by hand, so it will not reflow — check it at every breakpoint.', ['pick']],
+    ['h', 'h2', 'Word Rise',
+      '<div class="s-head"><h3 data-words>Fixed teeth you can trust</h3></div>',
+      'Finer grain than H1. One headline per page, eight words at most — past that the reader is waiting on you.', []],
+    ['h', 'h3', 'Underline Draw', HEAD,
+      'The words are static; only the accent rule moves. The most restrained option here and the easiest to reuse.', []],
+    ['h', 'h4', 'Emphasis Sweep',
+      '<div class="s-head"><h3>Implants from <span class="mark">£250 a month</span></h3>' +
+      '<p>0% interest over 12 months on every implant treatment.</p></div>',
+      'A highlight wipes behind one phrase. Points at the promise instead of animating the whole line.', []],
+
+    /* --- M --- */
+    ['m', 'm1', 'Curtain', media('is-loose-dentures.webp', 'Consultation at Cygnet House'),
+      'An amethyst panel slides off. The most branded of the four — the colour is doing the work, not the photograph.', []],
+    ['m', 'm2', 'Zoom Settle', media('is-full-mouth.webp', 'Treatment planning at Cygnet House'),
+      'Starts oversized, eases back to true. <b>Works on any crop</b>, needs no overlay, and leaves nothing stuck on screen if it is interrupted.', ['pick']],
+    ['m', 'm3', 'Clip Sweep', media('is-failing-teeth.webp', 'Clinical examination at Cygnet House'),
+      'Uncovered left to right. Pairs naturally with H1, since both reveal rather than move.', []],
+    ['m', 'm4', 'Split', media('is-missing-teeth.webp', 'Patient in the chair at Cygnet House'),
+      'Two panels part from the centre. Showy — worth it once, on a hero or a before/after, and nowhere else.', []],
+
+    /* --- I --- */
+    ['i', 'i1', 'Lift', '<div class="s-card hov"><h4>Missing several teeth</h4><p>Hover me.</p></div>',
+      'Four pixels up and a deeper shadow. <b>The baseline</b> — a grid without it feels like a document rather than an interface.', ['pick']],
+    ['i', 'i2', 'Media Zoom',
+      '<div class="s-card hov" style="padding:0;overflow:hidden">' + media('practice.webp', 'The team at Cygnet House') +
+      '<div style="padding:12px"><h4>Meet the team</h4><p>Hover me.</p></div></div>',
+      'The frame holds still, the photo grows inside it. <b>Pair with I1</b> — together they are two rules and a completely different feel.', ['pick']],
+    ['i', 'i3', 'Arrow Travel',
+      '<div class="s-card hov"><span><b>Implant questions, answered</b></span>' + ICON.arrow + '</div>',
+      'The arrow leaves before the card does. Reads as "this goes somewhere", which is exactly what a link row should say.', []],
+    ['i', 'i4', 'Edge Sweep', '<div class="s-card hov"><h4>All-on-4 from £12,000</h4><p>Hover me.</p></div>',
+      'An accent bar grows down the leading edge. Says "this one" without moving the card a pixel.', []],
+    ['i', 'i5', 'Sheen', '<div style="text-align:center"><button type="button" class="s-btn">Check My Suitability</button></div>',
+      '<b>Left out.</b> A band of light crosses the button once per hover. It reads as a sale, and this practice is not selling a sale.', ['cost']],
+
+    /* --- U --- */
+    ['u', 'u1', 'Count Up',
+      '<div class="counts">' +
+      '<div><span class="count" data-count="4.9" data-dp="1">0.0</span><p>Google rating</p></div>' +
+      '<div><span class="count" data-count="122">0</span><p>Reviews</p></div>' +
+      '<div><span class="count"><small>£</small><span data-count="250">0</span></span><p>Per month</p></div>' +
+      '</div>',
+      'Eased, and it lands on the true figure rather than near it. <b>The only pattern here that makes a number easier to believe</b> instead of merely prettier.', ['pick']],
+    ['u', 'u2', 'Tick Draw',
+      '<div style="text-align:center"><div class="seal">' + ICON.seal + '</div>' +
+      '<p style="margin-top:12px;font-size:.875rem;color:var(--color-on-primary-mut)">Enquiry received</p></div>',
+      'The stroke draws itself once. <b>Already on the thank-you page</b>; shown here on ink because that is where it lives.', ['live']],
+    ['u', 'u3', 'Icon Trace',
+      '<ul>' +
+      '<li>' + ICON.tick + '<span>Fixed teeth that feel like your own</span></li>' +
+      '<li>' + ICON.tick + '<span>Eat the foods you love again</span></li>' +
+      '<li>' + ICON.tick + '<span>A confident, natural-looking smile</span></li>' +
+      '<li>' + ICON.tick + '<span>Planned with CBCT 3D scanning</span></li>' +
+      '</ul>',
+      'Outline icons draw in sequence while the copy slides in behind them. Lovely on a benefits list; one list per page.', []],
+    ['u', 'u4', 'Bar Entrance',
+      '<div class="phone"><p>…rest of the page…</p>' +
+      '<div class="fauxbar"><button type="button" class="s-btn s-btn--ghost">Call</button>' +
+      '<button type="button" class="s-btn">Check My Suitability</button></div></div>',
+      'The mobile CTA bar arrives once instead of being there from the first paint. <b>Marks the moment</b> the visitor has read enough to act.', ['pick']]
+  ];
+
+  var BADGE = {
+    live: '<span class="badge badge--live">On the funnel</span>',
+    pick: '<span class="badge badge--pick">Recommended</span>',
+    cost: '<span class="badge badge--cost">Left out</span>'
+  };
+
+  /* --- Build --- */
+  CASES.forEach(function (c) {
+    var group = c[0], id = c[1], name = c[2], body = c[3], why = c[4], badges = c[5];
+    var host = document.getElementById('grp-' + group);
+    if (!host) return;
+
+    var isHover = group === 'i';
+    var inkStage = id === 'u2';
+
+    var el = document.createElement('div');
+    el.className = 'case';
+    el.setAttribute('data-anim', id);
+    el.innerHTML =
+      '<div class="case__bar">' +
+        '<span class="case__id">' + id.toUpperCase() + '</span>' +
+        '<h3 class="case__name">' + name + '</h3>' +
+        badges.map(function (b) { return BADGE[b]; }).join('') +
+        (isHover ? '' :
+          '<button type="button" class="replay">' + ICON.replay + ' Replay</button>') +
+      '</div>' +
+      '<div class="case__stage' + (inkStage ? ' stage--ink' : '') + '">' + body + '</div>' +
+      '<p class="case__why">' + why + '</p>';
+    host.appendChild(el);
+  });
+
+  /* H2 needs its words wrapped before anything can stagger them. */
+  document.querySelectorAll('[data-words]').forEach(function (h) {
+    h.innerHTML = h.textContent.trim().split(/\s+/).map(function (w, i) {
+      return '<span class="word" style="--d:' + (i * 70) + 'ms">' + w + '</span>';
+    }).join(' ');
+  });
+
+  /* --- Count-up ---------------------------------------------------------
+     Eased to match the CSS curve, and it assigns the exact target on the
+     last frame so the figure on screen is always the real one. */
+  function countUp(el) {
+    var target = parseFloat(el.dataset.count);
+    var dp = parseInt(el.dataset.dp || '0', 10);
+    var start = null, DUR = 1100;
+
+    function frame(now) {
+      if (start === null) start = now;
+      var t = Math.min((now - start) / DUR, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = (target * eased).toFixed(dp);
+      if (t < 1) requestAnimationFrame(frame);
+      else el.textContent = target.toFixed(dp);
+    }
+    el.textContent = (0).toFixed(dp);
+    requestAnimationFrame(frame);
+  }
+
+  function resetCounts(scope) {
+    scope.querySelectorAll('[data-count]').forEach(function (el) {
+      el.textContent = (0).toFixed(parseInt(el.dataset.dp || '0', 10));
+    });
+  }
+  function runCounts(scope) {
+    scope.querySelectorAll('[data-count]').forEach(countUp);
+  }
+
+  /* --- Reduced motion ---------------------------------------------------
+     `.rm` mirrors the media query. It is set from the OS on load so the lab
+     is honest by default, and the toggle flips it so both states can be
+     compared side by side. */
+  var root  = document.documentElement;
+  var rmBtn = document.getElementById('toggle-rm');
+  var rmNote = document.getElementById('rm-note');
+  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function setRM(on, fromSystem) {
+    root.classList.toggle('rm', on);
+    rmBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    rmNote.textContent = on
+      ? (fromSystem ? 'Your system asks for reduced motion — this is what you would get.'
+                    : 'Simulating reduced motion: every pattern sits in its finished state.')
+      : 'Motion on. Scroll to trigger, or replay any case.';
+    if (on) document.querySelectorAll('.case').forEach(function (c) {
+      c.classList.add('is-in');
+      c.querySelectorAll('[data-count]').forEach(function (el) {
+        el.textContent = parseFloat(el.dataset.count).toFixed(parseInt(el.dataset.dp || '0', 10));
+      });
+    });
+  }
+  setRM(mq.matches, true);
+  rmBtn.addEventListener('click', function () { setRM(!root.classList.contains('rm'), false); });
+
+  /* --- Play on entry ---------------------------------------------------- */
+  function play(el) {
+    el.classList.add('is-in');
+    runCounts(el);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        play(e.target);
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: .25 });
+    document.querySelectorAll('.case').forEach(function (c) { io.observe(c); });
+  } else {
+    document.querySelectorAll('.case').forEach(play);
+  }
+
+  /* --- Replay -----------------------------------------------------------
+     Removing .is-in does not snap back to the resting state — it starts a
+     transition towards it, so a forced reflow reads a value still sitting at
+     the finished end. Transitions have to be suppressed across the reset:
+     kill them, drop the class, commit, restore them, commit again, then
+     replay. Two reflows, both load-bearing. */
+  function replay(el) {
+    el.classList.add('no-anim');
+    el.classList.remove('is-in');
+    resetCounts(el);
+    void el.offsetWidth;          // commit the resting state with no transition
+    el.classList.remove('no-anim');
+    void el.offsetWidth;          // let transitions take effect again
+    play(el);
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.replay');
+    if (!btn) return;
+    replay(btn.closest('.case'));
+  });
+
+  document.getElementById('replay-all').addEventListener('click', function () {
+    if (root.classList.contains('rm')) { setRM(false, false); }
+    document.querySelectorAll('.case').forEach(replay);
+  });
+
+})();
+</script>
+
+</body>
+</html>
