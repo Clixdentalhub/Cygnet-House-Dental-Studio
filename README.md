@@ -252,19 +252,30 @@ step rather than submitting early.
 
 ## Verified
 
-Checked in headless Chromium at **375 / 768 / 1024 / 1440px**:
+Headless Chromium, both pages, at **360 / 375 / 414 / 768 / 1024 / 1280 / 1440px**.
 
-- no horizontal scroll at any breakpoint
-- no JS console errors
-- multi-step form: pointer selection auto-advances, arrow keys do not,
-  validation blocks empty steps, errors clear on input, back navigation
-  preserves answers, success state renders
-- FAQ accordion opens/closes with correct `aria-expanded`
+**`index.html`** — no console errors · JSON-LD parses · no `noindex` · zero
+visible `[placeholders]` · no dead or bracketed hrefs · every image loads and
+carries an `alt` · exactly one `h1` · no section carries more than one motion
+pattern · no horizontal overflow at any width · `--header-h` is >= the real
+header height at every width, so no anchor lands behind it · the six nav links
+scroll-spy correctly and each one puts its heading clear of the header ·
+scroll progress runs 0 to 1.
 
-Accessibility on the ink form card, measured against its own ground:
-title/legend/options 15.9:1, intro and labels 10.1:1, eyebrow 7.5:1, error text
-9.4:1, CTA fill 3.3:1 with 4.7:1 text on it — all AA or better. Plus visible
-focus rings, labelled inputs, `prefers-reduced-motion` respected, a skip link,
-and inline SVG icons only — no emoji.
+**Form** — pointer selection auto-advances, arrow keys do not, validation
+blocks an empty step, errors clear on input, back navigation preserves
+answers, and a successful send redirects to `thank-you.html?firstName=…`.
+
+**`thank-you.html`** — no console errors · greets by name · pushes
+`generate_lead` · `noindex` present · no dead hrefs · an `<img onerror>`
+payload in `?firstName` is rejected with zero nodes injected · no overflow.
+
+**Accessibility** — WCAG AA contrast throughout, measured rather than assumed.
+On the ink form card, against its own ground: title and options 15.9:1, intro
+and labels 10.1:1, eyebrow 7.5:1, error text 9.4:1, CTA fill 3.3:1 with 4.7:1
+text on it. Visible focus rings, labelled inputs, a skip link, `aria-current`
+on the active nav link, and inline SVG icons only — no emoji.
+`prefers-reduced-motion` puts every pattern into its finished state rather
+than running it faster.
 
 **Not yet checked:** real-device testing, and a screen-reader pass.
