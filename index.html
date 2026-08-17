@@ -1400,7 +1400,7 @@ body{padding-bottom:88px}
           </div>
 
           <!-- CONFIGURE: replace action with the real form endpoint (CRM / Make webhook / GHL) -->
-          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/19da6d71-307a-44a3-bf14-998efefb682c" method="post" novalidate>
+          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/8de02f9e-13c5-49a1-b1f4-7f2f991e867d" method="post" novalidate>
 
             <!-- Step 1 -->
             <div class="step" data-step="1">
@@ -2415,13 +2415,17 @@ body{padding-bottom:88px}
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
 
-      /* FormData keeps this a "simple" request (no CORS preflight), and
-         no-cors lets the webhook accept it cross-origin — the response is
-         opaque, so resolve = delivered, reject = a real network failure. */
+      /* Sent as application/x-www-form-urlencoded. That content type is
+         CORS-safelisted, so the request stays "simple" — no preflight, which
+         a no-cors request could not answer anyway — and GHL's inbound
+         webhook reads flat form fields far more predictably than it reads a
+         multipart body. The response is opaque by design, so a resolved
+         promise means delivered and a rejection means a real network
+         failure. */
       fetch(form.action, {
         method: 'POST',
         mode: 'no-cors',
-        body: new FormData(form)
+        body: new URLSearchParams(new FormData(form))
       }).then(function () {
         if (SITE_CONFIG.thankYouUrl) {
           /* The first name rides along so the thank-you page can greet them.

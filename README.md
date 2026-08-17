@@ -155,12 +155,44 @@ URL of the thank-you page.
 
 ### Form endpoint
 
-Wired to the LeadConnector webhook on `#qualifier-form`. The submit handler
-POSTs a `FormData` body with `mode: 'no-cors'` — that keeps it a "simple"
-request with no CORS preflight, which is what the webhook accepts. The
+Posts to the LeadConnector inbound webhook on `#qualifier-form`:
+
+```
+https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/8de02f9e-13c5-49a1-b1f4-7f2f991e867d
+```
+
+Sent as **`application/x-www-form-urlencoded`** via `URLSearchParams`. That
+content type is CORS-safelisted, so the request stays "simple" and skips the
+preflight — which a `no-cors` request could not answer anyway — and GHL reads
+flat form fields far more predictably than it reads a multipart body. The
 response is opaque by design, so a resolved promise means delivered and a
-rejection means a real network failure (the user then gets an inline error
+rejection means a real network failure (the visitor then gets an inline error
 inviting them to call instead).
+
+**The payload**, captured from a real submission:
+
+```
+situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
+&phone=07700+900123&email=margaret%40example.co.uk&website=
+&pageUrl=https%3A%2F%2F…&treatment=Dental+Implants
+```
+
+| Field | Example | Notes |
+|---|---|---|
+| `situation` | `Missing several teeth` | One of: *Missing 1 tooth · Missing several teeth · Loose or uncomfortable dentures · Failing teeth / considering full-mouth* |
+| `timing` | `As soon as possible` | One of: *As soon as possible · In the next few months · Just researching for now* |
+| `firstName` | `Margaret` | Validated: 2+ characters |
+| `phone` | `07700 900123` | Validated: 10–15 digits, punctuation preserved as typed |
+| `email` | `margaret@example.co.uk` | Validated |
+| `website` | *(empty)* | **Honeypot.** Always empty from a human. Non-empty = bot — bin it. |
+| `pageUrl` | full page URL | Useful for attribution if the funnel is ever duplicated |
+| `treatment` | `Dental Implants` | Constant, for routing when other funnels share the workflow |
+
+To capture a live sample for GHL's "listen for new request" step, submit the
+form once from the published page.
+
+**First workflow condition should be the honeypot:** if `website` `is not
+empty` → stop. Everything downstream then only ever sees real people.
 
 ### Putting it in GHL
 
