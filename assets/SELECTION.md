@@ -93,3 +93,30 @@ classified visually). All six ingested at 800×600 WebP q80, EXIF stripped.
 - No extras. Note: the pair's framing differs (retracted intraoral vs natural
   smile) — only two photos exist for this case, so the slider comparison is
   looser here than for Cases 1 and 3.
+
+---
+
+## Composite bonding campaign — `assets/bonding/`
+
+Same April 2026 `Y#` shoot, fetched via the Google Drive connector (direct
+Google network access stays blocked from this environment; the connector's
+oversized result is written to disk, which is what makes the transfer
+possible at all). These are the practice's own marketing photographs and are
+already in use on the live implants funnel, so the consent basis is unchanged
+— none of them is a clinical before/after.
+
+| Slot | Source | What the photo shows |
+|------|--------|----------------------|
+| `bonding/hero.webp` | `Y#-47.jpg` | Dr Rose in conversation with a seated patient, panoramic X-ray on the monitor behind — warm and unhurried rather than clinical. |
+| `bonding/why-natural.webp` | `Y#-53.jpg` | Dr Rose and a patient standing together, both smiling, bright window light. The most positive frame in the set. |
+| `bonding/why-minimal.webp` | `Y#-113.jpg` | Close-up: gloved hands holding a tooth shade guide and a fine instrument, "Dr Dimitrios S." scrubs. Reads as delicate, precise work. |
+| `bonding/why-one-visit.webp` | `Y#-68.jpg` | Two team members smiling beside a seated patient in a bright room — relaxed, quick, unintimidating. |
+| `bonding/why-clinicians.webp` | `Y#-79.jpg` | The clinical team working together on a patient under the operating light. Skill in action. |
+
+No frame is reused between the two campaigns.
+
+**Still unfilled:** the six `bonding/case-*` before/after slots. Cygnet has no
+bonding or whitening before/after cases anywhere on the Drive — the only `B&A`
+folder under the practice is `B&A/implants`. The bonding and whitening B&A
+folders that do exist there belong to **other practices**, so none of them can
+be used here.

@@ -518,9 +518,12 @@ whether they also replace the ten is the client's call.
 
 **Where they have to come from.** Google hosts are blocked by this environment's
 network policy — `drive.google.com` returns a 403 at the proxy — so images
-cannot be pulled from Drive directly. The Drive *connector* can read them, but
-it returns each file as base64 into the conversation, which is not viable for
-2–4 MB photographs. `github.com` and `raw.githubusercontent.com` are both
+cannot be pulled from Drive directly. The Drive *connector* can read them: it
+returns each file as base64, and when that exceeds the tool-result limit the
+harness writes it to disk instead of into the conversation — so the bytes can
+be decoded straight to a file at no context cost. That is how the five frames
+above arrived. It is one call per image, so it suits a handful rather than a
+hundred. `github.com` and `raw.githubusercontent.com` are both
 reachable. So the two working routes are:
 
 1. **Attach the files in the Claude chat** — they land on disk here, then
@@ -545,17 +548,17 @@ using one here would be the same category of error as the Gedling Dental
 reviews in the source funnel, so those six slots stay empty until Cygnet
 supplies consented cases of its own.
 
-Eleven new files, all in `assets/bonding/`, none of them supplied yet. Until a
+Eleven new files in `assets/bonding/`. **Five are now in** — pulled from the April shoot via the Drive connector and mapped in `assets/SELECTION.md`. Six remain open. Until a
 file exists its slot renders as a labelled striped block naming the file it
 wants — never a broken-image icon.
 
-| File | Where | Size |
-|---|---|---|
-| `bonding/hero.webp` | Hero, beside the form | 1600 × 900 |
-| `bonding/why-natural.webp` | §4 card 1 | 800 × 500 |
-| `bonding/why-minimal.webp` | §4 card 2 | 800 × 500 |
-| `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 |
-| `bonding/why-clinicians.webp` | §4 card 4 | 800 × 500 |
+| File | Where | Size | Status |
+|---|---|---|---|
+| `bonding/hero.webp` | Hero, beside the form | 1600 × 900 | ✅ `Y#-47` |
+| `bonding/why-natural.webp` | §4 card 1 | 800 × 500 | ✅ `Y#-53` |
+| `bonding/why-minimal.webp` | §4 card 2 | 800 × 500 | ✅ `Y#-113` |
+| `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 | ✅ `Y#-68` |
+| `bonding/why-clinicians.webp` | §4 card 4 | 800 × 500 | ✅ `Y#-79` |
 | `bonding/case-chipped-{before,after}.webp` | §6 slider 1 | 800 × 600 |
 | `bonding/case-gaps-{before,after}.webp` | §6 slider 2 | 800 × 600 |
 | `bonding/case-discolouration-{before,after}.webp` | §6 slider 3 | 800 × 600 |
