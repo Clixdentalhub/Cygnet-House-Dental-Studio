@@ -162,6 +162,36 @@ response is opaque by design, so a resolved promise means delivered and a
 rejection means a real network failure (the user then gets an inline error
 inviting them to call instead).
 
+### Putting it in GHL
+
+```
+node tools/build-ghl.mjs
+```
+
+Writes two **standalone, paste-and-go** documents to `dist/`:
+
+| File | Size | What it is |
+|---|---|---|
+| `cygnet-implants-funnel.html` | ~2.2 MB | The funnel, with all 33 images inlined as data URIs |
+| `cygnet-thank-you.html` | ~215 KB | The confirmation page, same treatment |
+
+No `assets/` folder to upload — paste either into a GHL custom-code / full-page
+HTML block and it renders. The live Google Maps iframe is intact.
+
+**Set two values before publishing.** Both ship as relative paths, which only
+resolve while the files sit in one folder:
+
+- in the funnel — `SITE_CONFIG.thankYouUrl` → the thank-you page's GHL URL
+- in the thank-you page — `SITE_CONFIG.funnelUrl` → the funnel's GHL URL
+
+**Worth doing when there is time:** inlining is the "live today" option, not
+the fast one. A data URI cannot be cached separately from the document, and
+base64 costs about a third more bytes than the file it encodes — so every
+visitor re-downloads 2.2 MB. Uploading the 33 images to GHL's media library
+and swapping the `src` attributes back to URLs would cut the document to
+about 90 KB and let the browser cache the photographs. Use `index.html` +
+`assets/` as the source for that.
+
 ### Images
 
 `python3 tools/ingest-images.py <folder> "RAW=slot, …"` cover-crops to the
