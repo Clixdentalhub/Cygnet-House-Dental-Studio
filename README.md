@@ -676,8 +676,12 @@ Standard 5.1 expects the second — and then link from the footer.
 
 - [ ] **Remove `<meta name="robots" content="noindex, nofollow">`** — after the
       blocker above, not before.
-- [ ] **Set `SITE_CONFIG.thankYouUrl`** in `composite-bonding.html` to the
-      thank-you page's published GHL URL. It ships as a relative path.
+- [ ] **Swap `SITE_CONFIG.thankYouUrl` off the preview URL.** It is set to
+      `…/preview/V8x3ST0kHpimI2uv4mhZ?notrack=true`, which works end to end —
+      verified, including the `&` separator against its existing query string
+      — but **`notrack=true` disables GHL's own tracking and `/preview/` is not
+      the published address**. Run traffic at it and the page records nothing.
+      This is the same trap `index.html` is still sitting in.
 - [ ] **Set `SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` to
       the funnel's GHL URL. It is `null` today.
 - [ ] **Add the conversion tag** to the thank-you page — the marked block at

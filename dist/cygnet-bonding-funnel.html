@@ -2415,14 +2415,19 @@ body{padding-bottom:88px}
        mutually exclusive, and only one of them should ever fire a
        conversion pixel.
 
-       This ships as a RELATIVE PATH, which only resolves while the two files
-       sit in one folder. Swap it for the bonding thank-you page's published
-       GHL address before running traffic, and rebuild — pasting a fresh
-       build into GHL overwrites anything edited by hand there.
+       !! THIS IS A PREVIEW URL, AND notrack=true DISABLES GHL'S OWN TRACKING.
+       Fine for testing the round trip; swap both for the PUBLISHED address
+       before running any traffic, or the page records nothing at all. That
+       is the same trap the implants funnel is sitting in — see README.
 
-       The separator is chosen rather than assumed further down, so a
-       destination that already carries a query string still works. */
-    thankYouUrl:  'composite-bonding-thank-you.html'
+       Note it already carries a query string. The separator further down is
+       chosen rather than assumed for exactly this reason, so the first name
+       lands as ...?notrack=true&firstName=… rather than collapsing the whole
+       thing into one unparseable value.
+
+       Change it HERE and rebuild — pasting a fresh build into GHL overwrites
+       anything edited by hand there. */
+    thankYouUrl:  'https://sites.leadconnectorhq.com/preview/V8x3ST0kHpimI2uv4mhZ?notrack=true'
   };
 
   /* ---------- Apply config ---------- */
