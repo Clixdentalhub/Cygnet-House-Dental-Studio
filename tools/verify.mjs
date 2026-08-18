@@ -65,6 +65,7 @@ for (const w of WIDTHS) {
       if (b.right > max + 0.5) { max = b.right; worst = el.tagName + '.' + (el.className || '').toString().split(' ')[0]; }
     }
     return {
+      hasNav: !!document.querySelector('.section-nav a'),
       overflow: doc.scrollWidth - doc.clientWidth,
       headerReal: Math.ceil(header.getBoundingClientRect().height),
       token, worst, maxRight: Math.round(max),
@@ -75,7 +76,11 @@ for (const w of WIDTHS) {
   if (r.overflow !== 0) bad(`${tag}px overflow ${r.overflow}px — widest: ${r.worst} @ ${r.maxRight}px`);
   else ok(`${tag}px no horizontal overflow`);
 
-  if (r.token < r.headerReal) bad(`${tag}px --header-h ${r.token} < real header ${r.headerReal} — anchors land behind it`);
+  // Only meaningful where in-page anchors resolve from the token. A thank-you
+  // page has no section nav, so a short token cannot put a heading behind the
+  // header — its one anchor is the skip link, which clears via scroll-margin.
+  if (!r.hasNav) ok(`${tag}px --header-h not load-bearing (no section nav)`);
+  else if (r.token < r.headerReal) bad(`${tag}px --header-h ${r.token} < real header ${r.headerReal} — anchors land behind it`);
   else ok(`${tag}px --header-h ${r.token} >= header ${r.headerReal}`);
 
   // Every nav anchor must leave its heading visible below the header.
@@ -96,7 +101,7 @@ for (const w of WIDTHS) {
   const missing = anchors.filter(([, t]) => typeof t !== 'number');
   if (missing.length) bad(`${tag}px nav targets not found: ${missing.map(m => m[0]).join(', ')}`);
   else if (behind.length) bad(`${tag}px headings behind header: ${behind.map(b => b[0] + ' ' + b[1] + 'px').join(', ')}`);
-  else ok(`${tag}px all ${anchors.length} nav anchors clear the header`);
+  else if (anchors.length) ok(`${tag}px all ${anchors.length} nav anchors clear the header`);
 
   if (SHOTS) {
     await page.evaluate(() => { location.hash = '#top'; window.scrollTo(0, 0); });
@@ -131,11 +136,12 @@ const c = await page.evaluate(() => {
   res.h1 = document.querySelectorAll('h1').length;
   try {
     const ld = document.querySelector('script[type="application/ld+json"]');
+    if (!ld) { res.ld = null; throw null; }
     const j = JSON.parse(ld.textContent);
     res.ld = j['@type'];
     res.ldAgg = 'aggregateRating' in j;
     res.ldServices = (j.availableService || []).map(s => s.name);
-  } catch (e) { res.ld = 'PARSE FAIL: ' + e.message; }
+  } catch (e) { if (e) res.ld = 'PARSE FAIL: ' + e.message; }
   res.robots = document.querySelector('meta[name="robots"]')?.content || null;
   res.imgs = [...document.images].map(i => ({
     src: i.getAttribute('src'), alt: i.getAttribute('alt'),
@@ -157,8 +163,14 @@ const c = await page.evaluate(() => {
 });
 
 c.h1 === 1 ? ok('exactly one <h1>') : bad(`${c.h1} <h1> elements`);
-c.ld === 'Dentist' ? ok(`JSON-LD parses (${c.ld}: ${c.ldServices.join(', ')})`) : bad(`JSON-LD ${c.ld}`);
-c.ldAgg ? bad('JSON-LD carries aggregateRating — not supported on LocalBusiness types') : ok('no aggregateRating in JSON-LD');
+if (c.ld === null) {
+  // A noindex confirmation page carrying LocalBusiness markup would be a fault,
+  // not a feature. Absent is the correct state; only flag it on an indexable page.
+  c.robots ? ok('no JSON-LD, correct for a noindex page') : bad('no JSON-LD on an indexable page');
+} else {
+  c.ld === 'Dentist' ? ok(`JSON-LD parses (${c.ld}: ${c.ldServices.join(', ')})`) : bad(`JSON-LD ${c.ld}`);
+  c.ldAgg ? bad('JSON-LD carries aggregateRating — not supported on LocalBusiness types') : ok('no aggregateRating in JSON-LD');
+}
 c.robots ? warn(`robots: "${c.robots}" — remove only when every placeholder is resolved`) : ok('no robots meta');
 
 const noAlt = c.imgs.filter(i => i.alt === null);
@@ -251,6 +263,14 @@ for (const p of contrast) {
 }
 
 /* ---------------------------------------------------------- the form */
+// A thank-you page has no qualifier form; everything below is funnel-only.
+const hasForm = await page.$('#qualifier-form');
+if (!hasForm) {
+  console.log(`\n\x1b[1m${FILE} — no qualifier form, funnel-only checks skipped\x1b[0m`);
+  await page.close(); await browser.close();
+  console.log(`\n\x1b[1m${fails ? '\x1b[31mFAIL' : '\x1b[32mPASS'}\x1b[0m — ${fails} failure(s), ${warns} warning(s)\n`);
+  process.exit(fails ? 1 : 0);
+}
 console.log(`\n\x1b[1m${FILE} — form\x1b[0m`);
 const step = () => page.evaluate(() =>
   [...document.querySelectorAll('.step')].findIndex(s => !s.hidden) + 1);

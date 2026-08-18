@@ -360,7 +360,13 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .section--primary h2,.section--primary h3{color:var(--color-on-primary)}
 
 .section-head{max-width:1000px; margin:0 auto var(--space-4); text-align:center}
-.section-head p{max-width:62ch; margin-inline:auto}
+/* 62ch left every section intro at ~two thirds the width of the heading above
+   it, so a four-sentence paragraph stacked into six short lines and read as a
+   dense block rather than a lead-in. 78ch is still inside the comfortable
+   measure for a short centred paragraph and takes the longest one down to
+   four lines. Below ~1000px the container caps it anyway, so this only
+   changes the wide layouts, which is where the imbalance was. */
+.section-head p{max-width:78ch; margin-inline:auto}
 .section-head p{color:var(--color-foreground-mut); font-size:1.0625rem; margin-bottom:0}
 .section--primary .section-head p{color:var(--color-on-primary-mut)}
 
@@ -1971,7 +1977,7 @@ body{padding-bottom:88px}
   <div class="container">
     <div class="section-head reveal anim-settle">
       <h2 id="nervous-title">Hiding your smile is exhausting. It does not have to be.</h2>
-      <p>Covering your mouth in photographs, laughing with your hand up, choosing the closed-lip smile every single time — most people who come to us for bonding have been doing it for years. From your first visit we take the time to explain everything clearly, answer every question and never rush you. Our calm, family-run approach is designed to make the whole thing feel straightforward rather than daunting.</p>
+      <p>Covering your mouth in photographs, laughing with your hand up, choosing the closed-lip smile every single time — most people who come to us for bonding have been doing it for years. From your first visit we explain everything clearly, answer every question and never rush you.</p>
     </div>
     <div class="cta-row reveal">
       <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
