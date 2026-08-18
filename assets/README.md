@@ -33,13 +33,15 @@ folder so the two campaigns can never fight over a filename.
 | `bonding/case-chipped-after.webp` | §6 slider 1 | 800 × 600 | 4:3 |
 | `bonding/case-gaps-before.webp` | §6 slider 2 | 800 × 600 | 4:3 |
 | `bonding/case-gaps-after.webp` | §6 slider 2 | 800 × 600 | 4:3 |
-| `bonding/case-discolouration-before.webp` | §6 slider 3 | 800 × 600 | 4:3 |
-| `bonding/case-discolouration-after.webp` | §6 slider 3 | 800 × 600 | 4:3 |
+| `bonding/case-staining-before.webp` | §6 slider 3 | 800 × 600 | 4:3 |
+| `bonding/case-staining-after.webp` | §6 slider 3 | 800 × 600 | 4:3 |
 
-**The before/after pairs need signed patient consent on file before they are
-published.** Shoot both frames at the same angle, distance and lighting — the
-comparison slider is unforgiving, and a pair whose framing drifts reads as two
-unrelated photographs rather than one result.
+All eleven are now supplied — see `SELECTION.md` for what each one is and
+where it came from. **The before/after pairs still need signed patient consent
+on file before the page goes live.** If any is ever reshot: match angle,
+distance and lighting across the pair. The comparison slider is unforgiving,
+and a pair whose framing drifts reads as two unrelated photographs rather than
+one result.
 
 The bonding funnel reuses `logo.webp`, `team-wide.webp`, the `people/`
 portraits and the two section backgrounds (`section-nervous.webp`,

@@ -55,8 +55,8 @@ SLOTS = {
     "bonding/case-chipped-after":      (800, 600),
     "bonding/case-gaps-before":        (800, 600),
     "bonding/case-gaps-after":         (800, 600),
-    "bonding/case-discolouration-before": (800, 600),
-    "bonding/case-discolouration-after":  (800, 600),
+    "bonding/case-staining-before":  (800, 600),
+    "bonding/case-staining-after":   (800, 600),
 }
 
 def ingest(src: pathlib.Path, slot: str) -> None:

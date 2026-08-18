@@ -540,28 +540,36 @@ section backgrounds come from it and render on this page today. Roughly 85 of
 those frames are still unused and several would suit the hero and the four §4
 cards — they just have to travel by one of the two routes above.
 
-**What does not exist anywhere:** Cygnet has no bonding or whitening
-before/after cases on Drive. The only `B&A` folder under the practice is
-`B&A/implants`. There *are* bonding and whitening B&A folders on the Drive, but
-they belong to **other practices** (Deepcar, ABC, BrightSmile, Smile Success) —
-using one here would be the same category of error as the Gedling Dental
-reviews in the source funnel, so those six slots stay empty until Cygnet
-supplies consented cases of its own.
+**No implant imagery on this page.** Two frames were pulled and then replaced
+because each had a panoramic X-ray on a screen behind the subject showing
+extensive tooth loss — an implant story on a composite bonding page. Three
+more were rejected for the same reason, and one because a private-fee list on
+the wall survived the crop. The rule for any future swap: check what is on the
+screens in the background, not just the subject.
 
-Eleven new files in `assets/bonding/`. **Five are now in** — pulled from the April shoot via the Drive connector and mapped in `assets/SELECTION.md`. Six remain open. Until a
+**Before/after cases** come from the client's "B&As for composite bonding"
+folder — four cases, three used. Ordering was decided visually; the files in
+each case share one EXIF timestamp, so capture order is no help.
+
+Case 3 was dropped from the third slider despite having the most striking after
+frame: its before is retracted and its after relaxed, so the wipe jumps between
+two obviously different photographs. Case 2 replaced it because its two frames
+line up almost exactly. Full reasoning in `assets/SELECTION.md`.
+
+**All eleven files are in.** Five practice frames from the April shoot, and six before/after files from the client's "B&As for composite bonding" folder. Every one is mapped in `assets/SELECTION.md`. Until a
 file exists its slot renders as a labelled striped block naming the file it
 wants — never a broken-image icon.
 
 | File | Where | Size | Status |
 |---|---|---|---|
-| `bonding/hero.webp` | Hero, beside the form | 1600 × 900 | ✅ `Y#-47` |
-| `bonding/why-natural.webp` | §4 card 1 | 800 × 500 | ✅ `Y#-53` |
+| `bonding/hero.webp` | Hero, beside the form | 1600 × 900 | ✅ `Y#-118` |
+| `bonding/why-natural.webp` | §4 card 1 | 800 × 500 | ✅ `Y#-68` |
 | `bonding/why-minimal.webp` | §4 card 2 | 800 × 500 | ✅ `Y#-113` |
-| `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 | ✅ `Y#-68` |
+| `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 | ✅ `Y#-106` |
 | `bonding/why-clinicians.webp` | §4 card 4 | 800 × 500 | ✅ `Y#-79` |
-| `bonding/case-chipped-{before,after}.webp` | §6 slider 1 | 800 × 600 |
-| `bonding/case-gaps-{before,after}.webp` | §6 slider 2 | 800 × 600 |
-| `bonding/case-discolouration-{before,after}.webp` | §6 slider 3 | 800 × 600 |
+| `bonding/case-chipped-{before,after}.webp` | §6 slider 1 | 800 × 600 | ✅ Case 1 |
+| `bonding/case-gaps-{before,after}.webp` | §6 slider 2 | 800 × 600 | ✅ Case 4 |
+| `bonding/case-staining-{before,after}.webp` | §6 slider 3 | 800 × 600 | ✅ Case 2 |
 
 `python3 tools/ingest-images.py <folder> "RAW.jpg=bonding/hero, …"` crops,
 strips EXIF and writes them at WebP q80.
@@ -615,17 +623,21 @@ First workflow condition stays the honeypot: `website` `is not empty` → stop.
 
 ## Before this can go live
 
-- [ ] **Resolve every `[placeholder]`.** As built there are six:
-      `[offer end date]` (hero, §5, footer), `[dates the previous prices
-      applied]` (§5 and footer), `[Confirm: is the £50 deducted from the cost
-      of treatment?]` (§11), `[minimum credit amount]` (§11), `[confirm which
-      of the three before/after cases exist, with consent]` (§6), and
-      `[new patient testimonials]` (§7).
+- [ ] **Resolve every `[placeholder]`.** Five remain: `[offer end date]`
+      (hero, §5, footer), `[dates the previous prices applied]` (§5 and
+      footer), `[Confirm: is the £50 deducted from the cost of treatment?]`
+      (§11), `[minimum credit amount]` (§11), and `[new patient testimonials]`
+      (§7).
 - [ ] **Then remove `<meta name="robots" content="noindex, nofollow">`** from
       `composite-bonding.html`. Not before.
 - [ ] **Lender name + FRN** for the finance copy.
-- [ ] **Supply the eleven images**, with consent paperwork for the six
-      before/after files.
+- [ ] **Signed patient consent on file for all three before/after cases.** The
+      images are in and the page states that consent exists; that sentence has
+      to be true before traffic runs.
+- [ ] **Confirm the treatment named in each before/after caption.** The
+      captions say "composite bonding"; the folder name is the only evidence so
+      far. Case 1's before is broken down far enough that crowns are a
+      reasonable reading — worth Dr Rose confirming.
 - [ ] **Set `SITE_CONFIG.thankYouUrl`** in `composite-bonding.html` to the
       thank-you page's published GHL URL. It ships as a relative path.
 - [ ] **Set `SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` to
