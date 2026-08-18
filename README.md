@@ -595,31 +595,44 @@ are practice or team photography rather than treatment photography.
 
 ## GHL wiring
 
-The form posts to the **same LeadConnector inbound webhook as the implants
-funnel**, on purpose:
+The form posts to **this campaign's own LeadConnector inbound webhook** — same
+sub-account as the implants funnel, different trigger, so the two campaigns
+land in separate workflows:
 
 ```
-https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/8de02f9e-13c5-49a1-b1f4-7f2f991e867d
+https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/xG6w8R0Itdi8jxe3jEIK
 ```
 
-All nine field **names** are identical to the implants funnel — `situation`,
-`timing`, `firstName`, `lastName`, `phone`, `email`, `website` (honeypot),
-`pageUrl`, `treatment` — so **no existing mapping needs re-doing**. What
-distinguishes the two campaigns is the constant:
+**All nine field names are identical to the implants funnel**, so anything
+already mapped there maps the same way here:
 
-```
-treatment=Composite Bonding & Teeth Whitening
-```
+| Field | What arrives in it |
+|---|---|
+| `situation` | *Chipped or worn front teeth · Gaps between my teeth · Uneven edges or minor misalignment · Discoloured or stained teeth · Several of these* |
+| `timing` | *As soon as possible · In the next few months · Just researching for now* |
+| `firstName` | validated, 2+ characters |
+| `lastName` | validated, 2+ characters |
+| `phone` | validated, 10–15 digits, punctuation preserved as typed |
+| `email` | validated |
+| `website` | **honeypot** — always empty from a human; non-empty means a bot |
+| `pageUrl` | full page URL, useful for attribution |
+| `treatment` | constant: `Composite Bonding & Teeth Whitening` |
 
-Route on it. `situation`'s *values* are new (chipped teeth / gaps / uneven
-edges / discolouration / several of these) but GHL maps on the key, not the
-value, so nothing breaks.
+`situation`'s *values* are new, but GHL maps on the key rather than the value,
+so nothing breaks. Keep `treatment` even now that the campaign has a dedicated
+webhook: it survives into the contact record and says which campaign a lead
+came from without anyone having to infer it from which workflow fired.
 
-**If this campaign should have its own workflow instead**, paste its inbound
-webhook URL over the `action` on `#qualifier-form` — that is the only change,
-and there is a comment at that line saying so.
+**First workflow condition is the honeypot:** `website` `is not empty` → stop.
+Everything downstream then only ever sees real people.
 
-First workflow condition stays the honeypot: `website` `is not empty` → stop.
+**Capturing the reference payload.** The Inbound Webhook trigger stores one
+captured request as its reference, and every downstream action can only pick
+from the keys in that stored sample — so make the capture submission complete.
+Fill every field: a key missing from the sample cannot be picked afterwards.
+All nine are transmitted on every send, including `website` with an empty
+value, so one ordinary submission is enough. Submit from the published page
+rather than a local copy, so `pageUrl` holds the real address.
 
 ## Before this can go live
 

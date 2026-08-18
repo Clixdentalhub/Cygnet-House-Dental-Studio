@@ -1486,16 +1486,18 @@ body{padding-bottom:88px}
             <p class="sr-only" id="progress-label" role="status">Step 1 of 3</p>
           </div>
 
-          <!-- Posts to the SAME LeadConnector inbound webhook as the implants
-               funnel, on purpose: the hidden `treatment` field is what the GHL
-               workflow routes on, and it is set to "Composite Bonding & Teeth
-               Whitening" below. Every one of the nine field NAMES is unchanged,
-               so no existing mapping needs re-doing.
+          <!-- This campaign's OWN LeadConnector inbound webhook — same
+               sub-account as the implants funnel, different trigger, so the
+               two campaigns land in separate workflows.
 
-               If this campaign should land in its own workflow instead, paste
-               its inbound webhook URL over the action below — that is the only
-               change needed. See README.md § Composite bonding campaign. -->
-          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/8de02f9e-13c5-49a1-b1f4-7f2f991e867d" method="post" novalidate>
+               All nine field NAMES are identical to the implants funnel, so
+               anything already mapped there maps the same way here. The hidden
+               `treatment` field below still carries "Composite Bonding &
+               Teeth Whitening", which is worth keeping even with a dedicated
+               webhook: it survives into the contact record and tells you which
+               campaign a lead came from without inferring it from the
+               workflow. See README.md § Composite bonding campaign. -->
+          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/xG6w8R0Itdi8jxe3jEIK" method="post" novalidate>
 
             <!-- Step 1 -->
             <div class="step" data-step="1">
