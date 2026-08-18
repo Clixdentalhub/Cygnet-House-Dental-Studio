@@ -623,21 +623,46 @@ First workflow condition stays the honeypot: `website` `is not empty` → stop.
 
 ## Before this can go live
 
-- [ ] **Resolve every `[placeholder]`.** Five remain: `[offer end date]`
-      (hero, §5, footer), `[dates the previous prices applied]` (§5 and
-      footer), `[Confirm: is the £50 deducted from the cost of treatment?]`
-      (§11), `[minimum credit amount]` (§11), and `[new patient testimonials]`
-      (§7).
-- [ ] **Then remove `<meta name="robots" content="noindex, nofollow">`** from
-      `composite-bonding.html`. Not before.
-- [ ] **Lender name + FRN** for the finance copy.
-- [ ] **Signed patient consent on file for all three before/after cases.** The
-      images are in and the page states that consent exists; that sentence has
-      to be true before traffic runs.
-- [ ] **Confirm the treatment named in each before/after caption.** The
-      captions say "composite bonding"; the folder name is the only evidence so
-      far. Case 1's before is broken down far enough that crowns are a
-      reasonable reading — worth Dr Rose confirming.
+All nine questions put to the practice have been answered, and every visible
+`[placeholder]` is gone. **One blocker remains, and it is a real one.**
+
+### Blocker — the finance copy is a financial promotion
+
+Every mention of 0% credit on this page is a financial promotion under FCA
+rules, and one may not run without the **lender named** and the practice's
+**FCA authorisation / credit-broker status and FRN** stated on the page. The
+footer already carries the broker sentence; the lender's name and the FRN are
+missing, and the practice has said it does not hold them.
+
+The copy has been left as written at the practice's instruction, and `noindex`
+stays on until this closes. Two ways to close it:
+
+1. **Supply the two details.** The FRN is public — it is on the FCA Financial
+   Services Register, so this is findable rather than unknowable.
+2. **Strip the specific credit terms.** Remove 0%, "12 months", the monthly
+   figures and the representative example, and reduce it to "payment options
+   available — ask at your consultation", which is not a financial promotion.
+   This costs a genuine conversion lever, which is why it is the second option.
+
+Do not simply publish as-is.
+
+### Second item — the policy pages do not exist
+
+The footer used to link to `/privacy-policy/`, `/complaints/` and `/terms/` on
+the practice site. The practice has confirmed **none of those pages exists**, so
+those links were 404s. A dead privacy link on a page collecting a name, a phone
+number and an email is worse than no link, so they are gone, replaced by a
+plain statement of what can be said truthfully today: what the details are used
+for, that they are not shared, and how to ask what is held or raise a concern.
+
+That is an interim. A hosted privacy policy and a complaints procedure still
+have to exist — UK GDPR expects the first at the point of collection, and GDC
+Standard 5.1 expects the second — and then link from the footer.
+
+### Then
+
+- [ ] **Remove `<meta name="robots" content="noindex, nofollow">`** — after the
+      blocker above, not before.
 - [ ] **Set `SITE_CONFIG.thankYouUrl`** in `composite-bonding.html` to the
       thank-you page's published GHL URL. It ships as a relative path.
 - [ ] **Set `SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` to
@@ -645,10 +670,23 @@ First workflow condition stays the honeypot: `website` `is not empty` → stop.
 - [ ] **Add the conversion tag** to the thank-you page — the marked block at
       the bottom of its script. Fire it there **or** in the funnel's submit
       handler, never both.
-- [ ] **Submit one real test lead** from the published page and confirm the
-      mapping. Re-capture the webhook reference only if a field is *added* —
-      nothing here has been renamed or removed.
+- [ ] **Submit one real test lead** and confirm the mapping. Re-capture the
+      webhook reference only if a field is *added* — nothing has been renamed.
 - [ ] Real-device testing and a screen-reader pass. Neither has been done.
+
+### Answered by the practice, and now reflected on the page
+
+| | Answer | What changed |
+|---|---|---|
+| Offer end date | None — the offer is open-ended | Every "offer valid until…" clause removed. "Today" stays out of the headline permanently: with no end date it would be manufactured urgency. |
+| Dates the £280 / £450 prices applied | No date range | Reframed. These are the practice's **standard fees**, not a former price, so no period applies. The footer now substantiates the saving as a promotional reduction from standard fees. The internal "before this goes live" note that was rendering to visitors is gone. |
+| Is the £50 deposit deducted? | **Yes** | Now stated: it covers the examination, X-rays and assessment, comes straight off the treatment cost, and is non-refundable only if the patient does not proceed. A better offer than the page previously described. |
+| Lender minimum credit amount | Not held; use what's there | The £300 / 12 × £25 representative example stands; the caveat sentence removed. |
+| Lender name, FCA status, FRN | Not held | **The blocker above.** |
+| Consent for all three before/afters | **Yes, all three** | The page's consent sentence is now true as written. |
+| Composite bonding in all three cases? | **Yes** | The three captions are confirmed accurate. |
+| Bonding / whitening testimonials | None available | The "not yet supplied" panel is gone. The ten genuine Google reviews stand on their own, none labelled as a bonding result. |
+| Do the three policy pages exist? | **No** | The second item above. |
 
 ## Building and verifying
 
