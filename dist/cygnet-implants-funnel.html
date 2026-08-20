@@ -1124,6 +1124,45 @@ body{padding-bottom:88px}
 @media (min-width:768px){ body{padding-bottom:0} }
 
 /* ==========================================================================
+   17b · VIDEO PLAYER
+   ========================================================================== */
+.vplayer{
+  position:relative; max-width:var(--container-narrow); margin-inline:auto;
+  /* 16/9 is the reserve, replaced by the file's real ratio once metadata
+     loads — the source could be portrait, and a permanently wrong box either
+     letterboxes heavily or crops the subject out. max-height stops a vertical
+     video becoming a tower on desktop. */
+  aspect-ratio:16/9; max-height:72vh;
+  border-radius:var(--radius); overflow:hidden; isolation:isolate;
+  background:#120C18; border:1px solid var(--color-border);
+  box-shadow:var(--shadow-lg);
+}
+.vplayer__video{width:100%; height:100%; object-fit:contain; display:block; background:#120C18}
+.vplayer__play{
+  position:absolute; inset:0; width:100%; height:100%; padding:0;
+  display:grid; place-items:center; cursor:pointer; border:0;
+  background:rgba(18,12,24,.34);
+  transition:background-color var(--motion) ease, opacity var(--motion) ease;
+}
+.vplayer__play:hover{background:rgba(18,12,24,.20)}
+.vplayer__play:focus-visible{outline:3px solid var(--color-flourish); outline-offset:-4px}
+.vplayer__disc{
+  width:76px; height:76px; border-radius:50%; display:grid; place-items:center;
+  background:var(--cta-on-dark); color:var(--cta-on-dark-text);
+  box-shadow:0 10px 30px rgba(18,12,24,.45);
+  transition:transform var(--motion) var(--ease-out);
+}
+@media (min-width:768px){ .vplayer__disc{width:88px; height:88px} }
+.vplayer__play:hover .vplayer__disc{transform:scale(1.06)}
+/* Once it is playing the overlay has to stop intercepting clicks, or the
+   native controls underneath are unreachable. */
+.vplayer.is-playing .vplayer__play{opacity:0; pointer-events:none}
+@media (prefers-reduced-motion:reduce){
+  .vplayer__disc{transition:none}
+  .vplayer__play:hover .vplayer__disc{transform:none}
+}
+
+/* ==========================================================================
    18b · SECTION MOTION
 
    Ten patterns from the motion lab, each with exactly one home. No section
@@ -1894,6 +1933,34 @@ body{padding-bottom:88px}
         <p>Your implants are placed and restored using advanced, precise techniques, leaving you with strong, fixed teeth built to last.</p>
       </li>
     </ol>
+  </div>
+</section>
+
+<!-- ============================================================
+     9b · PRACTICE VIDEO
+     Sits directly above the team, so the video introduces the people the
+     next section names. No autoplay: it costs the visitor bandwidth they
+     did not ask to spend, and a video that starts talking on its own is the
+     fastest way to get a tab closed.
+     ============================================================ -->
+<section class="section section--surface" id="video" aria-labelledby="video-title">
+  <div class="container">
+    <h2 class="sr-only" id="video-title">Practice video</h2>
+    <div class="vplayer reveal" data-vplayer>
+      <!-- #t=0.1 makes iOS paint a real first frame instead of black; without
+           a poster image that fragment is the only thing standing between the
+           visitor and an empty rectangle. -->
+      <video class="vplayer__video" preload="metadata" playsinline
+             src="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a871858741b35065954d963.mp4#t=0.1"></video>
+      <button type="button" class="vplayer__play" data-vplay>
+        <span class="vplayer__disc" aria-hidden="true">
+          <!-- Nudged 3px right: a geometrically centred triangle reads
+               left-heavy, because its visual mass sits behind its point. -->
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" style="margin-left:3px"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.86l11.14-6.86a1 1 0 0 0 0-1.72L9.52 4.28A1 1 0 0 0 8 5.14Z"/></svg>
+        </span>
+        <span class="sr-only">Play the practice video</span>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -2757,6 +2824,43 @@ body{padding-bottom:88px}
 
     reveals.forEach(function (el) { observer.observe(el); });
   }
+
+  /* ==========================================================
+     PRACTICE VIDEO
+
+     Click to play, never on load. Controls appear only once playing, so the
+     resting state is a clean frame and one button rather than a browser
+     chrome bar the visitor has to look past.
+     ========================================================== */
+  document.querySelectorAll('[data-vplayer]').forEach(function (wrap) {
+    var video = wrap.querySelector('video');
+    var button = wrap.querySelector('[data-vplay]');
+    if (!video || !button) return;
+
+    video.addEventListener('loadedmetadata', function () {
+      if (video.videoWidth && video.videoHeight) {
+        wrap.style.aspectRatio = video.videoWidth + ' / ' + video.videoHeight;
+      }
+    });
+
+    button.addEventListener('click', function () {
+      video.controls = true;
+      wrap.classList.add('is-playing');
+      var started = video.play();
+      /* A blocked or failed play() rejects. Put the poster state back rather
+         than leaving the visitor staring at a frame with no way to start it. */
+      if (started && started.catch) {
+        started.catch(function () {
+          wrap.classList.remove('is-playing');
+          video.controls = false;
+        });
+      }
+    });
+
+    video.addEventListener('ended', function () {
+      wrap.classList.remove('is-playing');
+    });
+  });
 
   /* ==========================================================
      HEADER — SCROLL PROGRESS + SECTION SPY

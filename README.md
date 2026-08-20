@@ -95,6 +95,7 @@ Open any of them in a browser or drop them on any static host.
   treatment captions, shown with patient consent
 - Lead form posts to the **LeadConnector webhook**
 - `Dentist` JSON-LD with NAP, hours, services, `hasMap` and social profiles
+- Practice video above the team section, hosted on the GHL CDN
 
 ---
 
@@ -285,6 +286,7 @@ mapping to list what it found and which slots are open.
 | 7 | Reviews — 15 reviews in a 3-column down/up/down marquee |
 | 8 | "Nervous about implants?" reassurance |
 | 9 | Your journey — 3 steps |
+| 9b | Practice video — click-to-play, no autoplay |
 | 10 | Meet your clinicians — team photo + clickable 6-person roster |
 | 11 | What's included + £50 deposit + 0% finance box + representative example |
 | 12 | FAQ — 5 items, accessible accordion |
