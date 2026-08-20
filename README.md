@@ -593,40 +593,49 @@ Everything else is reused from the implants shoot: the logo, the team photo,
 the roster portraits, and the two section backgrounds (§8, §13), all of which
 are practice or team photography rather than treatment photography.
 
-## Hero video
+## The video band (§10a)
 
-The hero photograph is replaced by a video hosted on the practice's own GHL
-media library:
+A section of its own, directly above **Meet the team**: Dr Rose talking about
+composite bonding, so it lands just before the roster where people are deciding
+whether they trust her.
 
 ```
 https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4
 ```
 
-It stays a **remote URL** — `tools/build-ghl.mjs` only inlines `assets/*.webp`
-and friends, and a video has no business inside a data URI. The poster is
-`assets/bonding/hero.webp`, which does get inlined, so the block reads as a
-video thumbnail rather than a black box before play.
+The clip stays a **remote URL** — `tools/build-ghl.mjs` only inlines
+`assets/*.webp` and friends, and a video has no business inside a data URI. The
+poster is local, so that one does get inlined and the band never shows a black
+hole.
 
-**It does not autoplay, deliberately.** That host is unreachable from this
-environment (403 at the proxy), so the clip could not be inspected: its
-duration, proportions and — the one that matters — whether it carries speech
-are all unknown. Autoplaying muted would either silence a talking head or
-surprise a visitor with sound. Click-to-play is correct for both cases.
+**Click to play, never autoplay.** It is speech: autoplaying it muted is
+pointless and autoplaying it audible is hostile. Controls are attached only
+once playback starts, so the resting state is a clean poster with one obvious
+affordance rather than browser chrome competing with it.
 
-Two things to settle once someone has watched it:
+**The whole poster is the button.** The disc is the affordance, not the hit
+area — make only the disc clickable and half the taps land on the poster and do
+nothing, which reads as a broken video. It is a real `<button>`, so it is in the
+tab order and takes Enter and Space for free, and it carries an `aria-label`
+naming what will play. A rejected `play()` puts the button back rather than
+leaving someone staring at a still with no way in.
 
-- **If it is silent b-roll**, swap `controls` for `autoplay muted loop` and add
-  a `prefers-reduced-motion` guard that drops the autoplay.
-- **If it contains speech, it needs captions.** A `<track kind="captions">`
-  slot is commented in place. Video with dialogue and no captions fails WCAG
-  1.2.2, and on a page this heavily compliance-checked that would be an odd
-  thing to leave.
+**The poster is its own `<img>`, not the `poster` attribute.** The still and the
+film want opposite fits — the poster should fill the frame, the video must never
+be cropped — and the attribute cannot do that, because it shares `object-fit`
+with the video element. So the poster is a covering layer that steps aside on
+play.
 
-Its true proportions are unknown, so the frame ships at 16/9 and a few lines of
-script correct it to the real ratio on `loadedmetadata`. A portrait or square
-clip therefore fills its frame instead of sitting in letterbox bars, and
-because the box already had a height there is no layout shift. If the video
-never loads, the 16/9 poster stands.
+It is cropped from `Y#-17`, a studio portrait of Dr Rose, deliberately
+off-centre: the play disc sits dead centre, and on a centred crop it landed on
+her face. She is placed right of centre so the disc falls on the backdrop.
+
+One ring pulses outward from the disc, and it is the only thing moving in the
+band — enough to say "this is a video", not enough to nag. It holds still under
+`prefers-reduced-motion`.
+
+**Still to do: captions.** Dialogue with no captions fails WCAG 1.2.2. A
+`<track kind="captions">` slot is commented in place, ready to fill.
 
 ## GHL wiring
 

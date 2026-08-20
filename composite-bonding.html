@@ -296,16 +296,77 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
    If this is ever switched to autoplay, add:
      @media (prefers-reduced-motion:reduce){ .hero__video video{ … } }
    and drop the autoplay attribute for those users. */
-/* .card__media::before paints the striped "file not here yet" slot, which is
-   for a missing IMAGE and has no business behind a video — it showed through
-   the player's own transparent area. Killed here, and the video is lifted
-   above it the same way .card__media img is. */
-.hero__video{background:#000}
-.hero__video::before{display:none}
-.hero__video video{
-  position:relative; z-index:1;
-  display:block; width:100%; height:100%;
-  object-fit:contain; background:#000;
+/* ==========================================================================
+   16b · VIDEO BAND (§10a)
+   Click-to-play, never autoplay: the clip is Dr Rose speaking, and autoplaying
+   speech either muted (pointless) or audible (hostile) are both wrong. The
+   whole poster is the button, because that is where people click anyway — the
+   disc is the affordance, not the hit area.
+   ========================================================================== */
+.video-frame{
+  position:relative; overflow:hidden; background:#000;
+  aspect-ratio:16/9; border-radius:var(--radius);
+  border:1px solid rgba(196,165,232,.28);
+  box-shadow:0 24px 60px rgba(24,10,34,.45);
+}
+/* The still and the film want opposite fits — the poster should fill the frame,
+   the video must never be cropped — and the poster ATTRIBUTE cannot do that,
+   because it shares object-fit with the video element. So the poster is its own
+   layer, covering, and it steps aside on play. */
+.video-frame__poster{
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.video-frame.is-playing .video-frame__poster{display:none}
+.video-frame video{position:relative; z-index:0; display:block; width:100%; height:100%; object-fit:contain; background:#000}
+
+.video-play{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; width:100%; padding:var(--space-3);
+  border:0; cursor:pointer; color:#fff; font-family:var(--font-heading);
+  /* A scrim, so the disc and the label keep their contrast whatever the
+     poster frame happens to be. */
+  background:linear-gradient(180deg,rgba(20,10,28,.28) 0%,rgba(20,10,28,.62) 100%);
+  transition:background-color var(--motion) ease;
+}
+.video-play__disc{
+  position:relative; flex:none;
+  width:84px; height:84px; border-radius:50%;
+  display:grid; place-items:center;
+  background:var(--cta-on-dark); color:var(--cta-on-dark-text);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  transition:transform var(--motion) var(--ease-out), background-color var(--motion) ease;
+}
+/* The triangle's optical centre sits left of its bounding box, so nudge it. */
+.video-play__disc svg{margin-left:5px}
+/* One slow ring, outward. Enough to say "this is a video", not enough to
+   nag — it is the only thing moving in this band. */
+.video-play__disc::after{
+  content:""; position:absolute; inset:-12px; border-radius:50%;
+  border:2px solid rgba(255,255,255,.5);
+  animation:play-pulse 2.8s ease-out infinite;
+}
+@keyframes play-pulse{
+  0%{transform:scale(.9); opacity:.7}
+  70%{transform:scale(1.28); opacity:0}
+  100%{transform:scale(1.28); opacity:0}
+}
+.video-play__label{
+  font-size:1.0625rem; font-weight:600; line-height:1.35; text-wrap:balance;
+  text-shadow:0 1px 14px rgba(0,0,0,.65);
+}
+.video-play__meta{
+  font-family:var(--font-body); font-size:.8125rem; font-weight:400;
+  color:rgba(255,255,255,.82); letter-spacing:.02em;
+}
+.video-play:hover .video-play__disc{transform:scale(1.07); background:#A961DE}
+.video-play:hover{background:linear-gradient(180deg,rgba(20,10,28,.20) 0%,rgba(20,10,28,.55) 100%)}
+.video-play:focus-visible{outline:3px solid var(--color-flourish); outline-offset:-4px}
+.video-frame.is-playing .video-play{display:none}
+@media (prefers-reduced-motion:reduce){
+  .video-play__disc::after{animation:none; opacity:.45}
+  .video-play:hover .video-play__disc{transform:none}
 }
 
 /* The labelled slot is always painted underneath; a loaded image covers it.
@@ -1691,34 +1752,8 @@ body{padding-bottom:88px}
     </div>
 
     <div class="hero__media">
-      <!-- Hosted on the practice's own GHL media library, so it stays a remote
-           URL rather than being inlined by tools/build-ghl.mjs — a video has no
-           business inside a data URI.
-
-           It does NOT autoplay. Until someone confirms whether this clip has
-           speech in it, autoplaying muted would either mute a talking head or
-           surprise a visitor with sound, and neither is acceptable. Click to
-           play is right for both. If it turns out to be silent b-roll, swap
-           `controls` for `autoplay muted loop` and add the reduced-motion
-           guard noted in the stylesheet.
-
-           The poster is the hero photograph — a real frame from the practice,
-           so the block reads as a video thumbnail rather than a black box
-           before play. Replace it with a still from the video itself when one
-           is to hand. -->
-      <div class="card__media hero__video" data-ratio-pending>
-        <video
-          src="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4"
-          poster="assets/bonding/hero.webp"
-          controls
-          preload="metadata"
-          playsinline
-          width="1600" height="900">
-          <!-- CAPTIONS: if this clip contains speech it needs a track here.
-               <track kind="captions" src="…" srclang="en" label="English" default> -->
-          <p>Your browser cannot play this video. <a href="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4">Open it directly</a>.</p>
-        </video>
-      </div>
+      <div class="card__media" data-file="assets/bonding/hero.webp"><img src="assets/bonding/hero.webp" alt="A patient sitting in the treatment chair, talking with a clinician at Cygnet House Dental Studio" fetchpriority="high" decoding="async"></div>
+    </div>
     </div>
 
   </div>
@@ -2059,6 +2094,55 @@ body{padding-bottom:88px}
         <p>Bonding and whitening are carried out for a brighter, more symmetrical smile. Many cases are completed in a single visit, with no downtime afterwards.</p>
       </li>
     </ol>
+    <div class="cta-row reveal">
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     10a · DR ROSE ON COMPOSITE BONDING
+     ============================================================ -->
+<section class="section section--primary" id="video" aria-labelledby="video-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="video-title">Hear it from the dentist who will plan your smile</h2>
+      <p>Dr Rose talks through what composite bonding actually involves — before you decide whether it is for you.</p>
+    </div>
+
+    <div class="reveal" style="max-width:var(--container-narrow); margin-inline:auto">
+      <!-- Hosted on the practice's own GHL media library, so it stays a remote
+           URL rather than being inlined by tools/build-ghl.mjs — a video has no
+           business inside a data URI. The poster is a local asset, so that one
+           does get inlined and the band never shows a black hole.
+
+           CAPTIONS: this clip is Dr Rose speaking. Video with dialogue and no
+           captions fails WCAG 1.2.2, so a <track> has to land here before
+           launch. Slot is below, ready to fill. -->
+      <div class="video-frame" data-video data-ratio-pending>
+        <img class="video-frame__poster" src="assets/bonding/video-poster.webp" alt="Dr Rose Kantzioura at Cygnet House Dental Studio" decoding="async">
+        <video
+          src="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4"
+          preload="metadata"
+          playsinline
+          width="1600" height="900">
+          <!-- <track kind="captions" src="…" srclang="en" label="English" default> -->
+          <p>Your browser cannot play this video. <a href="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4">Open it directly</a>.</p>
+        </video>
+
+        <!-- The whole poster is the button. The disc is the affordance; making
+             only the disc clickable means half the taps land on the poster and
+             do nothing, which reads as a broken video. -->
+        <button type="button" class="video-play js-video-play">
+          <span class="video-play__disc" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.79-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z"/></svg>
+          </span>
+          <span class="video-play__label">Watch Dr Rose explain composite bonding</span>
+          <span class="video-play__meta">This video has sound</span>
+        </button>
+      </div>
+    </div>
+
     <div class="cta-row reveal">
       <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
     </div>
@@ -2893,7 +2977,33 @@ body{padding-bottom:88px}
   }
 
   /* ==========================================================
-     HERO VIDEO — adopt the clip's real proportions
+     VIDEO — click to play
+     Controls are added only once playback starts, so the resting state is a
+     clean poster with one obvious affordance rather than a browser chrome bar
+     competing with it. The button is a real <button>, so it is in the tab
+     order and takes Enter and Space for free.
+     ========================================================== */
+  document.querySelectorAll('.js-video-play').forEach(function (btn) {
+    var frame = btn.closest('[data-video]');
+    var video = frame && frame.querySelector('video');
+    if (!video) return;
+    btn.setAttribute('aria-label', 'Play the video: Dr Rose explains composite bonding');
+    btn.addEventListener('click', function () {
+      frame.classList.add('is-playing');
+      video.controls = true;
+      var p = video.play();
+      /* A rejected play() leaves the viewer staring at a poster with no way
+         back, so put the button back if the browser refuses. */
+      if (p && p.catch) p.catch(function () {
+        frame.classList.remove('is-playing');
+        video.controls = false;
+      });
+      video.focus({ preventScroll: true });
+    });
+  });
+
+  /* ==========================================================
+     VIDEO — adopt the clip's real proportions
      The frame ships at 16/9 so it has a height before anything loads. Once
      metadata arrives we know the true ratio and set it, so a portrait or
      square clip fills its frame instead of sitting in letterbox bars. If the
