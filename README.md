@@ -593,6 +593,41 @@ Everything else is reused from the implants shoot: the logo, the team photo,
 the roster portraits, and the two section backgrounds (§8, §13), all of which
 are practice or team photography rather than treatment photography.
 
+## Hero video
+
+The hero photograph is replaced by a video hosted on the practice's own GHL
+media library:
+
+```
+https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4
+```
+
+It stays a **remote URL** — `tools/build-ghl.mjs` only inlines `assets/*.webp`
+and friends, and a video has no business inside a data URI. The poster is
+`assets/bonding/hero.webp`, which does get inlined, so the block reads as a
+video thumbnail rather than a black box before play.
+
+**It does not autoplay, deliberately.** That host is unreachable from this
+environment (403 at the proxy), so the clip could not be inspected: its
+duration, proportions and — the one that matters — whether it carries speech
+are all unknown. Autoplaying muted would either silence a talking head or
+surprise a visitor with sound. Click-to-play is correct for both cases.
+
+Two things to settle once someone has watched it:
+
+- **If it is silent b-roll**, swap `controls` for `autoplay muted loop` and add
+  a `prefers-reduced-motion` guard that drops the autoplay.
+- **If it contains speech, it needs captions.** A `<track kind="captions">`
+  slot is commented in place. Video with dialogue and no captions fails WCAG
+  1.2.2, and on a page this heavily compliance-checked that would be an odd
+  thing to leave.
+
+Its true proportions are unknown, so the frame ships at 16/9 and a few lines of
+script correct it to the real ratio on `loadedmetadata`. A portrait or square
+clip therefore fills its frame instead of sitting in letterbox bars, and
+because the box already had a height there is no layout shift. If the video
+never loads, the 16/9 poster stands.
+
 ## GHL wiring
 
 The form posts to **this campaign's own LeadConnector inbound webhook** — same
