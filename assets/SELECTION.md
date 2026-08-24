@@ -107,7 +107,6 @@ already in use on the live implants funnel, so the consent basis is unchanged
 
 | Slot | Source | What the photo shows |
 |------|--------|----------------------|
-| `bonding/hero.webp` | `Y#-118.jpg` | A patient sitting in the chair talking with a clinician. Fills the frame, warm, clean background, no screens in shot. |
 | `bonding/why-natural.webp` | `Y#-68.jpg` | Two team members smiling beside a seated patient in a bright room — the most positive human frame left once the X-ray shots were out. |
 | `bonding/why-minimal.webp` | `Y#-113.jpg` | Close-up: gloved hands holding a tooth shade guide and a fine instrument, "Dr Dimitrios S." scrubs. Reads as delicate, precise work. |
 | `bonding/why-one-visit.webp` | `Y#-106.jpg` | A clinician treating a patient with an iTero 3D intraoral scan on the screen beside them. Checked at full resolution: a colour scan, not a radiograph. |

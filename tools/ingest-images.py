@@ -46,7 +46,6 @@ SLOTS = {
     # --- Composite bonding / whitening campaign -------------------------
     # These land in assets/bonding/ rather than assets/, so the two funnels
     # never fight over a filename.
-    "bonding/hero":                    (1600, 900),
     "bonding/why-natural":             (800, 500),
     "bonding/why-minimal":             (800, 500),
     "bonding/why-one-visit":           (800, 500),

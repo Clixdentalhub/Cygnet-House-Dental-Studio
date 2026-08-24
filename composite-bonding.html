@@ -286,7 +286,6 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 
 /* Standalone media (hero, clinicians) keeps all four corners */
 .card__media{position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid var(--color-border)}
-.hero__media .card__media{aspect-ratio:16/9}
 /* The clip's real proportions are unknown until its metadata arrives, so the
    frame starts at 16/9 and the script below corrects it to the true ratio on
    loadedmetadata. Without that a vertical clip would letterbox into a wide
@@ -642,8 +641,8 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   border-bottom:1px solid var(--color-border);
 }
 @media (min-width:1024px){ .hero{padding-block:var(--space-6) var(--space-8)} }
-/* Mobile order: copy → form → image (the form stays high on the page).
-   Desktop: copy + image stack in the left column, form sits alongside. */
+/* Mobile order: copy → form (the form stays high on the page).
+   Desktop: the two sit side by side. */
 .hero__grid{display:grid; gap:var(--space-4)}
 .hero__copy{display:flex; flex-direction:column}
 .hero__title{margin-bottom:var(--space-2)}
@@ -656,12 +655,9 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
     gap:var(--space-6); align-items:start;
   }
   .hero__sub{font-size:1.125rem}
-  .hero__copy{grid-column:1; grid-row:1}
-  .hero__media{grid-column:1; grid-row:2}
-  .hero__form{grid-column:2; grid-row:1 / span 2}
+  .hero__copy{grid-column:1}
+  .hero__form{grid-column:2}
 }
-.hero__media .placeholder{min-height:200px}
-@media (min-width:768px){ .hero__media .placeholder{min-height:280px} }
 
 .ticks{display:grid; gap:10px}
 .ticks li{display:flex; gap:10px; align-items:flex-start; font-size:1rem}
@@ -1749,11 +1745,6 @@ body{padding-bottom:88px}
         </div>
 
       </div>
-    </div>
-
-    <div class="hero__media">
-      <div class="card__media" data-file="assets/bonding/hero.webp"><img src="assets/bonding/hero.webp" alt="A patient sitting in the treatment chair, talking with a clinician at Cygnet House Dental Studio" fetchpriority="high" decoding="async"></div>
-    </div>
     </div>
 
   </div>

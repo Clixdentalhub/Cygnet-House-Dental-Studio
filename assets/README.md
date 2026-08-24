@@ -24,7 +24,6 @@ folder so the two campaigns can never fight over a filename.
 
 | Filename | Used in | Suggested size | Crop |
 |----------|---------|----------------|------|
-| `bonding/hero.webp` | Hero, beside the qualifier form | 1600 × 900 | 16:9 |
 | `bonding/why-natural.webp` | §4 card 1 — "Natural-looking results" | 800 × 500 | 16:10 |
 | `bonding/why-minimal.webp` | §4 card 2 — "Minimally invasive treatment" | 800 × 500 | 16:10 |
 | `bonding/why-one-visit.webp` | §4 card 3 — "Often completed in one visit" | 800 × 500 | 16:10 |

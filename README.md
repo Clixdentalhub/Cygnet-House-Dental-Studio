@@ -562,7 +562,6 @@ wants — never a broken-image icon.
 
 | File | Where | Size | Status |
 |---|---|---|---|
-| `bonding/hero.webp` | Hero, beside the form | 1600 × 900 | ✅ `Y#-118` |
 | `bonding/why-natural.webp` | §4 card 1 | 800 × 500 | ✅ `Y#-68` |
 | `bonding/why-minimal.webp` | §4 card 2 | 800 × 500 | ✅ `Y#-113` |
 | `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 | ✅ `Y#-106` |
@@ -571,7 +570,7 @@ wants — never a broken-image icon.
 | `bonding/case-gaps-{before,after}.webp` | §6 slider 2 | 800 × 600 | ✅ Case 4 |
 | `bonding/case-staining-{before,after}.webp` | §6 slider 3 | 800 × 600 | ✅ Case 2 |
 
-`python3 tools/ingest-images.py <folder> "RAW.jpg=bonding/hero, …"` crops,
+`python3 tools/ingest-images.py <folder> "RAW.jpg=bonding/why-natural, …"` crops,
 strips EXIF and writes them at WebP q80.
 
 One fix to the shared slider pattern came out of building this: an empty
