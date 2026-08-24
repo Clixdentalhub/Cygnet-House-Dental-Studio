@@ -267,7 +267,6 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 
 /* Standalone media (hero, clinicians) keeps all four corners */
 .card__media{position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid var(--color-border)}
-.hero__media .card__media{aspect-ratio:16/9}
 
 /* The labelled slot is always painted underneath; a loaded image covers it.
    No JS and no load-order race — a missing or still-lazy file just shows the
@@ -546,12 +545,12 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
     gap:var(--space-6); align-items:start;
   }
   .hero__sub{font-size:1.125rem}
+  /* One row now the hero photograph is gone — Dr Sourtzis' video does that
+     job further down the page, and better. Spanning two rows here would
+     stretch the form over a row nothing occupies. */
   .hero__copy{grid-column:1; grid-row:1}
-  .hero__media{grid-column:1; grid-row:2}
-  .hero__form{grid-column:2; grid-row:1 / span 2}
+  .hero__form{grid-column:2; grid-row:1}
 }
-.hero__media .placeholder{min-height:200px}
-@media (min-width:768px){ .hero__media .placeholder{min-height:280px} }
 
 .ticks{display:grid; gap:10px}
 .ticks li{display:flex; gap:10px; align-items:flex-start; font-size:1rem}
@@ -1623,10 +1622,6 @@ body{padding-bottom:88px}
         </div>
 
       </div>
-    </div>
-
-    <div class="hero__media">
-      <div class="card__media" data-file="assets/hero.webp"><img src="assets/hero.webp" alt="Dr Dimitrios Sourtzis with a patient at Cygnet House Dental Studio" fetchpriority="high" decoding="async"></div>
     </div>
 
   </div>
