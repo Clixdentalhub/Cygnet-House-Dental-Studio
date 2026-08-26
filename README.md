@@ -465,6 +465,25 @@ Plus 0% interest-free finance over 12 months, and a **£50 non-refundable
 consultation deposit** — worded identically in the hero, §5, §11, the footer
 and the thank-you page, per the brief's fix list.
 
+## The finance blocker — a lead worth chasing (Aug 2026)
+
+The practice said it does not hold the lender name or FRN. That looks wrong.
+
+A **Tabeo** finance page exists for this exact practice at
+`lead.tabeo.co.uk/cygnet-house-dental-studio/finance`, and Tabeo is the
+FCA-authorised credit broker and loan servicer behind it; the practice acts as
+credit intermediary. Practices are issued the required regulatory wording by
+Tabeo at onboarding, so the details almost certainly sit in the practice's
+Tabeo account or on its own website's finance page.
+
+**Do not paste an FRN from a search result.** Three different numbers came back
+for Tabeo entities (942763, 749309, 777539) and none could be verified — the
+FCA register, the Tabeo page and the practice's own site are all blocked by
+this environment's egress proxy. A wrong FRN is a worse breach than a missing
+one: it is an affirmative false statement rather than an omission. Take the
+number from the practice's Tabeo paperwork or from `register.fca.org.uk`.
+
+
 ## Compliance decisions baked into the copy
 
 Same standard as the implants build. Reversing any of these needs a sign-off,
@@ -743,7 +762,8 @@ Standard 5.1 expects the second — and then link from the footer.
 | Standard bonding fee: £280 or £300? | **£300** — the campaign ad copy is the source of truth | Corrected from £280 across the hero list, the price card and the footer substantiation. At £280 the stated £80 saving and the £245 total were both arithmetically wrong; the brief carried the error and the first build reproduced it. £300 − £220 = £80, and £80 + £150 + £15 = £245, so every figure on the page now reconciles. |
 | Is the £50 deposit deducted? | **Yes** | Now stated: it covers the examination, X-rays and assessment, comes straight off the treatment cost, and is non-refundable only if the patient does not proceed. A better offer than the page previously described. |
 | Lender minimum credit amount | Not held; use what's there | The £300 / 12 × £25 representative example stands; the caveat sentence removed. |
-| Lender name, FCA status, FRN | Not held | **The blocker above.** |
+| Lender name, FCA status, FRN | Not held | **The blocker above** — but see "The finance blocker" below; "not held" appears to be wrong. |
+| Offer end date, revisited | Confirmed: "limited time" / "this month only" in the ads are **urgency devices with no real end date** | The landing page stays deadline-free — a deadline it cannot substantiate is not going on the page. The ads carry that risk on the practice's instruction; recorded here rather than mirrored into the page. |
 | Consent for all three before/afters | **Yes, all three** | The page's consent sentence is now true as written. |
 | Composite bonding in all three cases? | **Yes** | The three captions are confirmed accurate. |
 | Bonding / whitening testimonials | None available | The "not yet supplied" panel is gone. The ten genuine Google reviews stand on their own, none labelled as a bonding result. |
