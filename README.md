@@ -456,7 +456,7 @@ actually about is the thing that arrives first.
 
 | Item | Price | Was | Saving |
 |---|---|---|---|
-| Composite bonding | £220 per tooth | £280 per tooth | £80 per tooth |
+| Composite bonding | £220 per tooth | £300 per tooth | £80 per tooth |
 | Professional teeth whitening | £300 | £450 | £150 |
 | Oral examination + X-rays | included | £15 | £15 |
 | **Total potential saving** | | | **£245+** |
@@ -475,7 +475,7 @@ not a copy edit.
   supplied. The figure is untouched; the word is out until there is a date to
   justify it, and `[offer end date]` is a placeholder in three places ready to
   take one.
-- **The savings claim needs substantiation.** "Normally £280" and "normally
+- **The savings claim needs substantiation.** "Normally £300" and "normally
   £450" have to be prices the practice genuinely charged, for a meaningful
   period, immediately before this offer — that is what the ASA looks for.
   §5 carries a visible note saying so and the footer has the substantiation
@@ -739,7 +739,8 @@ Standard 5.1 expects the second — and then link from the footer.
 | | Answer | What changed |
 |---|---|---|
 | Offer end date | None — the offer is open-ended | Every "offer valid until…" clause removed. "Today" stays out of the headline permanently: with no end date it would be manufactured urgency. |
-| Dates the £280 / £450 prices applied | No date range | Reframed. These are the practice's **standard fees**, not a former price, so no period applies. The footer now substantiates the saving as a promotional reduction from standard fees. The internal "before this goes live" note that was rendering to visitors is gone. |
+| Dates the £300 / £450 prices applied | No date range | Reframed. These are the practice's **standard fees**, not a former price, so no period applies. The footer now substantiates the saving as a promotional reduction from standard fees. The internal "before this goes live" note that was rendering to visitors is gone. |
+| Standard bonding fee: £280 or £300? | **£300** — the campaign ad copy is the source of truth | Corrected from £280 across the hero list, the price card and the footer substantiation. At £280 the stated £80 saving and the £245 total were both arithmetically wrong; the brief carried the error and the first build reproduced it. £300 − £220 = £80, and £80 + £150 + £15 = £245, so every figure on the page now reconciles. |
 | Is the £50 deposit deducted? | **Yes** | Now stated: it covers the examination, X-rays and assessment, comes straight off the treatment cost, and is non-refundable only if the patient does not proceed. A better offer than the page previously described. |
 | Lender minimum credit amount | Not held; use what's there | The £300 / 12 × £25 representative example stands; the caveat sentence removed. |
 | Lender name, FCA status, FRN | Not held | **The blocker above.** |
