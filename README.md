@@ -57,18 +57,30 @@ Open any of them in a browser or drop them on any static host.
 - [ ] **Lender name and FRN** for the footer finance paragraph. The line is
       accurate and publishable as it stands — nothing in it is invented — and
       a source comment marks where the two details slot in.
-- [ ] **"Save up to £1,000"** — needs a genuine, substantiated prior price
-      before it can be used. Omitted until then; §5 carries a build note where
-      it would go back in.
+- [ ] **The offer's closing date.** The page says "limited time", which is
+      what the ads say and no more. A dated line ("until 30 September") is
+      stronger and easier to defend under CAP 3.17 — send the date and it
+      goes into the hero band, the offer-terms note and the footer.
+- [ ] **Is the clinical assessment free too, or only the treatment-coordinator
+      consultation?** The ads say "FREE TCO Consultation included for all
+      implant assessments", so the page claims exactly that and nothing wider.
+      The §11 list of what the consultation includes (CBCT, X-rays, intraoral
+      scan) sits directly beside it — if those are also free, the callout can
+      say so and the claim gets considerably stronger.
+- [ ] **Campaign 2, Ad Copy 4** headlines "Save £1000 on Dental Implant"
+      (singular), which contradicts the £500 single-implant saving every other
+      ad in that set uses. Looks like a typo in the ad, not a second offer —
+      worth fixing at the ad end, because the page now states £500.
 
 ---
 
 ## Standing recommendation
 
 > **Full-arch finance is the biggest open lever on this page.** 0% over 12
-> months is a superb anchor for a single implant (£250/month) but forces
-> £1,000 and £1,250 per month for All-on-4 and All-on-6 — figures that stop
-> most people reading. Those two cards lead with the total instead, which is
+> months is a superb anchor for a single implant (£208.33/month at the offer
+> price) but forces roughly £958 and £1,167 per month for All-on-4 and
+> All-on-6 — figures that stop most people reading. All three cards lead with
+> the total and quote the monthly only in the representative example, which is
 > the best available framing, but a longer-term plan for full-arch would do
 > more for conversion than any design change left in this build.
 
@@ -85,11 +97,17 @@ Open any of them in a browser or drop them on any static host.
 - Implant treatment provider **Dr Dimitrios Sourtzis**, GDC 287145
 - Six-person clinical team with official bios, GDC numbers and confirmed
   portraits, as a clickable roster over the team photo
-- Pricing: single **£3,000–£3,500**, All-on-4 **from £12,000/arch**, All-on-6
-  **from £15,000/arch**
+- Pricing, aligned to the ad copy on the client's instruction that "ad copy is
+  the truth". Usual guide prices: single **from £3,000**, All-on-4 **from
+  £12,000/arch**, All-on-6 **from £15,000/arch**. Offer prices: **from
+  £2,500**, **from £11,500/arch**, **from £14,000/arch** — £500 / £500 /
+  £1,000 off. Each card carries a savings badge and shows the usual price
+  struck through above the offer price, and §5 closes with an offer-terms note
 - Finance: **0% over 12 months on every implant treatment**, in its own box in
   §11, with the representative example beside it
-- **£50 consultation deposit** — covers the full assessment and scans
+- **Free treatment-coordinator consultation** with every implant assessment.
+  This replaced the £50 consultation deposit, which every ad in campaigns 2–4
+  contradicted
 - 15 verbatim Google reviews in a three-column marquee (4.9 from 122)
 - Three before/after comparison sliders (cases 1, 3, 4) with short
   treatment captions, shown with patient consent
@@ -108,11 +126,17 @@ sign-off, not just a copy edit.
   success rate" and "over 50 implants without any failures". Both are removed —
   GDC and ASA treat absolute outcome claims as unsubstantiable. Dr Sourtzis'
   message is reframed around a careful, restoratively-driven, honest approach.
-- **No savings claims.** "Save up to £1,000" / "SAVE £500" omitted pending a
-  genuine, substantiated prior price.
+- **Savings are stated as a comparison, not an assertion.** Every card shows
+  the usual guide price struck through beside the offer price, and §5 closes
+  with the terms: what the saving is measured against, one per patient, not
+  combinable, subject to clinical suitability. CAP 3.17/3.18 want the basis of
+  a savings claim visible; a bare "SAVE £500" badge on its own would not be.
 - **Softened suitability language.** "We assess complex cases others have
   declined" — not "we can treat what others can't".
-- **No manufactured urgency.** Vague scarcity is omitted.
+- **Urgency goes no further than the ads.** The ads say "limited time" and
+  "this month only" without a date, so the page says "limited time" and stops
+  there. No countdown, no invented deadline, no "only 3 spaces left". A real
+  closing date would let this be stated properly — see the to-do list.
 - **No `aggregateRating` in the JSON-LD.** Google does not support
   self-serving review markup on `LocalBusiness` types.
 - **Reviews are post-ownership only.** Mitchell-era reviews are excluded, and
@@ -288,7 +312,7 @@ mapping to list what it found and which slots are open.
 | 9 | Your journey — 3 steps |
 | 9b | Practice video — click-to-play, no autoplay |
 | 10 | Meet your clinicians — team photo + clickable 6-person roster |
-| 11 | What's included + £50 deposit + 0% finance box + representative example |
+| 11 | What's included + free-consultation callout + 0% finance box + representative example |
 | 12 | FAQ — 5 items, accessible accordion |
 | 13 | Final CTA + address + live map |
 | — | Footer with regulatory/finance/pricing disclosures |
