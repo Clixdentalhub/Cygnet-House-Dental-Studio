@@ -318,7 +318,10 @@ mapping to list what it found and which slots are open.
 | — | Footer with regulatory/finance/pricing disclosures |
 | — | Sticky mobile CTA bar (Call · Check My Suitability) with safe-area padding |
 
-**`thank-you.html`** — confirmation seal, what-happens-next in three steps, a
+**`thank-you.html`** — confirmation seal, an offer panel restating the savings
+and the free consultation (the click promised money off; a confirmation page
+silent about it reads as a bait-and-switch, and it is the first thing the
+caller gets asked), what-happens-next in three steps, a
 call band (they are as warm as they will ever be at that moment), four things
 worth thinking about before the call, and two reviews. One mobile action, not
 two: they have already filled the form in. Every link back to the funnel

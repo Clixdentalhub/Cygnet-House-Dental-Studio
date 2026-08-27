@@ -705,6 +705,22 @@ body{padding-bottom:88px}
   .confirm__seal path{animation:none; stroke-dashoffset:0}
 }
 
+/* The click that got here promised money off. A confirmation page that says
+   nothing about it reads as a bait-and-switch, and "does my discount still
+   stand?" is the first thing the caller gets asked. Worded as "the offer is
+   running", not "your saving is reserved" — clinical suitability decides what
+   actually applies, and that is settled at the consultation, not here. */
+.confirm__offer{
+  display:flex; gap:12px; align-items:flex-start; text-align:left;
+  max-width:52ch; margin:var(--space-3) auto 0;
+  padding:14px var(--space-2);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(196,165,232,.34); border-radius:var(--radius-sm);
+  font-size:.9375rem; line-height:1.5; color:var(--color-on-primary-mut);
+}
+.confirm__offer svg{color:var(--color-flourish); flex:none; margin-top:2px}
+.confirm__offer strong{color:#fff}
+
 .confirm__ref{
   display:inline-flex; align-items:center; gap:8px; margin-top:var(--space-3);
   padding:8px 16px; border-radius:var(--radius-pill);
@@ -868,6 +884,11 @@ body{padding-bottom:88px}
       <p class="confirm__eyebrow">Enquiry received</p>
       <h1 id="ty-title">Thank you<span class="js-ty-name"></span> — we've got your details.</h1>
       <p class="confirm__lead">A member of our team will call you during practice hours to answer your questions and arrange your implant consultation. Nothing is booked or charged until you're ready.</p>
+      <p class="confirm__offer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 12.3 21.7a1.6 1.6 0 0 1-2.3 0l-7.7-7.7a1.6 1.6 0 0 1-.4-1.4l1-6.2A1.6 1.6 0 0 1 4.2 5l6.2-1a1.6 1.6 0 0 1 1.4.4l8.8 8.8a1.6 1.6 0 0 1 0 .2Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>
+        <span><strong>You&rsquo;ve enquired while the offer is running</strong> — £500 off a single implant, £500 off All-on-4 and £1,000 off All-on-6, plus a free consultation with our treatment coordinator. We&rsquo;ll confirm exactly what applies to your case in writing, before anything begins.</span>
+      </p>
+
       <p class="confirm__ref">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
         Keep an eye on your email — a confirmation is on its way.
@@ -900,7 +921,7 @@ body{padding-bottom:88px}
       </li>
       <li class="next__item">
         <h3>Your consultation</h3>
-        <p>Your free consultation with our treatment coordinator, alongside your full assessment: examination, digital X-rays, a CBCT 3D scan and an intraoral digital scan.</p>
+        <p>You&rsquo;ll have a free consultation with our treatment coordinator, alongside your full assessment: examination, digital X-rays, a CBCT 3D scan and an intraoral digital scan.</p>
       </li>
       <li class="next__item">
         <h3>Your written plan</h3>
