@@ -260,6 +260,24 @@ invention, and never silently omitted.
   submit handler, never both.
 - **Data-URI images cannot be cached** and cost ~33% more bytes. Inlining is
   the get-it-live-today option; hosting the images is the fast one.
+- **The broken-image cleanup covers `.stack__media img` and `.card__media img`
+  but not `.ba__layer`.** On a build whose before/after cases do not exist yet,
+  every empty slider paints two broken-image glyphs — and its divider, knob and
+  Before/After badges sit over the striped slot, cutting the filename label in
+  half. Add `.ba__layer` to the selector and give the slider a `.ba--empty`
+  state that hides the comparison furniture. Fixed in `composite-bonding.html`.
+- **A gradient ground has no `backgroundColor`.** Any contrast check that walks
+  up looking for one climbs straight past an ink card built from a gradient and
+  reports white text on the light section behind it — 1.06:1 for something that
+  actually measures 15.9:1. Read the gradient's own stops and take the worst.
+- **A render-blocking off-site stylesheet defers every inline script after it.**
+  With no route to `fonts.googleapis.com`, the document sits in `readyState:
+  "loading"`, the bottom script never runs, and the page looks broken in a way
+  it is not. Verification must abort off-site requests up front, or it measures
+  the network rather than the page.
+- **Gold is not a light-ground colour.** `#D4AF37` is 2.1:1 on white and 8.2:1
+  on the ink band. If a brief hands you gold, give it one job on ink and a
+  darker twin for the same job on light — never let it become decoration.
 
 ---
 

@@ -1,0 +1,70 @@
+
+[1mindex.html — layout at 7 widths[0m
+  [32m✓[0m  360px no horizontal overflow
+  [32m✓[0m  360px --header-h 136 >= header 135
+  [32m✓[0m  360px all 6 nav anchors clear the header
+  [32m✓[0m  375px no horizontal overflow
+  [32m✓[0m  375px --header-h 136 >= header 135
+  [32m✓[0m  375px all 6 nav anchors clear the header
+  [32m✓[0m  414px no horizontal overflow
+  [32m✓[0m  414px --header-h 136 >= header 135
+  [32m✓[0m  414px all 6 nav anchors clear the header
+  [32m✓[0m  768px no horizontal overflow
+  [32m✓[0m  768px --header-h 136 >= header 135
+  [32m✓[0m  768px all 6 nav anchors clear the header
+  [32m✓[0m 1024px no horizontal overflow
+  [32m✓[0m 1024px --header-h 136 >= header 135
+  [32m✓[0m 1024px all 6 nav anchors clear the header
+  [32m✓[0m 1280px no horizontal overflow
+  [32m✓[0m 1280px --header-h 76 >= header 69
+  [32m✓[0m 1280px all 6 nav anchors clear the header
+  [32m✓[0m 1440px no horizontal overflow
+  [32m✓[0m 1440px --header-h 76 >= header 69
+  [32m✓[0m 1440px all 6 nav anchors clear the header
+
+[1mindex.html — content[0m
+  [32m✓[0m no script errors
+  [36mi[0m 1 off-site request(s) aborted on purpose (fonts, map embed) — page renders on its fallback stack
+  [32m✓[0m exactly one <h1>
+  [32m✓[0m JSON-LD parses (Dentist: Single dental implant, All-on-4 full-arch dental implants, All-on-6 full-arch dental implants)
+  [32m✓[0m no aggregateRating in JSON-LD
+  [32m✓[0m no robots meta
+  [32m✓[0m all 21 images carry an alt
+  [32m✓[0m 19/19 referenced image files present on disk
+  [32m✓[0m every missing image has a labelled slot naming it
+  [32m✓[0m no dead or bracketed hrefs
+  [32m✓[0m no section carries more than one motion pattern
+  [36mi[0m 0 visible [placeholder]s: 
+
+[1mindex.html — contrast (measured)[0m
+  [32m✓[0m body copy         8.17:1  (17.0px, needs 4.5)
+  [32m✓[0m price figure     16.93:1  (32.0px, large, needs 3)
+  [33m! price was: selector not found[0m
+  [33m! save pill: selector not found[0m
+  [32m✓[0m price note        8.17:1  (13.0px, needs 4.5)
+  [32m✓[0m CTA label         9.63:1  (16.0px, needs 4.5)
+  [32m✓[0m form title       15.85:1  (22.0px, large, needs 3)
+  [32m✓[0m form option      15.85:1  (15.0px, needs 4.5)
+  [32m✓[0m form eyebrow      7.47:1  (11.0px, needs 4.5)
+  [32m✓[0m form label       10.06:1  (12.0px, needs 4.5)
+  [33m! offer box h3: selector not found[0m
+  [33m! offer box p: selector not found[0m
+  [33m! inline [ph]: selector not found[0m
+  [32m✓[0m nav link          8.17:1  (14.0px, needs 4.5)
+  [32m✓[0m trust strip      16.93:1  (15.0px, needs 4.5)
+  [32m✓[0m on-ink body      10.75:1  (17.0px, needs 4.5)
+  [32m✓[0m footer legal      7.05:1  (12.0px, needs 4.5)
+
+[1mindex.html — form[0m
+  [32m✓[0m empty step blocked, error shown
+  [32m✓[0m pointer selection auto-advances
+  [32m✓[0m arrow keys move between radios without advancing
+  [32m✓[0m Continue advances to step 3
+  [32m✓[0m all 4 detail fields validate
+  [32m✓[0m back navigation preserves answers
+  [32m✓[0m all 9 contract fields posted (treatment="Dental Implants")
+  [32m✓[0m posts urlencoded to services.leadconnectorhq.com
+  [32m✓[0m redirect built correctly for the off-site thank-you page: …HJ8bPcsjqpLcyP?notrack=true&firstName=Margaret
+
+[1m[32mPASS[0m — 0 failure(s), 5 warning(s)
+

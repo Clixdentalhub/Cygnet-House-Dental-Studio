@@ -47,12 +47,19 @@ function build(src, out, label) {
   );
 }
 
-build('index.html',      'cygnet-implants-funnel.html', 'Funnel');
-build('thank-you.html',  'cygnet-thank-you.html',       'Thank-you');
+build('index.html',                       'cygnet-implants-funnel.html', 'Implants');
+build('thank-you.html',                   'cygnet-thank-you.html',       'Implants TY');
+build('composite-bonding.html',            'cygnet-bonding-funnel.html',  'Bonding');
+build('composite-bonding-thank-you.html',  'cygnet-bonding-thank-you.html', 'Bonding TY');
 
 console.log(`
-Before publishing, set two values:
-  cygnet-implants-funnel.html → SITE_CONFIG.thankYouUrl = the thank-you page's GHL URL
-  cygnet-thank-you.html       → SITE_CONFIG.funnelUrl   = the funnel's GHL URL
-Both ship as relative paths, which only resolve while the two files sit in
-the same folder.`);
+Each funnel and its thank-you page are a PAIR. Before publishing either pair,
+set both halves of its round trip:
+  <funnel>    → SITE_CONFIG.thankYouUrl = that pair's thank-you page GHL URL
+  <thank-you> → SITE_CONFIG.funnelUrl   = that pair's funnel GHL URL
+Both ship as relative paths, which only resolve while the files sit in one
+folder. Change them in the SOURCE and rebuild — pasting a fresh build into
+GHL overwrites anything edited by hand there.
+
+The bonding funnel still carries <meta name="robots" content="noindex">.
+Leave it until every highlighted [placeholder] is resolved.`);
