@@ -2955,6 +2955,21 @@ body{padding-bottom:88px}
     video.addEventListener('ended', function () {
       wrap.classList.remove('is-playing');
     });
+
+    /* If the file never loads — the CDN moves it, the host blocks hotlinking,
+       the URL rots — the default outcome is a black rectangle with a play
+       button that does nothing, which is worse than no video at all. Pull the
+       whole section instead, so the page simply runs team-after-reviews. */
+    function dropSection() {
+      var section = wrap.closest('section');
+      if (section) section.hidden = true;
+    }
+    video.addEventListener('error', dropSection);
+    /* A fast failure beats this script to the element: the error event has
+       already been and gone, and the only remaining trace is video.error.
+       Without this line the listener above never fires and the dead player
+       ships. Measured — an aborted request errors before DOMContentLoaded. */
+    if (video.error) dropSection();
   });
 
   /* ==========================================================
