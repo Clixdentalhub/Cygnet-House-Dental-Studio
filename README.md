@@ -432,7 +432,7 @@ the client's stated hex rather than a near neighbour.
 | 2 | Hero — H1, subhead, four offer ticks, deposit + finance line, trust chips, the qualifier form | §3.3 |
 | 3 | Trust strip | — |
 | 4 | Why patients choose Cygnet House — four value cards | §3.5 + the §3.4 intro |
-| 5 | The offer — bonding · **package** · whitening, then the £245+ total | §3.8 |
+| 5 | The offer — bonding · **package** · whitening, then the £310+ total | §3.8 |
 | 6 | Before & after — chipped teeth · gaps · discolouration | §3.6 |
 | 7 | Reviews — 4.9 from 122, ten genuine Google reviews | §3.10 |
 | 8 | Reassurance band | §3.4 |
@@ -458,8 +458,8 @@ actually about is the thing that arrives first.
 |---|---|---|---|
 | Composite bonding | £220 per tooth | £300 per tooth | £80 per tooth |
 | Professional teeth whitening | £300 | £450 | £150 |
-| Oral examination + X-rays | included | £15 | £15 |
-| **Total potential saving** | | | **£245+** |
+| Oral examination + X-rays | included | £80 | £80 |
+| **Total potential saving** | | | **£310+** |
 
 Plus 0% interest-free finance over 12 months, and a **£50 non-refundable
 consultation deposit** — worded identically in the hero, §5, §11, the footer
@@ -490,7 +490,7 @@ Same standard as the implants build. Reversing any of these needs a sign-off,
 not a copy edit.
 
 - **"Today" is dropped from the headline.** The brief's H1 ends *"— Save Over
-  £245 Today"*. "Today" asserts a deadline, and no offer end date was
+  £310 Today"*. "Today" asserts a deadline, and no offer end date was
   supplied. The figure is untouched; the word is out until there is a date to
   justify it, and `[offer end date]` is a placeholder in three places ready to
   take one.
@@ -759,7 +759,8 @@ Standard 5.1 expects the second — and then link from the footer.
 |---|---|---|
 | Offer end date | None — the offer is open-ended | Every "offer valid until…" clause removed. "Today" stays out of the headline permanently: with no end date it would be manufactured urgency. |
 | Dates the £300 / £450 prices applied | No date range | Reframed. These are the practice's **standard fees**, not a former price, so no period applies. The footer now substantiates the saving as a promotional reduction from standard fees. The internal "before this goes live" note that was rendering to visitors is gone. |
-| Standard bonding fee: £280 or £300? | **£300** — the campaign ad copy is the source of truth | Corrected from £280 across the hero list, the price card and the footer substantiation. At £280 the stated £80 saving and the £245 total were both arithmetically wrong; the brief carried the error and the first build reproduced it. £300 − £220 = £80, and £80 + £150 + £15 = £245, so every figure on the page now reconciles. |
+| Standard bonding fee: £280 or £300? | **£300** — the campaign ad copy is the source of truth | Corrected from £280 across the hero list, the price card and the footer substantiation. At £280 the stated £80 saving and the £310 total were both arithmetically wrong; the brief carried the error and the first build reproduced it. £300 − £220 = £80, and £80 + £150 + £15 = £310, so every figure on the page now reconciles. |
+| Value of the examination + X-rays | **£80**, revised up from £15 — client instruction | Updated in the hero list, the package card, the savings band, §7 and the footer substantiation. Total potential saving moves £310+ → £310+ (£80 bonding + £150 whitening + £80 examination). Every headline, card, badge and small-print figure moved together. |
 | Is the £50 deposit deducted? | **Yes** | Now stated: it covers the examination, X-rays and assessment, comes straight off the treatment cost, and is non-refundable only if the patient does not proceed. A better offer than the page previously described. |
 | Lender minimum credit amount | Not held; use what's there | The £300 / 12 × £25 representative example stands; the caveat sentence removed. |
 | Lender name, FCA status, FRN | Not held | **The blocker above** — but see "The finance blocker" below; "not held" appears to be wrong. |
