@@ -1,13 +1,24 @@
-# Cygnet House Dental Studio — Dental Implants Funnel
+# Cygnet House Dental Studio — lead-generation funnels
 
-Single-page, mobile-first lead-generation landing page for dental implants
-(Single / All-on-4 / All-on-6), built from the Clix Dental build brief.
+Two campaigns for the same practice, sharing one design system, one asset
+folder and one set of build tools.
+
+| Campaign | Funnel | Thank-you | Status |
+|---|---|---|---|
+| **Dental implants** (Single / All-on-4 / All-on-6) | `index.html` | `thank-you.html` | Live — no blocking items |
+| **Composite bonding + teeth whitening** | `composite-bonding.html` | `composite-bonding-thank-you.html` | **`noindex` — placeholders open**, see below |
+
+Everything below the "Composite bonding campaign" heading covers the second
+one. Everything above it is the implants build and is unchanged.
 
 **Deliverables**
 
 | File | What it is |
 |------|------------|
-| `index.html` | The live funnel page. One self-contained file (HTML + CSS + vanilla JS). No frameworks, no build step, no external JS. |
+| `index.html` | The live implants funnel. One self-contained file (HTML + CSS + vanilla JS). No frameworks, no build step, no external JS. |
+| `composite-bonding.html` | The composite bonding + teeth whitening funnel. Same design system, new content, new offer. Carries `noindex` until its placeholders are resolved. |
+| `composite-bonding-thank-you.html` | Its confirmation page. `noindex` on purpose. |
+| `tools/verify.mjs` | The verification pass — 7 widths, overflow, header offsets, contrast measured, and the full form journey end to end. `node tools/verify.mjs <page> [--shots]`. |
 | `thank-you.html` | The post-submission confirmation page. Same tokens, same header and footer, self-contained in the same way. `noindex` on purpose. |
 | `design-lab.html` | Internal design reference — background motion options, section cuts and reusable funnel blocks, with copy-paste code. Not a public page. |
 | `motion-lab.html` | Internal reference — 27 motion patterns for sections, cards, headlines, media, hover and micro-interactions. Every case is live and replayable, with a reduced-motion toggle that shows exactly what a visitor with that preference gets. Ends with the shortlist I would actually apply. |
@@ -410,3 +421,400 @@ on the active nav link, and inline SVG icons only — no emoji.
 than running it faster.
 
 **Not yet checked:** real-device testing, and a screen-reader pass.
+
+---
+
+# Composite bonding campaign
+
+Second funnel, same practice: **composite bonding + professional teeth
+whitening**, sold as one smile makeover package. Built from the Smile Makeover
+brief, which is itself a rebuild of the old GoHighLevel funnel *"Transform Your
+Smile With Composite Bonding & Teeth Whitening"*.
+
+**It is not cleared to launch.** `<meta name="robots" content="noindex,
+nofollow">` is in the `<head>` and every unconfirmed value renders as a
+highlighted `[bracketed placeholder]` on the page. The list is below.
+
+## What carried over, and what did not
+
+The design system carried over **in full** — tokens, components, section
+patterns, the ten motion patterns, the Ink Atelier qualifier form, the
+thank-you page and the build tooling. Content, copy, pricing, imagery and the
+offer are new.
+
+Three deliberate departures from the incoming brief, each reversible:
+
+| The brief asked for | What shipped | Why |
+|---|---|---|
+| **Poppins** as the typeface | Lexend + Source Sans 3, as the implants build uses | The heading face is what every measured line-break decision on this page was made against. Poppins is wider at the same size and re-breaks headlines everywhere, so swapping it is a re-verification pass, not a token edit. If you want it, change `--font-heading` / `--font-body` and the Google Fonts `<link>` — two lines — then re-run `tools/verify.mjs`. |
+| **Gold + champagne as brand colours** on a cream ground | Gold used, but only as a *saving marker* | `#D4AF37` measures **2.1:1 on white** — unusable as text on any light ground — and **8.2:1 on the ink band**, where it is excellent. So gold appears on ink only, and always means "this is the saving". On the white price cards the same job is done by `--color-gold-ink` (`#7A5B12`, 11.4:1 in its pill). One meaning, two grounds, nothing decorative. |
+| **Applying the `ui-ux-pro-max` design system** | The Cygnet design system | The two instructions conflict, and the Cygnet system is the one already measured for contrast, verified at seven widths and shipped. Re-deriving layout and type from a generic system would undo that. |
+
+The brand purple **did** move: `#6A2383` → `#6823A3`, the value the brief
+states. It is 8.9:1 on white and the change is imperceptible, but it is now
+the client's stated hex rather than a near neighbour.
+
+## Section map
+
+| § | Section | Brief |
+|---|---------|-------|
+| 1 | Sticky header — logo, six section links, click-to-call, **Book Now**, scroll progress | §3.2 |
+| 2 | Hero — H1, subhead, four offer ticks, deposit + finance line, trust chips, the qualifier form | §3.3 |
+| 3 | Trust strip | — |
+| 4 | Why patients choose Cygnet House — four value cards | §3.5 + the §3.4 intro |
+| 5 | The offer — bonding · **package** · whitening, then the £310+ total | §3.8 |
+| 6 | Before & after — chipped teeth · gaps · discolouration | §3.6 |
+| 7 | Reviews — 4.9 from 122, ten genuine Google reviews | §3.10 |
+| 8 | Reassurance band | §3.4 |
+| 9 | Your new smile in 3 steps | §3.7 |
+| 10 | Meet Dr Rose + the full team roster | §3.9 |
+| 11 | What your consultation includes, deposit, finance | — |
+| 12 | FAQ — five bonding/whitening questions | — |
+| 13 | Final CTA + address + live map | §3.11 |
+
+The brief's **top bar** (§3.1, practice name + address in a slim purple band)
+is not built. It would add a third row to a header that already resolves its
+anchor offsets from `--header-h`, and the address is already in §13 and the
+footer. Say the word and it goes in, but `--header-h` and every anchor offset
+move with it.
+
+The package card sits **in the middle** of the three, not last, because the
+C2 Centre Out motion lands the middle card first — so the thing the offer is
+actually about is the thing that arrives first.
+
+## The offer, as built
+
+| Item | Price | Was | Saving |
+|---|---|---|---|
+| Composite bonding | £220 per tooth | £300 per tooth | £80 per tooth |
+| Professional teeth whitening | £300 | £450 | £150 |
+| Oral examination + X-rays | included | £80 | £80 |
+| **Total potential saving** | | | **£310+** |
+
+Plus 0% interest-free finance over 12 months, and a **£50 non-refundable
+consultation deposit** — worded identically in the hero, §5, §11, the footer
+and the thank-you page, per the brief's fix list.
+
+## The finance blocker — a lead worth chasing (Aug 2026)
+
+The practice said it does not hold the lender name or FRN. That looks wrong.
+
+A **Tabeo** finance page exists for this exact practice at
+`lead.tabeo.co.uk/cygnet-house-dental-studio/finance`, and Tabeo is the
+FCA-authorised credit broker and loan servicer behind it; the practice acts as
+credit intermediary. Practices are issued the required regulatory wording by
+Tabeo at onboarding, so the details almost certainly sit in the practice's
+Tabeo account or on its own website's finance page.
+
+**Do not paste an FRN from a search result.** Three different numbers came back
+for Tabeo entities (942763, 749309, 777539) and none could be verified — the
+FCA register, the Tabeo page and the practice's own site are all blocked by
+this environment's egress proxy. A wrong FRN is a worse breach than a missing
+one: it is an affirmative false statement rather than an omission. Take the
+number from the practice's Tabeo paperwork or from `register.fca.org.uk`.
+
+
+## Compliance decisions baked into the copy
+
+Same standard as the implants build. Reversing any of these needs a sign-off,
+not a copy edit.
+
+- **"Today" is dropped from the headline.** The brief's H1 ends *"— Save Over
+  £310 Today"*. "Today" asserts a deadline, and no offer end date was
+  supplied. The figure is untouched; the word is out until there is a date to
+  justify it, and `[offer end date]` is a placeholder in three places ready to
+  take one.
+- **The savings claim needs substantiation.** "Normally £300" and "normally
+  £450" have to be prices the practice genuinely charged, for a meaningful
+  period, immediately before this offer — that is what the ASA looks for.
+  §5 carries a visible note saying so and the footer has the substantiation
+  sentence written, waiting on `[dates the previous prices applied]`.
+- **No shade-count promise on whitening.** The brief suggested "brightens your
+  smile by several shades". That is an outcome claim; it reads *"How much
+  lighter your teeth go varies from person to person, and whitening is not
+  permanent"* instead. The legal line that whitening may only be carried out
+  by a registered dental professional is in §5 and the footer.
+- **Suitability is qualified throughout** — "for suitable patients", "many
+  cases", "usually needs little to no removal". No absolutes.
+- **Bonding's downside is stated**, in the FAQ: it can chip or stain and may
+  need repair or replacement.
+- **No `aggregateRating` in the JSON-LD.**
+- **The rating is 4.9 from 122, not 5/5.** The brief allowed the 5/5 framing
+  only if accurate for Cygnet. It is not; 4.9/122 is, and it is verifiable.
+- **The source funnel's reviews are gone.** The "Gedling Dental" / "Dr
+  Sandeep" testimonials belonged to a different practice and are not carried
+  over in any form.
+- **Finance still needs the lender named and the FRN stated** before the 0%
+  copy can go live. The broker-status sentence is in the footer; the two
+  missing details are marked in §11.
+- **Every clinician named carries their GDC number**, Dr Rose (290358) at the
+  top of §10 and in the footer.
+
+## Reviews
+
+The ten reviews in the marquee are the practice's **own genuine Google
+reviews**, carried over from the implants build. Every one of them is about
+the team, the care, or a nervous patient being looked after — none is tagged
+as a bonding or whitening result, because none of them describes one. That is
+deliberate: a real review with an honest label beats a fabricated one with a
+flattering label, and beats an empty section.
+
+A visible placeholder under the marquee says exactly that and asks for the new
+smile-makeover testimonials. When they arrive they replace the placeholder;
+whether they also replace the ten is the client's call.
+
+## Images
+
+**Where they have to come from.** Google hosts are blocked by this environment's
+network policy — `drive.google.com` returns a 403 at the proxy — so images
+cannot be pulled from Drive directly. The Drive *connector* can read them: it
+returns each file as base64, and when that exceeds the tool-result limit the
+harness writes it to disk instead of into the conversation — so the bytes can
+be decoded straight to a file at no context cost. That is how the five frames
+above arrived. It is one call per image, so it suits a handful rather than a
+hundred. `github.com` and `raw.githubusercontent.com` are both
+reachable. So the two working routes are:
+
+1. **Attach the files in the Claude chat** — they land on disk here, then
+   `tools/ingest-images.py` crops, strips EXIF and files them in one command.
+2. **Drag them into `assets/bonding/` via GitHub's web UI** on this branch.
+
+No pre-resizing or renaming needed — send the raw files and say which goes
+where.
+
+**What already exists and is in use:** the April 2026 Cygnet shoot
+(`2026-04-22_CygnetHouse/pics` on Drive, ~100 frames) was ingested during the
+implants build. The logo, the team photo, all six roster portraits and the two
+section backgrounds come from it and render on this page today. Roughly 85 of
+those frames are still unused and several would suit the hero and the four §4
+cards — they just have to travel by one of the two routes above.
+
+**No implant imagery on this page.** Two frames were pulled and then replaced
+because each had a panoramic X-ray on a screen behind the subject showing
+extensive tooth loss — an implant story on a composite bonding page. Three
+more were rejected for the same reason, and one because a private-fee list on
+the wall survived the crop. The rule for any future swap: check what is on the
+screens in the background, not just the subject.
+
+**Before/after cases** come from the client's "B&As for composite bonding"
+folder — four cases, three used. Ordering was decided visually; the files in
+each case share one EXIF timestamp, so capture order is no help.
+
+Case 3 was dropped from the third slider despite having the most striking after
+frame: its before is retracted and its after relaxed, so the wipe jumps between
+two obviously different photographs. Case 2 replaced it because its two frames
+line up almost exactly. Full reasoning in `assets/SELECTION.md`.
+
+**All eleven files are in.** Five practice frames from the April shoot, and six before/after files from the client's "B&As for composite bonding" folder. Every one is mapped in `assets/SELECTION.md`. Until a
+file exists its slot renders as a labelled striped block naming the file it
+wants — never a broken-image icon.
+
+| File | Where | Size | Status |
+|---|---|---|---|
+| `bonding/why-natural.webp` | §4 card 1 | 800 × 500 | ✅ `Y#-68` |
+| `bonding/why-minimal.webp` | §4 card 2 | 800 × 500 | ✅ `Y#-113` |
+| `bonding/why-one-visit.webp` | §4 card 3 | 800 × 500 | ✅ `Y#-106` |
+| `bonding/why-clinicians.webp` | §4 card 4 | 800 × 500 | ✅ `Y#-79` |
+| `bonding/case-chipped-{before,after}.webp` | §6 slider 1 | 800 × 600 | ✅ Case 1 |
+| `bonding/case-gaps-{before,after}.webp` | §6 slider 2 | 800 × 600 | ✅ Case 4 |
+| `bonding/case-staining-{before,after}.webp` | §6 slider 3 | 800 × 600 | ✅ Case 2 |
+
+`python3 tools/ingest-images.py <folder> "RAW.jpg=bonding/why-natural, …"` crops,
+strips EXIF and writes them at WebP q80.
+
+One fix to the shared slider pattern came out of building this: an empty
+before/after slot still painted its divider, knob and Before/After badges over
+the striped block, and the line ran straight through the slot's own filename
+label — plus Chromium left a broken-image glyph in each corner, because the
+error-cleanup selector covered `.stack__media img` and `.card__media img` but
+not `.ba__layer`. Both are fixed in `composite-bonding.html` (see `.ba--empty`).
+`index.html` is untouched: all six of its case images exist, so the change
+would be inert there, and it is live and verified. Worth backporting the next
+time that file is opened.
+
+**The six before/after files need signed patient consent on file before they
+are published**, and each needs a caption naming the treatment — the captions
+are already written. If a case does not exist for one of the three concerns,
+that slider comes out rather than being filled with a stand-in.
+
+Everything else is reused from the implants shoot: the logo, the team photo,
+the roster portraits, and the two section backgrounds (§8, §13), all of which
+are practice or team photography rather than treatment photography.
+
+## The video band (§10a)
+
+A section of its own, directly above **Meet the team**: Dr Rose talking about
+composite bonding, so it lands just before the roster where people are deciding
+whether they trust her.
+
+```
+https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4
+```
+
+The clip stays a **remote URL** — `tools/build-ghl.mjs` only inlines
+`assets/*.webp` and friends, and a video has no business inside a data URI. The
+poster is local, so that one does get inlined and the band never shows a black
+hole.
+
+**Click to play, never autoplay.** It is speech: autoplaying it muted is
+pointless and autoplaying it audible is hostile. Controls are attached only
+once playback starts, so the resting state is a clean poster with one obvious
+affordance rather than browser chrome competing with it.
+
+**The whole poster is the button.** The disc is the affordance, not the hit
+area — make only the disc clickable and half the taps land on the poster and do
+nothing, which reads as a broken video. It is a real `<button>`, so it is in the
+tab order and takes Enter and Space for free, and it carries an `aria-label`
+naming what will play. A rejected `play()` puts the button back rather than
+leaving someone staring at a still with no way in.
+
+**The poster is its own `<img>`, not the `poster` attribute.** The still and the
+film want opposite fits — the poster should fill the frame, the video must never
+be cropped — and the attribute cannot do that, because it shares `object-fit`
+with the video element. So the poster is a covering layer that steps aside on
+play.
+
+It is cropped from `Y#-17`, a studio portrait of Dr Rose, deliberately
+off-centre: the play disc sits dead centre, and on a centred crop it landed on
+her face. She is placed right of centre so the disc falls on the backdrop.
+
+One ring pulses outward from the disc, and it is the only thing moving in the
+band — enough to say "this is a video", not enough to nag. It holds still under
+`prefers-reduced-motion`.
+
+**Still to do: captions.** Dialogue with no captions fails WCAG 1.2.2. A
+`<track kind="captions">` slot is commented in place, ready to fill.
+
+## GHL wiring
+
+The form posts to **this campaign's own LeadConnector inbound webhook** — same
+sub-account as the implants funnel, different trigger, so the two campaigns
+land in separate workflows:
+
+```
+https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/xG6w8R0Itdi8jxe3jEIK
+```
+
+**All nine field names are identical to the implants funnel**, so anything
+already mapped there maps the same way here:
+
+| Field | What arrives in it |
+|---|---|
+| `situation` | *Chipped or worn front teeth · Gaps between my teeth · Uneven edges or minor misalignment · Discoloured or stained teeth · Several of these* |
+| `timing` | *As soon as possible · In the next few months · Just researching for now* |
+| `firstName` | validated, 2+ characters |
+| `lastName` | validated, 2+ characters |
+| `phone` | validated, 10–15 digits, punctuation preserved as typed |
+| `email` | validated |
+| `website` | **honeypot** — always empty from a human; non-empty means a bot |
+| `pageUrl` | full page URL, useful for attribution |
+| `treatment` | constant: `Composite Bonding & Teeth Whitening` |
+
+`situation`'s *values* are new, but GHL maps on the key rather than the value,
+so nothing breaks. Keep `treatment` even now that the campaign has a dedicated
+webhook: it survives into the contact record and says which campaign a lead
+came from without anyone having to infer it from which workflow fired.
+
+**First workflow condition is the honeypot:** `website` `is not empty` → stop.
+Everything downstream then only ever sees real people.
+
+**Capturing the reference payload.** The Inbound Webhook trigger stores one
+captured request as its reference, and every downstream action can only pick
+from the keys in that stored sample — so make the capture submission complete.
+Fill every field: a key missing from the sample cannot be picked afterwards.
+All nine are transmitted on every send, including `website` with an empty
+value, so one ordinary submission is enough. Submit from the published page
+rather than a local copy, so `pageUrl` holds the real address.
+
+## Before this can go live
+
+All nine questions put to the practice have been answered, and every visible
+`[placeholder]` is gone. **One blocker remains, and it is a real one.**
+
+### Blocker — the finance copy is a financial promotion
+
+Every mention of 0% credit on this page is a financial promotion under FCA
+rules, and one may not run without the **lender named** and the practice's
+**FCA authorisation / credit-broker status and FRN** stated on the page. The
+footer already carries the broker sentence; the lender's name and the FRN are
+missing, and the practice has said it does not hold them.
+
+The copy has been left as written at the practice's instruction, and `noindex`
+stays on until this closes. Two ways to close it:
+
+1. **Supply the two details.** The FRN is public — it is on the FCA Financial
+   Services Register, so this is findable rather than unknowable.
+2. **Strip the specific credit terms.** Remove 0%, "12 months", the monthly
+   figures and the representative example, and reduce it to "payment options
+   available — ask at your consultation", which is not a financial promotion.
+   This costs a genuine conversion lever, which is why it is the second option.
+
+Do not simply publish as-is.
+
+### Second item — the policy pages do not exist
+
+The footer used to link to `/privacy-policy/`, `/complaints/` and `/terms/` on
+the practice site. The practice has confirmed **none of those pages exists**, so
+those links were 404s. A dead privacy link on a page collecting a name, a phone
+number and an email is worse than no link, so they are gone, replaced by a
+plain statement of what can be said truthfully today: what the details are used
+for, that they are not shared, and how to ask what is held or raise a concern.
+
+That is an interim. A hosted privacy policy and a complaints procedure still
+have to exist — UK GDPR expects the first at the point of collection, and GDC
+Standard 5.1 expects the second — and then link from the footer.
+
+### Then
+
+- [ ] **Remove `<meta name="robots" content="noindex, nofollow">`** — after the
+      blocker above, not before.
+- [ ] **Swap `SITE_CONFIG.thankYouUrl` off the preview URL.** It is set to
+      `…/preview/V8x3ST0kHpimI2uv4mhZ?notrack=true`, which works end to end —
+      verified, including the `&` separator against its existing query string
+      — but **`notrack=true` disables GHL's own tracking and `/preview/` is not
+      the published address**. Run traffic at it and the page records nothing.
+      This is the same trap `index.html` is still sitting in.
+- [ ] **Set `SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` to
+      the funnel's GHL URL. It is `null` today.
+- [ ] **Add the conversion tag** to the thank-you page — the marked block at
+      the bottom of its script. Fire it there **or** in the funnel's submit
+      handler, never both.
+- [ ] **Submit one real test lead** and confirm the mapping. Re-capture the
+      webhook reference only if a field is *added* — nothing has been renamed.
+- [ ] Real-device testing and a screen-reader pass. Neither has been done.
+
+### Answered by the practice, and now reflected on the page
+
+| | Answer | What changed |
+|---|---|---|
+| Offer end date | None — the offer is open-ended | Every "offer valid until…" clause removed. "Today" stays out of the headline permanently: with no end date it would be manufactured urgency. |
+| Dates the £300 / £450 prices applied | No date range | Reframed. These are the practice's **standard fees**, not a former price, so no period applies. The footer now substantiates the saving as a promotional reduction from standard fees. The internal "before this goes live" note that was rendering to visitors is gone. |
+| Standard bonding fee: £280 or £300? | **£300** — the campaign ad copy is the source of truth | Corrected from £280 across the hero list, the price card and the footer substantiation. At £280 the stated £80 saving and the £310 total were both arithmetically wrong; the brief carried the error and the first build reproduced it. £300 − £220 = £80, and £80 + £150 + £15 = £310, so every figure on the page now reconciles. |
+| Value of the examination + X-rays | **£80**, revised up from £15 — client instruction | Updated in the hero list, the package card, the savings band, §7 and the footer substantiation. Total potential saving moves £310+ → £310+ (£80 bonding + £150 whitening + £80 examination). Every headline, card, badge and small-print figure moved together. |
+| Is the £50 deposit deducted? | **Yes** | Now stated: it covers the examination, X-rays and assessment, comes straight off the treatment cost, and is non-refundable only if the patient does not proceed. A better offer than the page previously described. |
+| Lender minimum credit amount | Not held; use what's there | The £300 / 12 × £25 representative example stands; the caveat sentence removed. |
+| Lender name, FCA status, FRN | Not held | **The blocker above** — but see "The finance blocker" below; "not held" appears to be wrong. |
+| Offer end date, revisited | Confirmed: "limited time" / "this month only" in the ads are **urgency devices with no real end date** | The landing page stays deadline-free — a deadline it cannot substantiate is not going on the page. The ads carry that risk on the practice's instruction; recorded here rather than mirrored into the page. |
+| Consent for all three before/afters | **Yes, all three** | The page's consent sentence is now true as written. |
+| Composite bonding in all three cases? | **Yes** | The three captions are confirmed accurate. |
+| Bonding / whitening testimonials | None available | The "not yet supplied" panel is gone. The ten genuine Google reviews stand on their own, none labelled as a bonding result. |
+| Do the three policy pages exist? | **No** | The second item above. |
+
+## Building and verifying
+
+```bash
+node tools/build-ghl.mjs                              # → dist/cygnet-bonding-*.html
+node tools/verify.mjs composite-bonding.html --shots  # 7 widths + screenshots
+```
+
+`verify.mjs` checks horizontal overflow, `--header-h` against the real header
+height, every nav anchor clearing the header, console errors, JSON-LD, one
+`<h1>`, alt text, dead hrefs, one motion pattern per section, seventeen
+measured contrast pairs, and the whole form journey — validation, pointer
+auto-advance, arrow keys *not* advancing, the nine posted fields, and the
+redirect landing on the thank-you page with the name in the query string.
+
+**Screenshot as well as measure.** The worst bug on the implants build — words
+rendering out of order in a price card — passed every measurement and was
+visible only in a picture. `--shots` writes a full-page PNG per width to
+`.verify/`.

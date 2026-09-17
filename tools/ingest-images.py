@@ -42,6 +42,20 @@ SLOTS = {
     "case3-after":         (800, 600),
     "case4-before":        (800, 600),
     "case4-after":         (800, 600),
+
+    # --- Composite bonding / whitening campaign -------------------------
+    # These land in assets/bonding/ rather than assets/, so the two funnels
+    # never fight over a filename.
+    "bonding/why-natural":             (800, 500),
+    "bonding/why-minimal":             (800, 500),
+    "bonding/why-one-visit":           (800, 500),
+    "bonding/why-clinicians":          (800, 500),
+    "bonding/case-chipped-before":     (800, 600),
+    "bonding/case-chipped-after":      (800, 600),
+    "bonding/case-gaps-before":        (800, 600),
+    "bonding/case-gaps-after":         (800, 600),
+    "bonding/case-staining-before":  (800, 600),
+    "bonding/case-staining-after":   (800, 600),
 }
 
 def ingest(src: pathlib.Path, slot: str) -> None:
@@ -50,8 +64,9 @@ def ingest(src: pathlib.Path, slot: str) -> None:
     im = ImageOps.exif_transpose(im)          # honour rotation, then drop EXIF
     im = ImageOps.fit(im.convert("RGB"), (w, h), Image.LANCZOS, centering=(0.5, 0.5))
     out = ASSETS / f"{slot}.webp"
+    out.parent.mkdir(parents=True, exist_ok=True)   # slots may be "bonding/hero"
     im.save(out, "WEBP", quality=80, method=6)
-    print(f"  {src.name:32s} -> {out.name:26s} {w}x{h}  "
+    print(f"  {src.name:32s} -> {slot+'.webp':34s} {w}x{h}  "
           f"{src.stat().st_size//1024:>5d}KB -> {out.stat().st_size//1024:>4d}KB")
 
 def main() -> int:
@@ -60,7 +75,7 @@ def main() -> int:
     folder = pathlib.Path(sys.argv[1])
     files = sorted(p for p in folder.iterdir()
                    if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp", ".heic"))
-    have = {p.stem for p in ASSETS.glob("*.webp")}
+    have = {str(p.relative_to(ASSETS).with_suffix("")) for p in ASSETS.rglob("*.webp")}
     print(f"found {len(files)} image(s) in {folder}")
     print("open slots:", ", ".join(s for s in SLOTS if s not in have) or "none")
 

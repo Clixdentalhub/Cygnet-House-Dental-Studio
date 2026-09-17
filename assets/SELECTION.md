@@ -93,3 +93,78 @@ classified visually). All six ingested at 800×600 WebP q80, EXIF stripped.
 - No extras. Note: the pair's framing differs (retracted intraoral vs natural
   smile) — only two photos exist for this case, so the slider comparison is
   looser here than for Cases 1 and 3.
+
+---
+
+## Composite bonding campaign — `assets/bonding/`
+
+Same April 2026 `Y#` shoot, fetched via the Google Drive connector (direct
+Google network access stays blocked from this environment; the connector's
+oversized result is written to disk, which is what makes the transfer
+possible at all). These are the practice's own marketing photographs and are
+already in use on the live implants funnel, so the consent basis is unchanged
+— none of them is a clinical before/after.
+
+| Slot | Source | What the photo shows |
+|------|--------|----------------------|
+| `bonding/why-natural.webp` | `Y#-68.jpg` | Two team members smiling beside a seated patient in a bright room — the most positive human frame left once the X-ray shots were out. |
+| `bonding/why-minimal.webp` | `Y#-113.jpg` | Close-up: gloved hands holding a tooth shade guide and a fine instrument, "Dr Dimitrios S." scrubs. Reads as delicate, precise work. |
+| `bonding/why-one-visit.webp` | `Y#-106.jpg` | A clinician treating a patient with an iTero 3D intraoral scan on the screen beside them. Checked at full resolution: a colour scan, not a radiograph. |
+| `bonding/why-clinicians.webp` | `Y#-79.jpg` | The clinical team working together on a patient under the operating light. Skill in action. |
+
+No frame is reused between the two campaigns.
+
+**Why not `Y#-47` and `Y#-53`.** Both were used here first and both were
+replaced: each has a panoramic X-ray on a screen behind the subject, and the
+X-ray shows extensive tooth loss — `Y#-53`'s is sharp enough to read a largely
+edentulous upper arch. That is an implant story on a composite bonding page.
+`Y#-43`, `Y#-104` and `Y#-57` were rejected for the same reason, and `Y#-62`
+because a private-fee list on the wall survives the crop and would sit on the
+page contradicting the offer pricing. `Y#-64` (the branded reception desk) is
+clean but unusable as a hero: the subjects sit far right with a blank wall
+filling the left half, and cropping in to them loses the signage.
+
+**Rule for any future swap on this page: check what is on the screens in the
+background, not just the subject.** Every rejection above came from a monitor,
+a lightbox or a wall, never from the person being photographed.
+
+## Before / after cases — `assets/bonding/case-*`
+
+Source: the client's **"B&As for composite bonding"** Drive folder, four case
+subfolders, ten files, all 1620×1080. Ingested at 800×600 WebP q80, EXIF
+stripped. Before/after order was determined visually — every file in a case
+carries the same EXIF timestamp, so capture order gives nothing.
+
+| Slot | Source | What it shows |
+|------|--------|---------------|
+| `case-chipped-before` | Case 1 · `e4d14983…` | Chipped, worn and heavily stained upper front teeth; broken, uneven edges. |
+| `case-chipped-after`  | Case 1 · `9a688d45…` | The same view: edges rebuilt to an even line, uniform shade. |
+| `case-gaps-before`    | Case 4 · `85f47814…` | Narrow upper lateral incisors leaving dark triangular gaps at the gum line. |
+| `case-gaps-after`     | Case 4 · `1d2b8160…` | Gaps closed, edges levelled into a continuous smile line. |
+| `case-staining-before` | Case 2 · `89b6d465…` | Lower front teeth with brown staining and notched, worn edges. |
+| `case-staining-after`  | Case 2 · `9474db96…` | The same teeth rebuilt to an even edge, staining gone. |
+
+**Case 1 also holds a retracted pair** (`fde71104…` before, `08e6b35d…` after)
+of the same patient. The natural-smile pair was chosen instead — it is more
+relatable and the two frames match each other more closely.
+
+**Case 3 is unused, and that was a judgement call.** Its after is the single
+most striking frame in the set — a bright, even smile — and it was in the build
+first. But its before is a retracted view with the lips held back and its after
+is a relaxed smile, so at the wipe the slider jumps from gum-and-retractor to
+lip-and-beard. Two matched-scale re-crops were tried and neither fixed it: the
+mismatch is retracted-versus-relaxed, which no crop reaches. A comparison
+slider whose halves are visibly different photographs undermines the very thing
+it exists to show, so Case 2 took the slot — the two frames line up almost
+exactly, and the change reads right at the seam.
+
+The cost is that the brief's third concern, tooth discolouration, is now
+covered by staining on lower teeth rather than a whole-smile shade change. If a
+whitening case is ever shot with matched framing, it belongs in this slot and
+Case 3 can come back as a still elsewhere.
+
+**Two things to confirm before launch.** Signed patient consent for all three
+cases, and that composite bonding is genuinely what was carried out in each —
+the captions name the treatment, and the folder name is the only evidence for
+that so far. Case 1's before is broken down far enough that crowns would be a
+reasonable reading, so it is worth Dr Rose confirming.

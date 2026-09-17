@@ -3,9 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dental Implants in Spilsby | Cygnet House Dental Studio</title>
-<meta name="description" content="Replace missing teeth with permanent dental implants in Spilsby. Single implants, All-on-4 and All-on-6, planned with CBCT 3D scanning. Check your suitability today.">
-<meta name="theme-color" content="#1E3A5F">
+<title>Composite Bonding &amp; Teeth Whitening in Spilsby | Cygnet House Dental Studio</title>
+<meta name="description" content="A minimally invasive smile makeover in Spilsby — composite bonding from £220 per tooth and professional teeth whitening from £300, with a complimentary examination and X-rays. 0% finance over 12 months.">
+<meta name="theme-color" content="#241730">
+<!-- Every [placeholder] is now resolved, but this STAYS.
+     Remaining blocker: the 0% finance copy is a financial promotion under FCA
+     rules and cannot run without the lender named and the practice's FCA
+     authorisation / credit-broker status + FRN on the page. Close that — or
+     strip the specific credit terms — before removing this tag.
+     Second, lower-severity item: the privacy policy and complaints procedure
+     the footer used to link to do not exist yet. See README.md. -->
+<meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,19 +23,26 @@
 /* ==========================================================================
    1 · DESIGN TOKENS
    ========================================================================== */
-/* Brand palette: Ink & Amethyst.
-   Brand aubergine #6A2383 has luminance 0.059 — a DARK colour (9.63:1 on
-   white), so it serves as the CTA here while near-black plum ink carries the
+/* Brand palette: Ink & Amethyst, plus champagne gold.
+   Brand purple #6823A3 has luminance 0.068 — a DARK colour (8.9:1 on white),
+   so it serves as the CTA here while near-black plum ink carries the
    structure. Because the primary surface is dark, a CTA placed ON it must
-   invert: see --cta-on-dark and the .section--primary .btn--primary rule. */
+   invert: see --cta-on-dark and the .section--primary .btn--primary rule.
+
+   GOLD IS NOT A SECOND BRAND COLOUR. #D4AF37 measures 2.1:1 on white — it is
+   unusable as text on any light ground — and 8.2:1 on the ink band, where it
+   is excellent. So it has exactly one job on this page: it marks a saving,
+   and only ever on ink. On light grounds the saving takes --color-gold-ink,
+   its darker twin (6.0:1 on the page background). One meaning, two grounds,
+   no decoration. */
 :root{
   /* Colour */
   --color-primary:        #241730;  /* plum ink — 16.9:1 with white */
   --color-primary-dark:   #1A1220;
   --color-on-primary:     #FFFFFF;
-  --color-secondary:      #6A2383;  /* links — brand aubergine, 9.6:1 on white */
-  --color-accent:         #6A2383;  /* CTA — the brand colour itself */
-  --color-accent-dark:    #521B66;
+  --color-secondary:      #6823A3;  /* links — brand purple, 8.9:1 on white */
+  --color-accent:         #6823A3;  /* CTA — the brand colour itself */
+  --color-accent-dark:    #4E1A7B;
   --color-on-accent:      #FFFFFF;
   --cta-on-dark:          #9B4DD6;  /* CTA fill on ink bands — 3.6:1 vs ink */
   --cta-on-dark-text:     #FFFFFF;  /* 4.7:1 on that fill */
@@ -44,6 +59,10 @@
   --color-error:          #B42318;
   --color-star:           #B45309;  /* semantic, not brand — gold stars are the
                                        convention readers recognise for ratings */
+  --color-gold:           #D4AF37;  /* saving marker — 8.2:1 ON INK ONLY */
+  --color-gold-ink:       #7A5B12;  /* the same job on light — 6.0:1 on --color-background */
+  --color-gold-wash:      #FBF3DF;  /* the pill it sits in — 11.4:1 */
+  --color-gold-line:      #E8D6A4;
 
   /* Radius */
   --radius:      12px;
@@ -267,6 +286,87 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 
 /* Standalone media (hero, clinicians) keeps all four corners */
 .card__media{position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid var(--color-border)}
+/* The clip's real proportions are unknown until its metadata arrives, so the
+   frame starts at 16/9 and the script below corrects it to the true ratio on
+   loadedmetadata. Without that a vertical clip would letterbox into a wide
+   box; with a hard-coded ratio and object-fit:cover it would instead be
+   cropped. Correcting the frame keeps the whole picture and costs no layout
+   shift, because the box already had a height.
+   If this is ever switched to autoplay, add:
+     @media (prefers-reduced-motion:reduce){ .hero__video video{ … } }
+   and drop the autoplay attribute for those users. */
+/* ==========================================================================
+   16b · VIDEO BAND (§10a)
+   Click-to-play, never autoplay: the clip is Dr Rose speaking, and autoplaying
+   speech either muted (pointless) or audible (hostile) are both wrong. The
+   whole poster is the button, because that is where people click anyway — the
+   disc is the affordance, not the hit area.
+   ========================================================================== */
+.video-frame{
+  position:relative; overflow:hidden; background:#000;
+  aspect-ratio:16/9; border-radius:var(--radius);
+  border:1px solid rgba(196,165,232,.28);
+  box-shadow:0 24px 60px rgba(24,10,34,.45);
+}
+/* The still and the film want opposite fits — the poster should fill the frame,
+   the video must never be cropped — and the poster ATTRIBUTE cannot do that,
+   because it shares object-fit with the video element. So the poster is its own
+   layer, covering, and it steps aside on play. */
+.video-frame__poster{
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.video-frame.is-playing .video-frame__poster{display:none}
+.video-frame video{position:relative; z-index:0; display:block; width:100%; height:100%; object-fit:contain; background:#000}
+
+.video-play{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; width:100%; padding:var(--space-3);
+  border:0; cursor:pointer; color:#fff; font-family:var(--font-heading);
+  /* A scrim, so the disc and the label keep their contrast whatever the
+     poster frame happens to be. */
+  background:linear-gradient(180deg,rgba(20,10,28,.28) 0%,rgba(20,10,28,.62) 100%);
+  transition:background-color var(--motion) ease;
+}
+.video-play__disc{
+  position:relative; flex:none;
+  width:84px; height:84px; border-radius:50%;
+  display:grid; place-items:center;
+  background:var(--cta-on-dark); color:var(--cta-on-dark-text);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  transition:transform var(--motion) var(--ease-out), background-color var(--motion) ease;
+}
+/* The triangle's optical centre sits left of its bounding box, so nudge it. */
+.video-play__disc svg{margin-left:5px}
+/* One slow ring, outward. Enough to say "this is a video", not enough to
+   nag — it is the only thing moving in this band. */
+.video-play__disc::after{
+  content:""; position:absolute; inset:-12px; border-radius:50%;
+  border:2px solid rgba(255,255,255,.5);
+  animation:play-pulse 2.8s ease-out infinite;
+}
+@keyframes play-pulse{
+  0%{transform:scale(.9); opacity:.7}
+  70%{transform:scale(1.28); opacity:0}
+  100%{transform:scale(1.28); opacity:0}
+}
+.video-play__label{
+  font-size:1.0625rem; font-weight:600; line-height:1.35; text-wrap:balance;
+  text-shadow:0 1px 14px rgba(0,0,0,.65);
+}
+.video-play__meta{
+  font-family:var(--font-body); font-size:.8125rem; font-weight:400;
+  color:rgba(255,255,255,.82); letter-spacing:.02em;
+}
+.video-play:hover .video-play__disc{transform:scale(1.07); background:#A961DE}
+.video-play:hover{background:linear-gradient(180deg,rgba(20,10,28,.20) 0%,rgba(20,10,28,.55) 100%)}
+.video-play:focus-visible{outline:3px solid var(--color-flourish); outline-offset:-4px}
+.video-frame.is-playing .video-play{display:none}
+@media (prefers-reduced-motion:reduce){
+  .video-play__disc::after{animation:none; opacity:.45}
+  .video-play:hover .video-play__disc{transform:none}
+}
 
 /* The labelled slot is always painted underneath; a loaded image covers it.
    No JS and no load-order race — a missing or still-lazy file just shows the
@@ -344,7 +444,13 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .section--primary h2,.section--primary h3{color:var(--color-on-primary)}
 
 .section-head{max-width:1000px; margin:0 auto var(--space-4); text-align:center}
-.section-head p{max-width:62ch; margin-inline:auto}
+/* 62ch left every section intro at ~two thirds the width of the heading above
+   it, so a four-sentence paragraph stacked into six short lines and read as a
+   dense block rather than a lead-in. 78ch is still inside the comfortable
+   measure for a short centred paragraph and takes the longest one down to
+   four lines. Below ~1000px the container caps it anyway, so this only
+   changes the wide layouts, which is where the imbalance was. */
+.section-head p{max-width:78ch; margin-inline:auto}
 .section-head p{color:var(--color-foreground-mut); font-size:1.0625rem; margin-bottom:0}
 .section--primary .section-head p{color:var(--color-on-primary-mut)}
 
@@ -385,6 +491,10 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 }
 .placeholder svg{color:var(--color-border-strong)}
 .placeholder-label{font-weight:600; color:var(--color-primary)}
+/* A whole block the client still owes us, as opposed to a single value. */
+.pending{margin-top:var(--space-4); text-align:left; align-items:stretch; min-height:0}
+.pending p{margin:0 0 var(--space)}
+.pending p:last-child{margin-bottom:0}
 /* Inline [bracket] placeholders that the client must replace */
 .ph{
   background:#FEF3C7; color:#713F12;
@@ -531,38 +641,22 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
   border-bottom:1px solid var(--color-border);
 }
 @media (min-width:1024px){ .hero{padding-block:var(--space-6) var(--space-8)} }
-/* Mobile order: copy → form → image (the form stays high on the page).
-   Desktop: copy + image stack in the left column, form sits alongside. */
+/* Mobile order: copy → form (the form stays high on the page).
+   Desktop: the two sit side by side. */
 .hero__grid{display:grid; gap:var(--space-4)}
 .hero__copy{display:flex; flex-direction:column}
 .hero__title{margin-bottom:var(--space-2)}
 .hero__sub{font-size:1.0625rem; color:var(--color-foreground-mut); max-width:36em; margin-bottom:var(--space-3)}
 .hero__ticks{margin-bottom:var(--space-3)}
 .hero__finance{margin-bottom:var(--space-3)}
-/* The offer band. The ads lead on money off and a free consultation, so the
-   page has to say both above the fold or the click and the landing read as
-   two different offers. Ink ground, so it carries weight without competing
-   with the H1 for colour. */
-.hero__offer{
-  display:flex; gap:10px; align-items:flex-start; align-self:flex-start;
-  background:var(--color-primary); color:var(--color-on-primary-mut);
-  border:1px solid var(--color-primary); border-radius:var(--radius-sm);
-  padding:10px var(--space-2); margin-bottom:var(--space-2);
-  font-size:.875rem; line-height:1.45;
-}
-.hero__offer svg{color:var(--color-flourish); flex:none; margin-top:2px}
-.hero__offer strong{color:#fff}
 @media (min-width:1024px){
   .hero__grid{
     grid-template-columns:minmax(0,1.05fr) minmax(400px,.95fr);
     gap:var(--space-6); align-items:start;
   }
   .hero__sub{font-size:1.125rem}
-  /* One row now the hero photograph is gone — Dr Sourtzis' video does that
-     job further down the page, and better. Spanning two rows here would
-     stretch the form over a row nothing occupies. */
-  .hero__copy{grid-column:1; grid-row:1}
-  .hero__form{grid-column:2; grid-row:1}
+  .hero__copy{grid-column:1}
+  .hero__form{grid-column:2}
 }
 
 .ticks{display:grid; gap:10px}
@@ -809,46 +903,20 @@ fieldset{border:0; padding:0; margin:0}
   font-size:.75rem; font-weight:600; letter-spacing:.02em;
   padding:4px 10px; border-radius:var(--radius-pill);
 }
-/* "Most enquired about" moved to the opposite corner so the savings badge —
-   the thing the ad promised — gets the reading corner on every card. */
-/* Tighter inset and type than the savings badge: at 1024px the three-column
-   track is at its narrowest and the two pills collided by 6px. Secondary
-   emphasis should give way anyway. */
-.price-card__tag--alt{
-  left:auto; right:var(--space-2);
-  background:var(--color-surface); color:var(--color-foreground-mut);
-  border:1px solid var(--color-border); font-weight:600;
-  font-size:.6875rem; padding:4px 8px;
-}
-/* The usual price sits above the offer price and is struck through, so the
-   saving is visible as a comparison rather than asserted as a number. */
-.price-card__was{
-  font-size:.875rem; color:var(--color-foreground-mut); margin:0 0 -6px;
-  font-variant-numeric:tabular-nums;
-}
-.price-card__was s{text-decoration-thickness:1.5px}
 .price-card__body{display:flex; flex-direction:column; gap:10px; margin-bottom:var(--space-3); flex:1}
-.price-card__head{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-2)}
-/* Two lines' worth of room whether the title needs them or not. "Single
-   Dental Implant" wraps where "All-on-4 Full-Arch" does not, and a one-line
-   heading beside a two-line one steps every row beneath it out of line. */
-.price-card__head h3{margin:0; min-height:2.4em}
-.price-card__glyph{width:76px; flex:none; color:var(--color-border-strong); margin-top:2px}
-.glyph-post{fill:var(--color-accent)}
+/* No glyph here. On the implants page the arch with 1 / 4 / 6 posts encoded a
+   real difference the heading did not state, which earned it the space. Bonding
+   versus whitening has no equivalent quantity, so the same device was carrying
+   nothing — and in a 76x33 box two of the three read as the same cluster of
+   marks. Dropping it gives the heading the full card width, which puts all
+   three on one line and lines the three price figures up with each other. */
+.price-card__head h3{margin:0}
 .price-card__figure{
   font-family:var(--font-heading); font-weight:700;
   font-size:2rem; line-height:1.1; color:var(--color-primary);
   font-variant-numeric:tabular-nums; margin:0;
 }
-/* The qualifier gets its own line on every card. Inline, "per arch" wrapped
-   on the two full-arch cards while "total" stayed up beside the single-implant
-   figure, and the three price blocks then ended at three different heights —
-   which pushed the £-off line out of line across the row. */
-.price-card__figure small{
-  display:block; font-family:var(--font-body); font-size:.9375rem;
-  font-weight:400; color:var(--color-foreground-mut); white-space:nowrap;
-  margin-top:2px;
-}
+.price-card__figure small{font-family:var(--font-body); font-size:.9375rem; font-weight:400; color:var(--color-foreground-mut); white-space:nowrap}
 .price-card__sub{
   font-size:.875rem; font-weight:600; color:var(--color-accent);
   font-variant-numeric:tabular-nums; margin:0;
@@ -861,6 +929,22 @@ fieldset{border:0; padding:0; margin:0}
 .price-card__note{
   font-size:.8125rem; color:var(--color-foreground-mut); margin:0;
   padding-top:10px; margin-top:auto; border-top:1px dashed var(--color-border);
+}
+/* Prior price + saving. The two children are whole phrases, never words
+   interleaved with surrounding text — a flex row that splits a sentence
+   renders it out of order, which is the trap .ticks li exists to avoid. */
+.price-card__was{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:8px;
+  margin:0; font-size:.9375rem; color:var(--color-foreground-mut);
+  font-variant-numeric:tabular-nums;
+}
+.price-card__was s{text-decoration-thickness:1.5px}
+.save-pill{
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--color-gold-wash); color:var(--color-gold-ink);
+  border:1px solid var(--color-gold-line); border-radius:var(--radius-pill);
+  padding:2px 10px; font-size:.8125rem; font-weight:600;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
 }
 .price-card .btn{margin-top:auto}
 .note-block{
@@ -958,6 +1042,15 @@ fieldset{border:0; padding:0; margin:0}
 }
 .ba input[type="range"]:focus-visible ~ .ba__knob{outline:3px solid var(--color-secondary); outline-offset:3px}
 .ba-caption{margin-top:10px; font-size:.875rem; color:var(--color-foreground-mut); text-align:center}
+/* Neither image has arrived yet. The divider, the knob and the Before/After
+   badges are all promises about a comparison that is not there — and the line
+   runs straight through the striped slot's own filename, chopping the label in
+   half. Hide them until the files exist; the slot then reads as one clean
+   labelled block. Added by the script when a layer fails to load. */
+.ba--empty .ba__line,
+.ba--empty .ba__knob,
+.ba--empty .ba__badge,
+.ba--empty input[type="range"]{display:none}
 
 /* ==========================================================================
    12 · JOURNEY
@@ -1046,13 +1139,11 @@ fieldset{border:0; padding:0; margin:0}
 .callout h3{margin-bottom:var(--space)}
 .callout p{font-size:.9375rem; color:var(--color-foreground-mut)}
 .callout--compliance{background:#FFFBEB; border-color:#FDE68A}
-.callout--free{background:#F2FBF6; border-color:#B7E0C8}
-.callout--free h3{color:var(--color-success)}   /* 5.1:1 on that ground */
 
 /* The one finance fact worth a box of its own. Ink ground so it reads as a
    statement, not another card in the stack. */
 /* The badge sits AFTER the copy. Leading it pushed the heading 82px right of
-   "Your consultation is free" and "Spreading the cost" directly above and
+   "Your £50 consultation deposit" and "Spreading the cost" directly above and
    below — three stacked cards whose headings started at three different
    places. Copy first keeps all three on one left edge. */
 .finance-box{
@@ -1083,6 +1174,20 @@ fieldset{border:0; padding:0; margin:0}
 .finance-box h3{color:#fff; margin-bottom:4px; font-size:1.0625rem}
 .finance-box p{color:var(--color-on-primary-mut); font-size:.9375rem}
 .finance-box p strong{color:#fff}
+
+/* The one figure the whole offer turns on. Same ink box as the finance note
+   below it, with gold where that one carries lilac — on this ground gold is
+   8.2:1 and reads as the saving rather than as ornament. */
+.finance-box--offer{
+  border-color:var(--color-gold);
+  box-shadow:inset 0 0 0 1px rgba(212,175,55,.45), var(--shadow-md);
+  margin-top:var(--space-4);
+}
+.finance-box--offer .finance-box__badge{
+  border-color:var(--color-gold); color:var(--color-gold);
+  font-size:1.25rem; letter-spacing:-.01em;
+}
+.finance-box--offer h3{color:var(--color-gold)}
 
 .rep-example{
   font-size:.8125rem; line-height:1.5; color:var(--color-foreground-mut);
@@ -1167,61 +1272,6 @@ body{padding-bottom:88px}
 @media (min-width:768px){ body{padding-bottom:0} }
 
 /* ==========================================================================
-   17b · VIDEO PLAYER
-   ========================================================================== */
-.vplayer{
-  position:relative; max-width:var(--container-narrow); margin-inline:auto;
-  /* 16/9 is the reserve, replaced by the file's real ratio once metadata
-     loads — the source could be portrait, and a permanently wrong box either
-     letterboxes heavily or crops the subject out. max-height stops a vertical
-     video becoming a tower on desktop. */
-  aspect-ratio:16/9; max-height:72vh;
-  border-radius:var(--radius); overflow:hidden; isolation:isolate;
-  background:#120C18; border:1px solid var(--color-border);
-  box-shadow:var(--shadow-lg);
-}
-.vplayer__video{width:100%; height:100%; object-fit:contain; display:block; background:#120C18}
-.vplayer__play{
-  position:absolute; inset:0; width:100%; height:100%; padding:0;
-  display:grid; place-items:center; cursor:pointer; border:0;
-  background:rgba(18,12,24,.34);
-  transition:background-color var(--motion) ease, opacity var(--motion) ease;
-}
-.vplayer__play:hover{background:rgba(18,12,24,.20)}
-.vplayer__play:focus-visible{outline:3px solid var(--color-flourish); outline-offset:-4px}
-.vplayer__disc{
-  width:76px; height:76px; border-radius:50%; display:grid; place-items:center;
-  background:var(--cta-on-dark); color:var(--cta-on-dark-text);
-  box-shadow:0 10px 30px rgba(18,12,24,.45);
-  transition:transform var(--motion) var(--ease-out);
-}
-@media (min-width:768px){ .vplayer__disc{width:88px; height:88px} }
-.vplayer__play:hover .vplayer__disc{transform:scale(1.06)}
-/* Once it is playing the overlay has to stop intercepting clicks, or the
-   native controls underneath are unreachable. */
-.vplayer.is-playing .vplayer__play{opacity:0; pointer-events:none}
-@media (prefers-reduced-motion:reduce){
-  .vplayer__disc{transition:none}
-  .vplayer__play:hover .vplayer__disc{transform:none}
-}
-
-/* Speaker credit. A face and a registration number beside a clinical video
-   do more for trust than any adjective in the heading above it. */
-.vcredit{
-  display:flex; align-items:center; justify-content:center; gap:12px;
-  max-width:var(--container-narrow); margin:var(--space-3) auto 0;
-  text-align:left;
-}
-.vcredit__avatar{
-  width:48px; height:48px; flex:none; border-radius:50%; overflow:hidden;
-  border:1px solid var(--color-border); background:var(--color-muted);
-}
-.vcredit__avatar img{width:100%; height:100%; object-fit:cover; object-position:50% 22%; display:block}
-.vcredit__who{display:flex; flex-direction:column; min-width:0}
-.vcredit__who strong{font-family:var(--font-heading); font-size:.9375rem; color:var(--color-primary)}
-.vcredit__who span{font-size:.8125rem; color:var(--color-foreground-mut)}
-
-/* ==========================================================================
    18b · SECTION MOTION
 
    Ten patterns from the motion lab, each with exactly one home. No section
@@ -1233,7 +1283,7 @@ body{padding-bottom:88px}
      C2 Centre Out  §5  the three pricing cards
      S3 Rule First  §6  before & after section head
      U1 Count Up    §7  the 4.9 / 122 figures
-     S4 Settle      §8  "Nervous about implants?" section head
+     S4 Settle      §8  the reassurance band's section head
      I1 + I2        §10 roster tiles — one hover gesture, lift plus zoom
      U3 Icon Trace  §11 the consultation check-list
      U2 Tick Draw   —   the form's success seal
@@ -1402,18 +1452,21 @@ body{padding-bottom:88px}
 <header class="header">
   <div class="container header__inner">
     <a class="logo" href="#top">
-      <img src="assets/logo.webp" alt="Cygnet House Dental Studio &amp; Implant Centre — home" width="374" height="166">
+      <img src="assets/logo.webp" alt="Cygnet House Dental Studio — home" width="374" height="166">
     </a>
 
     <!-- Section nav. Sits inline on wide screens; below 1024px it drops to
          its own scrollable rail so the links never squeeze the CTA out. -->
     <nav class="section-nav" aria-label="Page sections">
       <ul>
-        <li><a href="#is-this-you">Your situation</a></li>
-        <li><a href="#pricing">Prices</a></li>
+        <!-- Scroll-spy walks these in order and lights the last one whose
+             section has passed the line, so the list has to stay in page
+             order: pricing → results → reviews → journey → clinicians → faq. -->
+        <li><a href="#pricing">Offer</a></li>
         <li><a href="#results">Results</a></li>
         <li><a href="#reviews">Reviews</a></li>
-        <li><a href="#clinicians">Team</a></li>
+        <li><a href="#journey">How it works</a></li>
+        <li><a href="#clinicians">Meet Dr Rose</a></li>
         <li><a href="#faq">FAQs</a></li>
       </ul>
     </nav>
@@ -1425,7 +1478,7 @@ body{padding-bottom:88px}
         <span class="js-phone">[Phone]</span>
         <span class="sr-only">Call the practice</span>
       </a>
-      <a class="btn btn--primary js-scroll-form" href="#qualifier">Check My Suitability</a>
+      <a class="btn btn--primary js-scroll-form" href="#qualifier">Book Now</a>
     </div>
   </div>
 
@@ -1452,25 +1505,27 @@ body{padding-bottom:88px}
            lines at 1280px. The mask is applied per word by JS instead: same
            reveal from behind an edge, natural wrapping preserved at every
            width, and the plain text stands if the script never runs. -->
-      <p class="hero__offer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 12.3 21.7a1.6 1.6 0 0 1-2.3 0l-7.7-7.7a1.6 1.6 0 0 1-.4-1.4l1-6.2A1.6 1.6 0 0 1 4.2 5l6.2-1a1.6 1.6 0 0 1 1.4.4l8.8 8.8a1.6 1.6 0 0 1 0 .2Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>
-        <span><strong>Limited-time offer</strong> — £500 off a single implant, £500 off All-on-4 and £1,000 off All-on-6, plus a free consultation with our treatment coordinator.</span>
-      </p>
+      <!-- The brief's headline ends "— Save Over £310 Today". "Today" is out
+           and stays out: the practice has confirmed the offer runs with no end
+           date, so a deadline would be manufactured urgency. The figure itself
+           is untouched. -->
+      <h1 class="hero__title anim-linemask" id="hero-title">Transform Your Smile With Composite Bonding &amp; Teeth Whitening — Save Over £310</h1>
 
-      <h1 class="hero__title anim-linemask" id="hero-title">Replace Missing Teeth With Permanent Dental Implants in Spilsby</h1>
+      <p class="hero__sub">Unhappy with chipped teeth, gaps, uneven edges, minor misalignment or discolouration? For suitable patients, a minimally invasive smile makeover can give you a naturally beautiful smile — without veneers or extensive dental work.</p>
 
-      <p class="hero__sub">Whether you're missing one tooth, several teeth, or tired of loose dentures, our advanced implant treatments give you fixed, natural-looking teeth — so you can eat, speak and smile with confidence again.</p>
-
+      <!-- No .nb / nowrap spans in here: .ticks li is a flex row, and a span
+           inside one becomes a flex item laid out beside the text rather than
+           flowing with it, which renders the words out of order. -->
       <ul class="ticks hero__ticks">
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Fixed teeth that feel and function like your own</li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Eat the foods you love again — no more slipping dentures</li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> A confident, natural-looking smile</li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Planned with CBCT 3D scanning for a precise, predictable result</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Composite bonding from £220 per tooth (normally £300)</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Professional teeth whitening from £300 (normally £450)</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Complimentary oral examination and X-rays included (£80 value)</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% interest-free finance available over 12 months</li>
       </ul>
 
       <p class="finance-anchor hero__finance">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        <span>Spread the cost with <strong>0% finance over 12 months</strong> · full pricing shown below — no surprises.</span>
+        <span>Spread the cost with <strong>0% interest-free finance</strong> over 12 months · a <strong>£50 non-refundable consultation deposit</strong> secures your appointment.</span>
       </p>
 
       <ul class="chips hero__chips">
@@ -1486,7 +1541,7 @@ body{padding-bottom:88px}
         </li>
         <li class="chip">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          Complex cases welcome
+          Minimally invasive — no veneers
         </li>
       </ul>
     </div>
@@ -1496,8 +1551,8 @@ body{padding-bottom:88px}
       <div class="form-card">
 
         <div class="js-form-view">
-          <p class="form-card__eyebrow">Implant suitability</p>
-          <h2 class="form-card__title">Check if dental implants are right for you</h2>
+          <p class="form-card__eyebrow">Smile makeover enquiry</p>
+          <h2 class="form-card__title">Discover your dream smile</h2>
           <p class="form-card__intro">Two quick questions, then your details. Takes under a minute.</p>
 
           <div class="progress">
@@ -1508,29 +1563,46 @@ body{padding-bottom:88px}
             <p class="sr-only" id="progress-label" role="status">Step 1 of 3</p>
           </div>
 
-          <!-- CONFIGURE: replace action with the real form endpoint (CRM / Make webhook / GHL) -->
-          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/8de02f9e-13c5-49a1-b1f4-7f2f991e867d" method="post" novalidate>
+          <!-- This campaign's OWN LeadConnector inbound webhook — same
+               sub-account as the implants funnel, different trigger, so the
+               two campaigns land in separate workflows.
+
+               All nine field NAMES are identical to the implants funnel, so
+               anything already mapped there maps the same way here. The hidden
+               `treatment` field below still carries "Composite Bonding &
+               Teeth Whitening", which is worth keeping even with a dedicated
+               webhook: it survives into the contact record and tells you which
+               campaign a lead came from without inferring it from the
+               workflow. See README.md § Composite bonding campaign. -->
+          <form id="qualifier-form" action="https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/xG6w8R0Itdi8jxe3jEIK" method="post" novalidate>
 
             <!-- Step 1 -->
             <div class="step" data-step="1">
               <fieldset>
-                <legend class="step__legend">What best describes your situation?</legend>
+                <legend class="step__legend">What would you most like to change?</legend>
+                <!-- The FIELD NAME is the contract with GHL, not the values.
+                     These options are new; `situation` is not, so every
+                     existing mapping keeps working untouched. -->
                 <div class="options">
                   <label class="option">
-                    <input type="radio" name="situation" value="Missing 1 tooth" required>
-                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Missing 1 tooth</span>
+                    <input type="radio" name="situation" value="Chipped or worn front teeth" required>
+                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Chipped or worn front teeth</span>
                   </label>
                   <label class="option">
-                    <input type="radio" name="situation" value="Missing several teeth">
-                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Missing several teeth</span>
+                    <input type="radio" name="situation" value="Gaps between my teeth">
+                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Gaps between my teeth</span>
                   </label>
                   <label class="option">
-                    <input type="radio" name="situation" value="Loose or uncomfortable dentures">
-                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Loose or uncomfortable dentures</span>
+                    <input type="radio" name="situation" value="Uneven edges or minor misalignment">
+                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Uneven edges or minor misalignment</span>
                   </label>
                   <label class="option">
-                    <input type="radio" name="situation" value="Failing teeth / considering full-mouth">
-                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Failing teeth / considering full-mouth</span>
+                    <input type="radio" name="situation" value="Discoloured or stained teeth">
+                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Discoloured or stained teeth</span>
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="situation" value="Several of these">
+                    <span class="option__box"><span class="option__radio" aria-hidden="true"></span> Several of these</span>
                   </label>
                 </div>
                 <p class="field__error" data-error-for="situation">
@@ -1583,7 +1655,7 @@ body{padding-bottom:88px}
 
             <!-- Step 3 -->
             <div class="step" data-step="3" hidden>
-              <p class="step__legend">Where shall we send your suitability answer?</p>
+              <p class="step__legend">Where shall we send your smile assessment?</p>
 
               <!-- Two names side by side from 480px up. Each keeps its own
                    label, input and error so a validation message never
@@ -1633,10 +1705,12 @@ body{padding-bottom:88px}
               </div>
 
               <input type="hidden" name="pageUrl" id="pageUrl">
-              <input type="hidden" name="treatment" value="Dental Implants">
+              <!-- Constant. This is what lets one GHL workflow serve both the
+                   implants funnel and this one — route on `treatment`. -->
+              <input type="hidden" name="treatment" value="Composite Bonding &amp; Teeth Whitening">
 
               <div class="form-nav">
-                <button type="submit" class="btn btn--primary btn--block btn--lg">Check My Suitability</button>
+                <button type="submit" class="btn btn--primary btn--block btn--lg">Discover Your Dream Smile</button>
               </div>
               <button type="button" class="form-back js-back" data-back="2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
@@ -1663,7 +1737,7 @@ body{padding-bottom:88px}
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
           <h2 class="form-card__title">Thank you — we've got your details.</h2>
-          <p>A member of our team will call you shortly to talk through your options and arrange your implant consultation. Nothing is booked or charged until you're ready.</p>
+          <p>A member of our team will call you shortly to talk through your options and arrange your smile consultation. Nothing is booked or charged until you're ready.</p>
           <p class="form-call">
             Need us sooner? Call
             <a class="link-call js-tel" href="tel:[Phone]"><span class="js-phone">[Phone]</span></a>
@@ -1700,8 +1774,12 @@ body{padding-bottom:88px}
         GDC-Registered Clinicians
       </li>
       <li>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M16 2h6v6"/></svg>
-        CBCT 3D-Guided Planning
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 9.5 8.5 3 11l6.5 2.5L12 20l2.5-6.5L21 11l-6.5-2.5Z"/></svg>
+        Minimally Invasive Bonding
+      </li>
+      <li>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        Many Cases In One Visit
       </li>
       <li>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
@@ -1711,126 +1789,125 @@ body{padding-bottom:88px}
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg>
         Rated 4.9 on Google
       </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/></svg>
-        Family-Run Spilsby Practice
-      </li>
     </ul>
   </div>
 </section>
 
 <!-- ============================================================
-     4 · IS THIS YOU?
+     4 · WHY PATIENTS CHOOSE CYGNET HOUSE
      ============================================================ -->
-<section class="section" id="is-this-you" aria-labelledby="is-this-you-title">
+<section class="section" id="why-us" aria-labelledby="why-us-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="is-this-you-title">Dental implants could be the answer if you're…</h2>
+      <h2 id="why-us-title">Your journey to a more confident smile starts here</h2>
+      <p>Composite bonding and professional whitening are two of the gentlest ways to change a smile you have stopped showing people — natural, comfortable and, for suitable patients, tooth-preserving.</p>
     </div>
 
     <!-- M2 · Zoom Settle lives here and only here. -->
     <ul class="grid grid--4 reveal anim-zoom">
       <li class="stack">
-        <div class="stack__media" data-file="assets/is-missing-teeth.webp"><img src="assets/is-missing-teeth.webp" alt="A patient smiling after single-tooth implant treatment at the practice" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Missing one or more teeth</h3>
-          <p>And you want a permanent fix, not a gap or a bridge.</p></div>
+        <div class="stack__media" data-file="assets/bonding/why-natural.webp"><img src="assets/bonding/why-natural.webp" alt="Two members of the Cygnet House team smiling beside a patient in the treatment room" loading="lazy" decoding="async"></div>
+        <div class="card"><h3>Natural-looking results</h3>
+          <p>Every makeover is designed to complement your own features — beautiful, not artificial.</p></div>
       </li>
       <li class="stack">
-        <div class="stack__media" data-file="assets/is-loose-dentures.webp"><img src="assets/is-loose-dentures.webp" alt="A relaxed patient in the consultation room discussing denture problems" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Struggling with loose dentures</h3>
-          <p>That move, click or make eating uncomfortable.</p></div>
+        <div class="stack__media" data-file="assets/bonding/why-minimal.webp"><img src="assets/bonding/why-minimal.webp" alt="Close-up of a dentist holding a tooth shade guide, working with fine instruments in gloved hands" loading="lazy" decoding="async"></div>
+        <div class="card"><h3>Minimally invasive treatment</h3>
+          <p>Bonding needs little to no removal of healthy tooth structure — a conservative alternative to veneers for suitable patients.</p></div>
       </li>
       <li class="stack">
-        <div class="stack__media" data-file="assets/is-failing-teeth.webp"><img src="assets/is-failing-teeth.webp" alt="A clinician examining a patient in the treatment room" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Living with failing teeth</h3>
-          <p>Cracked, loose or painful teeth you know can't last.</p></div>
+        <div class="stack__media" data-file="assets/bonding/why-one-visit.webp"><img src="assets/bonding/why-one-visit.webp" alt="A clinician treating a patient in the chair, with a 3D intraoral scan on the screen beside them" loading="lazy" decoding="async"></div>
+        <div class="card"><h3>Often completed in one visit</h3>
+          <p>Many cases are finished in a single appointment, with no downtime afterwards.</p></div>
       </li>
       <li class="stack">
-        <div class="stack__media" data-file="assets/is-full-mouth.webp"><img src="assets/is-full-mouth.webp" alt="A patient reviewing a full-mouth treatment plan with the team" loading="lazy" decoding="async"></div>
-        <div class="card"><h3>Ready for a <span class="nb">full-mouth solution</span></h3>
-          <p>Fixed teeth in as few as one set of implants.</p></div>
+        <div class="stack__media" data-file="assets/bonding/why-clinicians.webp"><img src="assets/bonding/why-clinicians.webp" alt="The clinical team working together on a patient under the operating light" loading="lazy" decoding="async"></div>
+        <div class="card"><h3>Skilled cosmetic clinicians</h3>
+          <p>Advanced clinical training, an eye for artistic detail and modern technology, applied to every case.</p></div>
       </li>
     </ul>
 
     <div class="cta-row reveal">
-      <p style="width:100%;text-align:center;color:var(--color-foreground-mut);margin:0">Not sure which applies to you? That's exactly what your consultation is for.</p>
-      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Check My Suitability</a>
+      <p style="width:100%;text-align:center;color:var(--color-foreground-mut);margin:0">Not sure which of these applies to you? That is exactly what your consultation is for.</p>
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Learn About Smile Makeovers</a>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     5 · SOLUTIONS + PRICING
+     5 · THE OFFER + PRICING
      ============================================================ -->
 <section class="section section--surface" id="pricing" aria-labelledby="pricing-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="pricing-title">Implant options to suit your smile — and your budget</h2>
-      <p>Every price is shown up front. Spread the cost with 0% finance.</p>
+      <h2 id="pricing-title">Save over £310 on our composite bonding and teeth whitening package</h2>
+      <p>Your smile makeover package includes both treatments, plus the examination and X-rays that come before them.</p>
     </div>
 
-    <!-- C2 · Centre Out. The middle card lands first. -->
+    <!-- C2 · Centre Out. The middle card lands first, which is why the
+         package — the thing the offer is actually about — sits in the middle
+         rather than at the end. -->
     <ul class="grid grid--3 reveal anim-centreout">
+      <li class="card price-card">
+        <div class="price-card__body">
+          <div class="price-card__head">
+            <h3>Composite Bonding</h3>
+          </div>
+          <p class="price-card__figure">From £220 <small>per tooth</small></p>
+          <p class="price-card__was"><s>Normally £300 per tooth</s> <span class="save-pill">Save £80 per tooth</span></p>
+          <p class="price-card__sub">0% interest-free finance available over 12 months</p>
+          <p class="price-card__lead">A minimally invasive cosmetic treatment that improves the shape, symmetry and appearance of your smile.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Repairs chipped and worn edges</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Closes small gaps between teeth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Little to no removal of healthy tooth structure</li></ul>
+          <p class="price-card__note">How many teeth are treated is agreed with you at your consultation, so your total is confirmed in writing before anything begins.</p>
+        </div>
+        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Start Your Smile Journey</a>
+      </li>
+
       <li class="card price-card price-card--featured">
-        <span class="price-card__tag">Save £500</span>
-        <span class="price-card__tag price-card__tag--alt">Most enquired about</span>
+        <span class="price-card__tag">The full package</span>
         <div class="price-card__body">
           <div class="price-card__head">
-            <h3>Single Dental Implant</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="60.0" cy="14.0" r="5" class="glyph-post"/></svg>
+            <h3>Smile Makeover Package</h3>
           </div>
-          <p class="price-card__was">Usually from <s>£3,000</s></p>
-          <p class="price-card__figure">From £2,500 <small>in total</small></p>
-          <p class="price-card__sub">£500 off · spread over 12 months at 0% interest</p>
-          <p class="price-card__lead">Replace a single missing tooth with a permanent, natural-looking result.</p>
-          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> One implant, one crown — a complete tooth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> No damage to neighbouring teeth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Planned on a CBCT 3D scan</li></ul>
-          <p class="price-card__note">Your exact cost depends on your case — additional treatment such as a bone graft or an extraction can affect the final price. You’ll get it in writing before anything begins.</p>
+          <p class="price-card__figure">Save £310<small>+</small></p>
+          <p class="price-card__sub">Bonding, whitening and your examination together</p>
+          <p class="price-card__lead">Both treatments planned as one smile design, in the right order — whitening first, so the bonding is matched to your new shade.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> £80 off per composite bonding tooth</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> £150 off professional teeth whitening</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> £80 complimentary oral examination and X-rays</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% interest-free finance available</li></ul>
+          <p class="price-card__note">Your exact total depends on how many teeth are bonded, so it is confirmed in writing before anything begins. A £50 consultation deposit secures your appointment and comes off the cost of your treatment if you go ahead.</p>
         </div>
-        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
+        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Start Your Smile Journey</a>
       </li>
+
       <li class="card price-card">
-        <span class="price-card__tag">Save £500</span>
         <div class="price-card__body">
           <div class="price-card__head">
-            <h3>All-on-4 Full-Arch</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="28.8" cy="24.8" r="5" class="glyph-post"/><circle cx="49.6" cy="15.2" r="5" class="glyph-post"/><circle cx="70.4" cy="15.2" r="5" class="glyph-post"/><circle cx="91.2" cy="24.8" r="5" class="glyph-post"/></svg>
+            <h3>Teeth Whitening</h3>
           </div>
-          <p class="price-card__was">Usually from <s>£12,000</s></p>
-          <p class="price-card__figure">From £11,500 <small>per arch</small></p>
-          <p class="price-card__sub">£500 off · spread over 12 months at 0% interest</p>
-          <p class="price-card__lead">A complete set of fixed teeth supported by four implants — a life-changing alternative to dentures.</p>
-          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Four implants support a full fixed arch</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Eat, speak and smile without slipping</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Placed and restored by our two-dentist team</li></ul>
-          
+          <p class="price-card__figure">From £300</p>
+          <p class="price-card__was"><s>Normally £450</s> <span class="save-pill">Save £150</span></p>
+          <p class="price-card__sub">0% interest-free finance available over 12 months</p>
+          <!-- The source funnel carried leftover implant copy here ("Perfect for
+               replacing a single missing tooth…"). Rewritten for whitening, and
+               kept to what can be substantiated: no shade-count promise. -->
+          <p class="price-card__lead">Professional-grade whitening, prescribed and supervised by your dentist, to brighten your smile for a fresher, more youthful result.</p>
+          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Prescribed and supervised by a registered dentist</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Your shade recorded before and after</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Follows your oral examination and X-rays</li></ul>
+          <p class="price-card__note">In the UK, tooth whitening may only be carried out by a registered dental professional. How much lighter your teeth go varies from person to person, and whitening is not permanent.</p>
         </div>
-        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
-      </li>
-      <li class="card price-card">
-        <span class="price-card__tag">Save £1,000</span>
-        <div class="price-card__body">
-          <div class="price-card__head">
-            <h3>All-on-6 Full-Arch</h3>
-            <svg class="price-card__glyph" viewBox="0 0 120 52" aria-hidden="true"><path d="M8,44 Q60,-16 112,44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="20.5" cy="31.3" r="5" class="glyph-post"/><circle cx="35.5" cy="20.7" r="5" class="glyph-post"/><circle cx="51.7" cy="14.8" r="5" class="glyph-post"/><circle cx="68.3" cy="14.8" r="5" class="glyph-post"/><circle cx="84.5" cy="20.7" r="5" class="glyph-post"/><circle cx="99.5" cy="31.3" r="5" class="glyph-post"/></svg>
-          </div>
-          <p class="price-card__was">Usually from <s>£15,000</s></p>
-          <p class="price-card__figure">From £14,000 <small>per arch</small></p>
-          <p class="price-card__sub">£1,000 off · spread over 12 months at 0% interest</p>
-          <p class="price-card__lead">Our premium full-arch solution — six implants for maximum stability, function and confidence.</p>
-          <ul class="price-card__ticks"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Six implants for maximum stability</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Our most robust full-arch option</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Placed and restored by our two-dentist team</li></ul>
-          
-        </div>
-        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Check My Suitability</a>
+        <a class="btn btn--primary btn--block js-scroll-form" href="#qualifier">Start Your Smile Journey</a>
       </li>
     </ul>
 
-    <!-- Offer terms. The savings shown above are advertised savings, so the
-         page has to state what they are measured against, who can have them
-         and for how long — ASA CAP 3.17/3.18. The end date is the one thing
-         still missing: the ads say "limited time", so that is exactly what
-         this says. Swap the sentence for a dated one the moment the practice
-         confirms a closing date. -->
-    <p class="note-block reveal">
-      <strong>Offer terms:</strong> savings of £500 on a single dental implant, £500 on All-on-4 and £1,000 on All-on-6, against our usual guide prices shown above. Available for a limited time, on treatment booked following an implant assessment at Cygnet House Dental Studio. One offer per patient, cannot be combined with any other offer, and subject to clinical suitability. Prices are guide prices from the stated amount — your exact cost is confirmed in writing after your assessment and CBCT scan, before any treatment begins.
-    </p>
+    <!-- Gold's one job on this page: the saving. On this ink ground it is
+         8.2:1; on the white cards above it would be 2.1:1, which is why the
+         pills up there use --color-gold-ink instead. -->
+    <div class="finance-box finance-box--offer reveal">
+      <div class="finance-box__body">
+        <h3>Total potential saving: £310+</h3>
+        <p>£80 off per bonded tooth, £150 off whitening, and the £80 examination and X-rays included at no charge.</p>
+      </div>
+      <span class="finance-box__badge" aria-hidden="true"><span>£310<small>+</small></span></span>
+    </div>
+
   </div>
 </section>
 
@@ -1841,15 +1918,15 @@ body{padding-bottom:88px}
   <div class="container">
     <div class="section-head reveal anim-rule">
       <span class="rule" aria-hidden="true"></span>
-      <h2 id="results-title">Real results from real patients</h2>
-      <p>Genuine before-and-after photos of implant treatments carried out at Cygnet House Dental Studio — drag the handle to compare. Shown with each patient’s consent.</p>
+      <h2 id="results-title">Love your smile every time you look in the mirror</h2>
+      <p>Genuine before-and-after photographs of composite bonding and whitening carried out at Cygnet House Dental Studio — drag the handle to compare. Every case is shown with the patient’s written consent, and each caption says what was treated.</p>
     </div>
 
     <ul class="grid grid--3 reveal">
       <li>
-        <div class="ba" data-files="assets/case1-before.webp + case1-after.webp" style="--pos:50%">
-          <img class="ba__layer" src="assets/case1-before.webp" alt="Before — implant bridge replacing the upper front teeth" loading="lazy" decoding="async">
-          <img class="ba__layer ba__layer--after" src="assets/case1-after.webp" alt="After — implant bridge replacing the upper front teeth" loading="lazy" decoding="async">
+        <div class="ba" data-files="assets/bonding/case-chipped-before.webp + case-chipped-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/bonding/case-chipped-before.webp" alt="Before — chipped, worn and heavily stained upper front teeth with uneven, broken edges" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/bonding/case-chipped-after.webp" alt="After — the upper front teeth rebuilt to an even edge and a uniform shade" loading="lazy" decoding="async">
           <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
           <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
           <label class="sr-only" for="ba-range-1">Reveal the after image for case 1</label>
@@ -1859,12 +1936,27 @@ body{padding-bottom:88px}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
           </span>
         </div>
-        <p class="ba-caption">Upper front teeth — implant bridge</p>
+        <p class="ba-caption">Chipped and worn front teeth — composite bonding</p>
       </li>
       <li>
-        <div class="ba" data-files="assets/case3-before.webp + case3-after.webp" style="--pos:50%">
-          <img class="ba__layer" src="assets/case3-before.webp" alt="Before — implant crowns restoring the upper back teeth" loading="lazy" decoding="async">
-          <img class="ba__layer ba__layer--after" src="assets/case3-after.webp" alt="After — implant crowns restoring the upper back teeth" loading="lazy" decoding="async">
+        <div class="ba" data-files="assets/bonding/case-gaps-before.webp + case-gaps-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/bonding/case-gaps-before.webp" alt="Before — narrow upper lateral incisors leaving dark triangular gaps at the gum line" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/bonding/case-gaps-after.webp" alt="After — the gaps closed and the edges levelled into a continuous smile line" loading="lazy" decoding="async">
+          <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
+          <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
+          <label class="sr-only" for="ba-range-2">Reveal the after image for case 2</label>
+          <input type="range" id="ba-range-2" min="0" max="100" value="50" step="1">
+          <span class="ba__line" aria-hidden="true"></span>
+          <span class="ba__knob" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+        <p class="ba-caption">Gaps between the front teeth — composite bonding</p>
+      </li>
+      <li>
+        <div class="ba" data-files="assets/bonding/case-staining-before.webp + case-staining-after.webp" style="--pos:50%">
+          <img class="ba__layer" src="assets/bonding/case-staining-before.webp" alt="Before — lower front teeth with brown staining and notched, worn edges" loading="lazy" decoding="async">
+          <img class="ba__layer ba__layer--after" src="assets/bonding/case-staining-after.webp" alt="After — the same lower front teeth rebuilt to an even edge, the staining gone" loading="lazy" decoding="async">
           <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
           <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
           <label class="sr-only" for="ba-range-3">Reveal the after image for case 3</label>
@@ -1874,24 +1966,14 @@ body{padding-bottom:88px}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
           </span>
         </div>
-        <p class="ba-caption">Upper back teeth — implant crowns</p>
-      </li>
-      <li>
-        <div class="ba" data-files="assets/case4-before.webp + case4-after.webp" style="--pos:50%">
-          <img class="ba__layer" src="assets/case4-before.webp" alt="Before — full upper arch restored on six implants" loading="lazy" decoding="async">
-          <img class="ba__layer ba__layer--after" src="assets/case4-after.webp" alt="After — full upper arch restored on six implants" loading="lazy" decoding="async">
-          <span class="ba__badge ba__badge--l" aria-hidden="true">Before</span>
-          <span class="ba__badge ba__badge--r" aria-hidden="true">After</span>
-          <label class="sr-only" for="ba-range-4">Reveal the after image for case 4</label>
-          <input type="range" id="ba-range-4" min="0" max="100" value="50" step="1">
-          <span class="ba__line" aria-hidden="true"></span>
-          <span class="ba__knob" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg>
-          </span>
-        </div>
-        <p class="ba-caption">Full upper arch — six implants</p>
+        <p class="ba-caption">Worn, stained lower front teeth — composite bonding</p>
       </li>
     </ul>
+
+
+    <div class="cta-row reveal">
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">See Your Smile Potential</a>
+    </div>
   </div>
 </section>
 
@@ -1901,7 +1983,12 @@ body{padding-bottom:88px}
 <section class="section section--surface has-cut" id="reviews" aria-labelledby="reviews-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="reviews-title">What our implant patients say</h2>
+      <h2 id="reviews-title">What our patients say</h2>
+      <!-- The brief suggested a "5/5" framing. The practice's actual Google
+           rating is 4.9 from 122, so that is what is shown — a rating you can
+           check is worth more than a rounder one you cannot. No
+           aggregateRating in the JSON-LD: Google does not support
+           self-serving review markup on LocalBusiness types. -->
       <p>Genuine, unedited reviews published by our patients on Google, where the practice is rated <strong><span class="anim-count" data-count="4.9" data-dp="1">4.9</span> out of 5 from <span class="anim-count" data-count="122">122</span> reviews</strong>.</p>
     </div>
 
@@ -1909,31 +1996,26 @@ body{padding-bottom:88px}
       <div class="marquee__col marquee__col--down" style="--mq-d:48s">
         <div class="marquee__track">
           <ul>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I recently had an Implant placed by Dimitrios and crown fitted by Rose. The fit and finish of which I am very happy with — it is hard to tell it apart from my own teeth.</blockquote><div class="review-card__meta"><p class="review-card__name">Tim Lovelock</p><span class="review-card__treatment">Single implant</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Never really liked going to the dentist, was always feeling uneasy and nervous.. it's been 2 years approx since I started coming to Cygnet House and I have never felt more comfortable. The staff are friendly, professional and most importantly the prices are affordable.</blockquote><div class="review-card__meta"><p class="review-card__name">Aaron Thompson</p><span class="review-card__treatment">Nervous patient</span></div></li>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I was greeted by the new dentist Rose she is very welcoming and put me at ease straight away. I was fitted with a crown with a no fuss no problems it was very easy and straight forward and Rose is a true professional.</blockquote><div class="review-card__meta"><p class="review-card__name">Susan Atkinson</p><span class="review-card__treatment">Crown</span></div></li>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Excellent practice, recently had a double wisdom tooth extraction and both the care and precision when completing the procedure along with after care have been exceptional, the practice has a real family feel to it and everyone is so warm and welcoming, highly recommend to anyone in the area!</blockquote><div class="review-card__meta"><p class="review-card__name">Dominic Ball</p><span class="review-card__treatment">Oral surgery</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I was greeted by the new dentist Rose she is very welcoming and put me at ease straight away. I was fitted with a crown with a no fuss no problems it was very easy and straight forward and Rose is a true professional.</blockquote><div class="review-card__meta"><p class="review-card__name">Susan Atkinson</p><span class="review-card__treatment">Crown with Dr Rose</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I've been a patient at Cygnet House for 8 years and I've never had cause for complaint. The staff are lovely from the girls on reception right through to the hygienist and dentists all are professional and friendly. I would highly recommend them.</blockquote><div class="review-card__meta"><p class="review-card__name">Valerie Greig</p><span class="review-card__treatment">Long-term patient</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Can't thank Dimitrios and his team enough for their prompt and efficient service! The procedure was completely painless and I felt comfortable throughout every part. Would definitely recommend.</blockquote><div class="review-card__meta"><p class="review-card__name">Katie Alice</p><span class="review-card__treatment">Urgent treatment</span></div></li>
           </ul>
         </div>
       </div>
       <div class="marquee__col marquee__col--up" style="--mq-d:62s">
         <div class="marquee__track">
           <ul>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Today I completed my first implant journey with Dimitrios. Thank you Dimitrios and all of your amazing team for giving me my smile back. The journey was a little longer than I expected due to the requirement of a bone graft…</blockquote><div class="review-card__meta"><p class="review-card__name">MR S</p><span class="review-card__treatment">Single implant + bone graft</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Absolutely fantastic dental practice. Staff are amazing. Highly recommend these guys especially if you're nervous or have a fear of dentists. They are so gentle and so professional.</blockquote><div class="review-card__meta"><p class="review-card__name">Hollie Cheffings</p><span class="review-card__treatment">Fear of dentists</span></div></li>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Can't thank Dimitrios and his team enough for their prompt and efficient service! I had the most horrific tooth pain and they got me booked in and sorted with a root canal so quickly. The procedure was completely painless and I felt comfortable throughout every part. Would definitely recommend.</blockquote><div class="review-card__meta"><p class="review-card__name">Katie Alice</p><span class="review-card__treatment">Urgent root canal</span></div></li>
+          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I have been coming to see Dimitrios and Rose for over a year now. They have always been professional, but also friendly, and have made me feel at ease even though I am a nervous wreck.</blockquote><div class="review-card__meta"><p class="review-card__name">Helen Edwards</p><span class="review-card__treatment">Regular patient</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Was seeing Dimitris for regular dental check ups at his last place of work. So it was a must to transfer to his new practice. Worth the 45 minute drive. What a lovely place with all staff very friendly</blockquote><div class="review-card__meta"><p class="review-card__name">liz james</p><span class="review-card__treatment">Worth the 45-minute drive</span></div></li>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Had another wonderful experience at the dentist, got my new dentures a week ago and have had no problems at all — so natural looking. Thank you to everyone for everything, really do appreciate what has been done.</blockquote><div class="review-card__meta"><p class="review-card__name">Ann Chester</p><span class="review-card__treatment">New dentures</span></div></li>
           </ul>
         </div>
       </div>
       <div class="marquee__col marquee__col--down" style="--mq-d:55s">
         <div class="marquee__track">
           <ul>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>A fantastic dental surgery that did everything I needed dentistry wise from root canal treatment to implants without being referred. All the staff are lovely, friendly and polite and made me feel at ease…</blockquote><div class="review-card__meta"><p class="review-card__name">Tony Ward</p><span class="review-card__treatment">Implants</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Such a lovely practice, the staff all incredibly helpful and chatty. Dimitrios has restored our faith in dentists after years of bad experiences and anxiety from previous practices.</blockquote><div class="review-card__meta"><p class="review-card__name">Cassie Bennett</p><span class="review-card__treatment">Nervous patient</span></div></li>
-          <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>I have been coming to see Dimitrios and Rose for over a year now. They have always been professional, but also friendly, and have made me feel at ease even though I am a nervous wreck.</blockquote><div class="review-card__meta"><p class="review-card__name">Helen Edwards</p><span class="review-card__treatment">Regular patient</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Fantastic people. I had dental problem needed urgent treatment it was sorted within the hour and the staff were polite the receptionist helpful. It's all ground floor and easy parking outside..I would recommend to family and friends..</blockquote><div class="review-card__meta"><p class="review-card__name">Sylvia Yarwood</p><span class="review-card__treatment">Urgent care</span></div></li>
           <li class="card review-card"><span class="stars" aria-label="Five out of five stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z"/></svg></span><blockquote>Always a lovely reassuring greeting from Dimitrios, Katie, and all the staff. Very understanding of nervous patients.</blockquote><div class="review-card__meta"><p class="review-card__name">Kimberley Barnes</p><span class="review-card__treatment">Nervous patients welcome</span></div></li>
           </ul>
@@ -1941,6 +2023,7 @@ body{padding-bottom:88px}
       </div>
     </div>
     <p class="center" style="margin-top:var(--space-3)"><a href="https://share.google/lbSSOORl3bOCNBqQZ" rel="noopener">Read all 122 reviews on Google</a></p>
+
   </div>
 
   <div class="cut" aria-hidden="true">
@@ -1954,7 +2037,7 @@ body{padding-bottom:88px}
 </section>
 
 <!-- ============================================================
-     8 · NERVOUS ABOUT IMPLANTS?
+     8 · REASSURANCE
      ============================================================ -->
 <section class="section section--primary has-bg" id="nervous" aria-labelledby="nervous-title">
   <div class="photo" style="background-image:url('assets/section-nervous.webp')" aria-hidden="true"></div>
@@ -1962,11 +2045,11 @@ body{padding-bottom:88px}
   <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container">
     <div class="section-head reveal anim-settle">
-      <h2 id="nervous-title">Feeling nervous? You're in good hands.</h2>
-      <p>It's completely normal to feel anxious about implant treatment — most of our patients did too. From your first visit, we take the time to explain everything clearly, answer every question, and never rush you. Our calm, family-run approach and gentle techniques are designed to make the whole experience as comfortable and reassuring as possible.</p>
+      <h2 id="nervous-title">Hiding your smile is exhausting. It does not have to be.</h2>
+      <p>Covering your mouth in photographs, laughing with your hand up, choosing the closed-lip smile every single time — most people who come to us for bonding have been doing it for years. From your first visit we explain everything clearly, answer every question and never rush you.</p>
     </div>
     <div class="cta-row reveal">
-      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Check My Suitability</a>
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
       <a class="btn btn--on-dark js-tel" href="tel:[Phone]">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
         Call <span class="js-phone">[Phone]</span>
@@ -1976,85 +2059,100 @@ body{padding-bottom:88px}
 </section>
 
 <!-- ============================================================
-     9 · YOUR JOURNEY
+     9 · YOUR NEW SMILE IN 3 STEPS
      ============================================================ -->
 <section class="section has-bg" id="journey" aria-labelledby="journey-title">
   <!-- A5 · Parallax Depth (scroll-driven) -->
   <div class="bg bg-parallax" data-parallax aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="journey-title">Your journey — 3 simple steps</h2>
+      <h2 id="journey-title">Your new smile in 3 simple steps</h2>
     </div>
     <ol class="steps reveal">
       <li class="card step-card">
         <span class="step-card__num" aria-hidden="true">1</span>
-        <h3>Consultation &amp; 3D assessment</h3>
-        <p>A thorough exam, digital scans and a CBCT scan to check your suitability and answer your questions.</p>
+        <h3>Smile consultation</h3>
+        <p>A comprehensive assessment of your smile and what is bothering you about it, and an honest answer on whether bonding and whitening suit your goals.</p>
       </li>
       <li class="card step-card">
         <span class="step-card__num" aria-hidden="true">2</span>
-        <h3>Your personalised plan</h3>
-        <p>Your treatment coordinator walks you through your options, timeline and exact costs. No pressure, no surprises.</p>
+        <h3>Smile design</h3>
+        <p>We design your ideal smile from tooth shape, size, symmetry and colour alongside your facial aesthetics, with digital smile planning where it is appropriate.</p>
       </li>
       <li class="card step-card">
         <span class="step-card__num" aria-hidden="true">3</span>
-        <h3>Your new smile</h3>
-        <p>Your implants are placed and restored using advanced, precise techniques, leaving you with strong, fixed teeth built to last.</p>
+        <h3>Smile transformation</h3>
+        <p>Bonding and whitening are carried out for a brighter, more symmetrical smile. Many cases are completed in a single visit, with no downtime afterwards.</p>
       </li>
     </ol>
+    <div class="cta-row reveal">
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     9b · PRACTICE VIDEO
-     Sits directly above the team, so the video introduces the people the
-     next section names. No autoplay: it costs the visitor bandwidth they
-     did not ask to spend, and a video that starts talking on its own is the
-     fastest way to get a tab closed.
+     10a · DR ROSE ON COMPOSITE BONDING
      ============================================================ -->
-<section class="section section--surface" id="video" aria-labelledby="video-title">
+<section class="section section--primary" id="video" aria-labelledby="video-title">
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="video-title">Dental implants, explained</h2>
-      <p>Dr Dimitrios Sourtzis — the dentist who places implants here — talks through what the treatment involves.</p>
+      <h2 id="video-title">Hear it from the dentist who will plan your smile</h2>
+      <p>Dr Rose talks through what composite bonding actually involves — before you decide whether it is for you.</p>
     </div>
 
-    <div class="vplayer reveal" data-vplayer>
-      <!-- #t=0.1 makes iOS paint a real first frame instead of black; without
-           a poster image that fragment is the only thing standing between the
-           visitor and an empty rectangle. -->
-      <video class="vplayer__video" preload="metadata" playsinline
-             src="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a871858741b35065954d963.mp4#t=0.1"></video>
-      <button type="button" class="vplayer__play" data-vplay>
-        <span class="vplayer__disc" aria-hidden="true">
-          <!-- Nudged 3px right: a geometrically centred triangle reads
-               left-heavy, because its visual mass sits behind its point. -->
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" style="margin-left:3px"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.86l11.14-6.86a1 1 0 0 0 0-1.72L9.52 4.28A1 1 0 0 0 8 5.14Z"/></svg>
-        </span>
-        <span class="sr-only">Play the video: Dr Dimitrios Sourtzis on dental implant treatment</span>
-      </button>
+    <div class="reveal" style="max-width:var(--container-narrow); margin-inline:auto">
+      <!-- Hosted on the practice's own GHL media library, so it stays a remote
+           URL rather than being inlined by tools/build-ghl.mjs — a video has no
+           business inside a data URI. The poster is a local asset, so that one
+           does get inlined and the band never shows a black hole.
+
+           CAPTIONS: this clip is Dr Rose speaking. Video with dialogue and no
+           captions fails WCAG 1.2.2, so a <track> has to land here before
+           launch. Slot is below, ready to fill. -->
+      <div class="video-frame" data-video data-ratio-pending>
+        <img class="video-frame__poster" src="assets/bonding/video-poster.webp" alt="Dr Rose Kantzioura at Cygnet House Dental Studio" decoding="async">
+        <video
+          src="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4"
+          preload="metadata"
+          playsinline
+          width="1600" height="900">
+          <!-- <track kind="captions" src="…" srclang="en" label="English" default> -->
+          <p>Your browser cannot play this video. <a href="https://assets.cdn.filesafe.space/mucgOLidUbBVBQ060OW7/media/6a8717db994ded095a9b3fac.mp4">Open it directly</a>.</p>
+        </video>
+
+        <!-- The whole poster is the button. The disc is the affordance; making
+             only the disc clickable means half the taps land on the poster and
+             do nothing, which reads as a broken video. -->
+        <button type="button" class="video-play js-video-play">
+          <span class="video-play__disc" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.79-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z"/></svg>
+          </span>
+          <span class="video-play__label">Watch Dr Rose explain composite bonding</span>
+          <span class="video-play__meta">This video has sound</span>
+        </button>
+      </div>
     </div>
 
-    <p class="vcredit reveal">
-      <span class="vcredit__avatar" aria-hidden="true">
-        <img src="assets/clinician-sourtzis.webp" alt="" loading="lazy" decoding="async">
-      </span>
-      <span class="vcredit__who">
-        <strong>Dr Dimitrios Sourtzis</strong>
-        <span>Implant treatment provider · Dentist · GDC No. 287145</span>
-      </span>
-    </p>
+    <div class="cta-row reveal">
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Get Your Smile Assessment</a>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     10 · MEET YOUR CLINICIANS
+     10 · MEET DR ROSE
      ============================================================ -->
 <section class="section section--surface" id="clinicians" aria-labelledby="clinicians-title">
   <div class="container">
     <div class="section-head reveal">
       <h2 id="clinicians-title">Meet the team</h2>
-      <p>Implants here are placed and restored by a husband-and-wife dentist team — more than 50 placed together — backed by a team that's looked after this community for decades. Select anyone to read their story.</p>
+      <p>Your smile makeover is led by <strong>Dr Triantafyllia (Rose) Kantzioura</strong> — Dentist, GDC No. 290358, cosmetic and restorative dentistry — backed by a team that has looked after this community for decades. Select anyone to read their story.</p>
+      <ul class="chips" style="justify-content:center;margin-top:var(--space-2)">
+        <li class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Calm, caring approach</li>
+        <li class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Advanced clinical training</li>
+        <li class="chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Patient-first advice</li>
+      </ul>
     </div>
 
     <div class="reveal">
@@ -2066,20 +2164,26 @@ body{padding-bottom:88px}
       <!-- I1 + I2 · one hover gesture: the tile lifts, the portrait grows inside it. -->
       <div class="roster anim-hover" id="roster" aria-label="Team members"></div>
 
+      <!-- Overwritten by show(PEOPLE[0]) on load. It holds Dr Rose so that the
+           no-JS rendering shows the clinician this page is about. -->
       <article class="card panel" id="person-panel" aria-live="polite">
-        <div class="card__media panel__photo" data-file="assets/clinician-sourtzis.webp">
-          <img src="assets/clinician-sourtzis.webp" alt="Dr Dimitrios Sourtzis" loading="lazy" decoding="async">
+        <div class="card__media panel__photo" data-file="assets/people/y15.webp">
+          <img src="assets/people/y15.webp" alt="Dr Triantafyllia (Rose) Kantzioura" loading="lazy" decoding="async">
         </div>
         <div class="panel__body">
-          <h3 id="panel-name">Dr Dimitrios Sourtzis</h3>
-          <p class="clinician__cred" id="panel-role">Implant treatment provider · Dentist · GDC No. 287145</p>
+          <h3 id="panel-name">Dr Triantafyllia (Rose) Kantzioura</h3>
+          <p class="clinician__cred" id="panel-role">Cosmetic treatment provider · Dentist · GDC No. 290358</p>
           <div id="panel-bio">
-            <p>I graduated from the Aristotle University of Thessaloniki and moved to the UK in 2020, building my dental career in Louth. My postgraduate training runs deep: a Master’s in Endodontics at King’s College London, a Diploma in Implant Dentistry, Minor Oral Surgery training at King’s — and I’m now completing a further surgical diploma to deepen that expertise.</p>
-            <p>Implants at Cygnet House are a two-dentist partnership. I place them; my wife, Dr Rose — completing a double Master’s in Prosthodontics — plans and restores them with me. Together we have placed more than 50 implants, and every case is planned restoratively: we design your final teeth first, then place the implants to support them.</p>
-            <p>I’m meticulous about diagnosis. I use a dental microscope for every root canal and every complex diagnostic case — the same precision-first mindset I bring to implant surgery.</p>
+            <p>I believe cosmetic dentistry should enhance your natural smile, not change who you are. That is the starting point for every case I plan.</p>
+            <p>I graduated from the Aristotle University of Thessaloniki, completed a postgraduate degree in Aesthetic and Restorative Dentistry, then moved to the UK to practise in Louth. In 2021 I began a double Master’s in Prosthodontics at King’s College London — the science of designing teeth that look right and last.</p>
+            <p>Composite bonding is one of my favourite treatments. It repairs chips, closes small gaps and improves symmetry while preserving your own tooth structure, and combined with professional whitening the difference it makes to how freely someone smiles can be considerable. Every makeover is planned around the individual, with aesthetics, function and long-term oral health weighed together.</p>
           </div>
         </div>
       </article>
+    </div>
+
+    <div class="cta-row reveal">
+      <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Start Smiling With Confidence</a>
     </div>
   </div>
 </section>
@@ -2088,37 +2192,39 @@ body{padding-bottom:88px}
      11 · WHAT YOUR CONSULTATION INCLUDES + FINANCE
      ============================================================ -->
 <section class="section has-bg" id="consultation" aria-labelledby="consultation-title">
-  <!-- A4 · Scan Pulse — echoes the CBCT scan in the list below -->
+  <!-- A4 · Scan Pulse -->
   <div class="bg bg-scan" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="container">
     <div class="section-head reveal">
-      <h2 id="consultation-title">What your consultation includes</h2>
+      <h2 id="consultation-title">What your smile consultation includes</h2>
     </div>
 
     <div class="included-grid reveal">
       <div class="card">
+        <!-- U3 · Icon Trace. Eight items is the ceiling — the stagger is
+             defined up to :nth-child(8) and a ninth would arrive untimed. -->
         <ul class="check-list anim-trace">
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Comprehensive oral examination</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Digital X-rays</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> CBCT 3D scan</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Intraoral digital scan</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Personalised treatment plan</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Time with an experienced treatment coordinator</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Complimentary oral examination and X-rays (£80 value)</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> A full smile assessment — shape, size, symmetry and colour</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> An honest answer on whether bonding and whitening suit your goals</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Digital smile planning where it is appropriate</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Your current shade recorded before anything begins</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Time to ask every question, unrushed</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> A clear, written breakdown of options and costs</li>
-          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% finance over 12 months explained</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 0% interest-free finance over 12 months explained</li>
         </ul>
       </div>
 
       <div>
-        <div class="callout callout--free">
-          <h3>Your consultation is free</h3>
-          <p>A <strong>free consultation with our treatment coordinator</strong> is included with every implant assessment — time to talk through your options, your plan and your costs, at no charge.</p>
+        <div class="callout">
+          <h3>Your £50 consultation deposit</h3>
+          <p>A <strong>£50 consultation deposit</strong> secures your appointment and covers your examination, X-rays and full smile assessment. If you go ahead with treatment it comes <strong>straight off the cost</strong>, so the assessment effectively costs you nothing. It is non-refundable only if you decide not to proceed.</p>
         </div>
 
         <div class="finance-box">
           <div class="finance-box__body">
             <h3>Interest-free over 12 months</h3>
-            <p>0% interest over 12 months is available on <strong>every implant treatment</strong>.</p>
+            <p>0% interest over 12 months is available on <strong>your smile makeover treatment</strong>, subject to status.</p>
           </div>
           <span class="finance-box__badge" aria-hidden="true"><span>0<small>%</small></span></span>
         </div>
@@ -2126,14 +2232,24 @@ body{padding-bottom:88px}
         <div class="callout callout--compliance">
           <h3>Spreading the cost</h3>
           <p class="rep-example">
-            <strong>Representative example:</strong> Total amount of credit £2,500 for a single dental implant at the offer price, repaid over 12 months at 0% APR representative. 11 monthly payments of £208.33 and a final payment of £208.37. Total amount payable £2,500. Finance is subject to status and affordability checks.
+            <strong>Representative example:</strong> Total amount of credit £300 for professional teeth whitening, repaid over 12 months at 0% APR representative. 12 monthly payments of £25. Total amount payable £300. Finance is subject to status and affordability checks.
           </p>
         </div>
-        <!-- BUILD NOTE (do not publish without this): the lender name and Cygnet
-             House Dental Studio's FCA authorisation / credit-broker status + FRN
-             still have to appear somewhere on the page before this finance copy
-             goes live. The visible placeholder was removed at client request —
-             the legal requirement has not gone away. -->
+        <!-- BUILD NOTE — THE ONE REMAINING LEGAL BLOCKER ON THIS PAGE.
+             Every mention of 0% credit here is a financial promotion under
+             FCA rules, and one may not run without the LENDER NAMED and the
+             practice's FCA authorisation / credit-broker status + FRN stated
+             on the page. The footer carries the broker sentence already; the
+             lender's name and the FRN are still missing.
+
+             The practice has said it does not hold these details, so the copy
+             is left as written at their instruction — but the FRN is public
+             on the FCA Financial Services Register, so this is findable
+             rather than unknowable. Until it is on the page, either supply
+             the two details or strip the specific credit terms (0%, 12
+             months, the monthly figures and the representative example) back
+             to "payment options available — ask at your consultation", which
+             is not a financial promotion. Do not simply publish as-is. -->
       </div>
     </div>
   </div>
@@ -2152,48 +2268,48 @@ body{padding-bottom:88px}
       <div class="faq__item">
         <h3 style="margin:0">
           <button type="button" class="faq__q" id="faq-q1" aria-expanded="false" aria-controls="faq-a1">
-            Am I suitable for implants?
+            Is composite bonding right for me?
             <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
           </button>
         </h3>
         <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1" hidden>
-          <p>Most people are — including many who've been told elsewhere they're not. Your CBCT scan gives us a precise answer.</p>
+          <p>It suits many people with chipped or worn edges, small gaps, uneven edges or minor misalignment. Some cases are better served by another treatment, and we will tell you so at your consultation rather than after it.</p>
         </div>
       </div>
 
       <div class="faq__item">
         <h3 style="margin:0">
           <button type="button" class="faq__q" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">
-            Does it hurt?
+            Will it damage my natural teeth?
             <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
           </button>
         </h3>
         <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2" hidden>
-          <p>Treatment is carried out under local anaesthetic and most patients are surprised how comfortable it is. We'll talk you through comfort options.</p>
+          <p>Composite bonding usually needs little to no removal of healthy tooth structure, which is why it is considered a conservative alternative to veneers for suitable patients. Your dentist will confirm what your own case needs.</p>
         </div>
       </div>
 
       <div class="faq__item">
         <h3 style="margin:0">
           <button type="button" class="faq__q" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">
-            How long do implants last?
+            How long does composite bonding last?
             <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
           </button>
         </h3>
         <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3" hidden>
-          <p>With good care, implants are designed to be a long-term, permanent solution.</p>
+          <p>That varies with the case, the bite and how it is looked after. Bonding can chip or pick up staining over time and may need repair or replacement — expected lifespan and aftercare are set out in your written plan.</p>
         </div>
       </div>
 
       <div class="faq__item">
         <h3 style="margin:0">
           <button type="button" class="faq__q" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">
-            How long does treatment take?
+            Can I have whitening and bonding together?
             <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
           </button>
         </h3>
         <div class="faq__a" id="faq-a4" role="region" aria-labelledby="faq-q4" hidden>
-          <p>It varies by case — your plan will set out exact timings at your consultation.</p>
+          <p>Yes, and the order matters. Whitening is normally carried out first so the bonding can be matched to your new shade — bonding material does not lighten with whitening gel. Your plan sets out the sequence and the timings.</p>
         </div>
       </div>
 
@@ -2205,19 +2321,7 @@ body{padding-bottom:88px}
           </button>
         </h3>
         <div class="faq__a" id="faq-a5" role="region" aria-labelledby="faq-q5" hidden>
-          <p>Yes. Every implant treatment can be spread over 12 months at 0% interest. With £500 off, a single implant is £2,500 — that&rsquo;s 11 payments of £208.33 and a final payment of £208.37. Full pricing is shown up front, and finance is subject to status.</p>
-        </div>
-      </div>
-
-      <div class="faq__item">
-        <h3 style="margin:0">
-          <button type="button" class="faq__q" id="faq-q6" aria-expanded="false" aria-controls="faq-a6">
-            Is the consultation really free?
-            <span class="faq__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-        </h3>
-        <div class="faq__a" id="faq-a6" role="region" aria-labelledby="faq-q6" hidden>
-          <p>Yes. A consultation with our treatment coordinator is included free with every implant assessment. You&rsquo;ll go through your options, see what the treatment involves and get your costs in writing — with no obligation to go ahead.</p>
+          <p>Yes. 0% interest-free finance over 12 months is available, subject to status and affordability checks. A £50 non-refundable consultation deposit secures your appointment, and full pricing is shown up front.</p>
         </div>
       </div>
     </div>
@@ -2242,10 +2346,10 @@ body{padding-bottom:88px}
   <div class="bg bg-aurora" aria-hidden="true"></div>
   <div class="container final__grid">
     <div class="reveal">
-      <h2 id="final-title">Ready to find out if implants are right for you?</h2>
-      <p style="color:var(--color-on-primary-mut)">Whether it's one tooth or a full-mouth restoration, take the first easy step today.</p>
+      <h2 id="final-title">Ready to see what your smile could look like?</h2>
+      <p style="color:var(--color-on-primary-mut)">Two quick questions and your details, and we will call you to arrange your smile consultation. Nothing is booked or charged until you are ready.</p>
       <div class="cta-row" style="justify-content:flex-start">
-        <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Check My Suitability</a>
+        <a class="btn btn--primary btn--lg js-scroll-form" href="#qualifier">Discover Your Dream Smile</a>
         <a class="btn btn--on-dark js-tel" href="tel:[Phone]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
           Or call <span class="js-phone">[Phone]</span>
@@ -2317,9 +2421,9 @@ body{padding-bottom:88px}
              than the same words that cannot. -->
         <h3>Treatments on this page</h3>
         <ul class="plain-list">
-          <li>Single dental implants</li>
-          <li>All-on-4 full-arch implants</li>
-          <li>All-on-6 full-arch implants</li>
+          <li>Composite bonding</li>
+          <li>Professional teeth whitening</li>
+          <li>Smile makeover package</li>
         </ul>
       </div>
       <div>
@@ -2334,26 +2438,45 @@ body{padding-bottom:88px}
             <tr><th scope="row">Sat/Sun</th><td>Closed</td></tr>
           </tbody>
         </table>
-        <h3 style="margin-top:var(--space-3)">Practice information</h3>
-        <ul>
-          <!-- Point these at the practice site's own policy pages once the
-               funnel's GHL URL is known. Live URLs beat dead brackets. -->
-          <li><a href="https://cygnethousedentalstudio.co.uk/privacy-policy/" rel="noopener">Privacy policy</a></li>
-          <li><a href="https://cygnethousedentalstudio.co.uk/complaints/" rel="noopener">Complaints procedure</a></li>
-          <li><a href="https://cygnethousedentalstudio.co.uk/terms/" rel="noopener">Terms &amp; conditions</a></li>
-        </ul>
+        <!-- The practice has confirmed these three pages do not exist on its
+             website, so the links that used to sit here were 404s. A dead
+             privacy link on a page that collects a name, a phone number and an
+             email is worse than no link, so they are gone and replaced with a
+             plain statement of the only things that can be said truthfully
+             today. This is an interim: a hosted privacy policy and complaints
+             procedure still have to exist, and then link from here. -->
+        <h3 style="margin-top:var(--space-3)">How we use your details</h3>
+        <p>The details you send through this page are used only to contact you about your enquiry and to arrange your consultation. They are not shared with anyone else. To ask what we hold, to have it deleted, or to raise a concern about your care, call the practice on <a class="js-tel" href="tel:[Phone]"><span class="js-phone">[Phone]</span></a>.</p>
       </div>
     </div>
 
     <div class="footer__legal">
-      <p><strong>Regulatory:</strong> Implant treatment provided by Dr Dimitrios Sourtzis, GDC No. 287145. Dr Triantafyllia (Rose) Kantzioura, Dentist, GDC No. 290358. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission.</p>
+      <p><strong>Regulatory:</strong> Cosmetic treatment on this page provided by Dr Triantafyllia (Rose) Kantzioura, Dentist, GDC No. 290358. Dr Dimitrios Sourtzis, Dentist, GDC No. 287145. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission. In the UK, tooth whitening may only be carried out by a registered dental professional.</p>
       <p><strong>Company:</strong> Cygnet House Dental Studio Ltd, registered in England &amp; Wales, company number 05359263. Registered office: Cygnet House, Grace Swan Close, Hundleby, Spilsby, PE23 5LT.</p>
       <!-- The lender's name and Cygnet House's FRN belong in this paragraph once
            they are to hand. Nothing here is invented, so the line is safe to
-           publish as it stands. -->
+           publish as it stands.
+
+           LEAD (Aug 2026): the practice was told it does not hold these details,
+           but a Tabeo finance page exists for this exact practice at
+           lead.tabeo.co.uk/cygnet-house-dental-studio/finance, and Tabeo is the
+           FCA-authorised credit broker and loan servicer. So the details do
+           exist — they are in the practice's Tabeo account, and Tabeo issues
+           the required wording at onboarding. Ask for it rather than treating
+           it as unobtainable.
+
+           Search returned three different FRNs for Tabeo entities (942763,
+           749309, 777539) and none could be verified from this environment —
+           the FCA register and both sites are blocked by the egress proxy.
+           DO NOT paste any of them. A wrong FRN on a financial promotion is a
+           worse breach than a missing one, because it is an affirmative false
+           statement rather than an omission. Take the number from the
+           practice's own Tabeo paperwork, or from register.fca.org.uk. -->
       <p><strong>Finance:</strong> 0% APR representative over 12 months. Cygnet House Dental Studio Ltd acts as a credit broker, not a lender. Finance is subject to status and affordability checks, and full written terms are provided before you commit.</p>
-      <p><strong>Pricing:</strong> prices shown are guide prices from the stated amount. Promotional savings are measured against our usual guide prices, are available for a limited time, are limited to one offer per patient and cannot be combined with any other offer. Your exact cost is confirmed in writing after your consultation and CBCT assessment. Monthly figures are based on 0% interest spread over 12 months.</p>
-      <p>Individual results vary. All before-and-after images and reviews shown are from real patients of this practice, used with their consent.</p>
+      <p><strong>Pricing:</strong> prices shown are guide prices from the stated amount. Composite bonding is priced per tooth, so your total depends on how many teeth are treated; it is confirmed in writing after your consultation. Monthly figures are based on 0% interest spread over 12 months.</p>
+      <p><strong>Savings:</strong> “normally £300 per tooth” and “normally £450” are Cygnet House Dental Studio’s standard fees for these treatments; the prices shown are a promotional reduction from those standard fees, not a comparison with any other practice. The £310+ total saving assumes one bonded tooth (£80), whitening (£150) and the examination and X-rays included at no charge (£80); bonding more than one tooth increases it.</p>
+      <p><strong>Deposit:</strong> a £50 consultation deposit is payable to secure your appointment. It is non-refundable if you do not proceed, and is deducted from the cost of your treatment if you do.</p>
+      <p>Individual results vary, and no cosmetic result can be guaranteed. All before-and-after images and reviews shown are from real patients of this practice, used with their consent.</p>
       <p>© <span id="year">2026</span> Cygnet House Dental Studio. All rights reserved.</p>
     </div>
   </div>
@@ -2367,7 +2490,7 @@ body{padding-bottom:88px}
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
     Call
   </a>
-  <a class="btn btn--primary js-scroll-form" href="#qualifier">Check My Suitability</a>
+  <a class="btn btn--primary js-scroll-form" href="#qualifier">Book Now</a>
 </div>
 
 <!-- Local-search structured data. Every value here is client-confirmed.
@@ -2392,9 +2515,9 @@ body{padding-bottom:88px}
   "areaServed": "Spilsby and East Lincolnshire",
   "medicalSpecialty": "Dentistry",
   "availableService": [
-    { "@type": "MedicalProcedure", "name": "Single dental implant" },
-    { "@type": "MedicalProcedure", "name": "All-on-4 full-arch dental implants" },
-    { "@type": "MedicalProcedure", "name": "All-on-6 full-arch dental implants" }
+    { "@type": "MedicalProcedure", "name": "Composite bonding" },
+    { "@type": "MedicalProcedure", "name": "Professional teeth whitening" },
+    { "@type": "MedicalProcedure", "name": "Smile makeover" }
   ],
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday",    "opens": "09:00", "closes": "17:30" },
@@ -2426,8 +2549,21 @@ body{padding-bottom:88px}
     /* Where a successful submission lands. Set to null to keep the visitor
        on this page and show the inline success state instead — the two are
        mutually exclusive, and only one of them should ever fire a
-       conversion pixel. */
-    thankYouUrl:  'https://dentalimplants.cygnethousedentalstudio.co.uk/thank-you'
+       conversion pixel.
+
+       !! THIS IS A PREVIEW URL, AND notrack=true DISABLES GHL'S OWN TRACKING.
+       Fine for testing the round trip; swap both for the PUBLISHED address
+       before running any traffic, or the page records nothing at all. That
+       is the same trap the implants funnel is sitting in — see README.
+
+       Note it already carries a query string. The separator further down is
+       chosen rather than assumed for exactly this reason, so the first name
+       lands as ...?notrack=true&firstName=… rather than collapsing the whole
+       thing into one unparseable value.
+
+       Change it HERE and rebuild — pasting a fresh build into GHL overwrites
+       anything edited by hand there. */
+    thankYouUrl:  'https://compositebonding.cygnethousedentalstudio.co.uk/thank-you'
   };
 
   /* ---------- Apply config ---------- */
@@ -2639,10 +2775,11 @@ body{padding-bottom:88px}
         if (seal) requestAnimationFrame(function () { seal.classList.add('is-visible'); });
         successView.focus();
         successView.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        /* Analytics hook: window.dataLayer && window.dataLayer.push({event:'implant_lead'}); */
+        /* Analytics hook: window.dataLayer && window.dataLayer.push({event:'bonding_lead'});
+           Fire it HERE or on the thank-you page, never both. */
       }).catch(function () {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Check My Suitability';
+        submitBtn.textContent = 'Discover Your Dream Smile';
         var err = form.querySelector('.form-submit-error');
         if (!err) {
           err = document.createElement('p');
@@ -2693,29 +2830,30 @@ body{padding-bottom:88px}
      ========================================================== */
   var PEOPLE = [
     {
+      id: 'rose',
+      name: 'Dr Triantafyllia (Rose) Kantzioura',
+      role: 'Cosmetic treatment provider · Dentist · GDC No. 290358',
+      short: 'Dentist',
+      img: 'assets/people/y15.webp',
+      bio: [
+        'I believe cosmetic dentistry should enhance your natural smile, not change who you are. That is the starting point for every case I plan.',
+        'I graduated from the Aristotle University of Thessaloniki, completed a postgraduate degree in Aesthetic and Restorative Dentistry, then moved to the UK to practise in Louth. In 2021 I began a double Master’s in Prosthodontics at King’s College London — fixed, removable and implant prosthodontics: the science of designing teeth that look right and last.',
+        'Composite bonding is one of my favourite treatments. It repairs chips, closes small gaps and improves symmetry while preserving your own tooth structure, and combined with professional whitening the difference it makes to how freely someone smiles can be considerable. Every makeover is planned around the individual, with aesthetics, function and long-term oral health weighed together.',
+        'I have also provided Invisalign for five years, and my university research explores how digital scanning can help care-home residents replace lost dentures faster.',
+        'Away from work: walks with my dog Coco, movie nights with friends, travelling — and continuous learning.'
+      ]
+    },
+    {
       id: 'dimitrios',
       name: 'Dr Dimitrios Sourtzis',
-      role: 'Implant treatment provider · Dentist · GDC No. 287145',
+      role: 'Dentist · GDC No. 287145',
       short: 'Dentist',
       img: 'assets/clinician-sourtzis.webp',
       bio: [
         'I graduated from the Aristotle University of Thessaloniki and moved to the UK in 2020, building my dental career in Louth. My postgraduate training runs deep: a Master’s in Endodontics at King’s College London, a Diploma in Implant Dentistry, Minor Oral Surgery training at King’s — and I’m now completing a further surgical diploma to deepen that expertise.',
-        'Implants at Cygnet House are a two-dentist partnership. I place them; my wife, Dr Rose — completing a double Master’s in Prosthodontics — plans and restores them with me. Together we have placed more than 50 implants, and every case is planned restoratively: we design your final teeth first, then place the implants to support them.',
-        'I’m meticulous about diagnosis. I use a dental microscope for every root canal and every complex diagnostic case — the same precision-first mindset I bring to implant surgery.',
+        'Rose is my wife as well as my colleague, and we plan complex cases together — she leads the cosmetic and prosthodontic work, I lead the surgical side. Between us that covers most of what a smile needs.',
+        'I’m meticulous about diagnosis. I use a dental microscope for every root canal and every complex diagnostic case — the same precision-first mindset I bring to surgery.',
         'Outside dentistry I enjoy exploring new destinations, good food, and time with family and friends.'
-      ]
-    },
-    {
-      id: 'rose',
-      name: 'Dr Triantafyllia (Rose) Kantzioura',
-      role: 'Dentist · GDC No. 290358',
-      short: 'Dentist',
-      img: 'assets/people/y15.webp',
-      bio: [
-        'I graduated from the Aristotle University of Thessaloniki, completed a postgraduate degree in Aesthetic and Restorative Dentistry, then moved to the UK to practice in Louth. In 2021 I began a double Master’s in Prosthodontics at King’s College London — fixed, removable and implant prosthodontics: the science of designing teeth that look right and last.',
-        'Implants here are a family affair: my husband Dr Dimitrios and I work as a surgical team, and I hold a Diploma in Implant Dentistry alongside my prosthodontic training. That combination means every implant we place is planned around the final result — function and aesthetics from the very start.',
-        'I’m currently completing a Diploma in Minor Oral Surgery, and other practices refer their complex surgical extractions, impacted teeth and implant placements to me — complex cases are the work I enjoy most. I’ve also provided Invisalign for five years, and my university research explores how digital scanning can help care-home residents replace lost dentures faster.',
-        'Away from work: walks with my dog Coco, movie nights with friends, travelling — and continuous learning.'
       ]
     },
     {
@@ -2738,7 +2876,7 @@ body{padding-bottom:88px}
       img: 'assets/people/y23.webp',
       bio: [
         'Melissa is our dual-qualified Dental Hygienist and Dental Therapist — University of Sheffield, 2020 — with a career in dentistry that began back in 2010 as a dental nurse. That’s fifteen years of knowing exactly how to put a nervous patient at ease.',
-        '“So gentle” is how a recent Google review describes her — and gentle matters, because healthy gums are the foundation every implant depends on. Melissa works hand-in-hand with our dentists to protect yours, before and after treatment.',
+        '“So gentle” is how a recent Google review describes her — and gentle matters, because healthy gums are the foundation any cosmetic result sits on. Whitening and bonding both start with a mouth that is healthy, and Melissa is the one who gets it there.',
         'Away from the practice she’s family-first, with the occasional live music night when the opportunity arises.'
       ]
     },
@@ -2749,7 +2887,7 @@ body{padding-bottom:88px}
       short: 'Dental Nurse',
       img: 'assets/people/y28.webp',
       bio: [
-        'Ava is a qualified Dental Nurse and our Invisalign Treatment Co-ordinator — the person who keeps your treatment journey moving and makes sure you always know what happens next.',
+        'Ava is a qualified Dental Nurse and our Treatment Co-ordinator — the person who keeps your treatment journey moving and makes sure you always know what happens next.',
         'She joined Cygnet House in 2022, qualified in 2024 (Level 3 Extended Diploma in Dental Nursing, City and Guilds), and is already working towards her Dental Radiography qualification. One patient review simply calls her “lovely nurse Ava”.',
         'Always keen to take on a new challenge, she supports patients at every step — informed, confident and well cared for.'
       ]
@@ -2762,7 +2900,6 @@ body{padding-bottom:88px}
       img: 'assets/people/y34.webp',
       bio: [
         'Hayley has been at Cygnet House since February 2003, with a career in dentistry that began in 1996 — Practice Manager, qualified Dental Nurse and Dental Radiographer, and the continuity behind two decades of patient relationships here.',
-        'She personally takes the CT scans and OPTs behind our 3D-guided implant planning — imaging other practices trust enough to refer their own patients here for.',
         'If you have a question or a concern at any point, Hayley is the person to ask: making sure every patient leaves happy is, quite literally, her job. Out of the office she’s a full-time mum who enjoys running, reading and a good period drama.'
       ]
     }
@@ -2846,11 +2983,61 @@ body{padding-bottom:88px}
     marquee.classList.add('marquee--live');
   }
 
+  /* ==========================================================
+     VIDEO — click to play
+     Controls are added only once playback starts, so the resting state is a
+     clean poster with one obvious affordance rather than a browser chrome bar
+     competing with it. The button is a real <button>, so it is in the tab
+     order and takes Enter and Space for free.
+     ========================================================== */
+  document.querySelectorAll('.js-video-play').forEach(function (btn) {
+    var frame = btn.closest('[data-video]');
+    var video = frame && frame.querySelector('video');
+    if (!video) return;
+    btn.setAttribute('aria-label', 'Play the video: Dr Rose explains composite bonding');
+    btn.addEventListener('click', function () {
+      frame.classList.add('is-playing');
+      video.controls = true;
+      var p = video.play();
+      /* A rejected play() leaves the viewer staring at a poster with no way
+         back, so put the button back if the browser refuses. */
+      if (p && p.catch) p.catch(function () {
+        frame.classList.remove('is-playing');
+        video.controls = false;
+      });
+      video.focus({ preventScroll: true });
+    });
+  });
+
+  /* ==========================================================
+     VIDEO — adopt the clip's real proportions
+     The frame ships at 16/9 so it has a height before anything loads. Once
+     metadata arrives we know the true ratio and set it, so a portrait or
+     square clip fills its frame instead of sitting in letterbox bars. If the
+     video never loads, the 16/9 poster frame stands and nothing shifts.
+     ========================================================== */
+  document.querySelectorAll('[data-ratio-pending] video').forEach(function (v) {
+    v.addEventListener('loadedmetadata', function () {
+      if (!v.videoWidth || !v.videoHeight) return;
+      var frame = v.closest('[data-ratio-pending]');
+      frame.style.aspectRatio = v.videoWidth + ' / ' + v.videoHeight;
+      frame.removeAttribute('data-ratio-pending');
+    });
+  });
+
   /* Cosmetic only: the CSS slot already shows through, but Chrome still
      paints a small broken-image glyph. Dropping the failed element leaves
-     the labelled slot clean. No-op once the photography is in place. */
-  document.querySelectorAll('.stack__media img, .card__media img').forEach(function (img) {
-    img.addEventListener('error', function () { img.remove(); });
+     the labelled slot clean. No-op once the photography is in place.
+
+     The comparison sliders need one thing more. Once both layers are gone
+     there is nothing to compare, so the divider, knob and badges come off
+     with them — see .ba--empty. */
+  document.querySelectorAll('.stack__media img, .card__media img, .ba__layer').forEach(function (img) {
+    img.addEventListener('error', function () {
+      var ba = img.closest('.ba');
+      img.remove();
+      if (ba && !ba.querySelector('.ba__layer')) ba.classList.add('ba--empty');
+    });
   });
 
   /* ==========================================================
@@ -2919,58 +3106,6 @@ body{padding-bottom:88px}
 
     reveals.forEach(function (el) { observer.observe(el); });
   }
-
-  /* ==========================================================
-     PRACTICE VIDEO
-
-     Click to play, never on load. Controls appear only once playing, so the
-     resting state is a clean frame and one button rather than a browser
-     chrome bar the visitor has to look past.
-     ========================================================== */
-  document.querySelectorAll('[data-vplayer]').forEach(function (wrap) {
-    var video = wrap.querySelector('video');
-    var button = wrap.querySelector('[data-vplay]');
-    if (!video || !button) return;
-
-    video.addEventListener('loadedmetadata', function () {
-      if (video.videoWidth && video.videoHeight) {
-        wrap.style.aspectRatio = video.videoWidth + ' / ' + video.videoHeight;
-      }
-    });
-
-    button.addEventListener('click', function () {
-      video.controls = true;
-      wrap.classList.add('is-playing');
-      var started = video.play();
-      /* A blocked or failed play() rejects. Put the poster state back rather
-         than leaving the visitor staring at a frame with no way to start it. */
-      if (started && started.catch) {
-        started.catch(function () {
-          wrap.classList.remove('is-playing');
-          video.controls = false;
-        });
-      }
-    });
-
-    video.addEventListener('ended', function () {
-      wrap.classList.remove('is-playing');
-    });
-
-    /* If the file never loads — the CDN moves it, the host blocks hotlinking,
-       the URL rots — the default outcome is a black rectangle with a play
-       button that does nothing, which is worse than no video at all. Pull the
-       whole section instead, so the page simply runs team-after-reviews. */
-    function dropSection() {
-      var section = wrap.closest('section');
-      if (section) section.hidden = true;
-    }
-    video.addEventListener('error', dropSection);
-    /* A fast failure beats this script to the element: the error event has
-       already been and gone, and the only remaining trace is video.error.
-       Without this line the listener above never fires and the dead player
-       ships. Measured — an aborted request errors before DOMContentLoaded. */
-    if (video.error) dropSection();
-  });
 
   /* ==========================================================
      HEADER — SCROLL PROGRESS + SECTION SPY

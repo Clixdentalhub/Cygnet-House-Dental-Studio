@@ -8,7 +8,7 @@
      inflates every conversion count that fires on it. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Thank you — Cygnet House Dental Studio</title>
-<meta name="description" content="Your implant enquiry has been received. Here is what happens next.">
+<meta name="description" content="Your smile makeover enquiry has been received. Here is what happens next.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,9 +28,9 @@
   --color-primary:        #241730;  /* plum ink — 16.9:1 with white */
   --color-primary-dark:   #1A1220;
   --color-on-primary:     #FFFFFF;
-  --color-secondary:      #6A2383;  /* links — brand aubergine, 9.6:1 on white */
-  --color-accent:         #6A2383;  /* CTA — the brand colour itself */
-  --color-accent-dark:    #521B66;
+  --color-secondary:      #6823A3;  /* links — brand aubergine, 9.6:1 on white */
+  --color-accent:         #6823A3;  /* CTA — the brand colour itself */
+  --color-accent-dark:    #4E1A7B;
   --color-on-accent:      #FFFFFF;
   --cta-on-dark:          #9B4DD6;  /* CTA fill on ink bands — 3.6:1 vs ink */
   --cta-on-dark-text:     #FFFFFF;  /* 4.7:1 on that fill */
@@ -333,7 +333,13 @@ section,#qualifier{scroll-margin-top:calc(var(--header-h) + var(--space-2))}
 .section--primary h2,.section--primary h3{color:var(--color-on-primary)}
 
 .section-head{max-width:1000px; margin:0 auto var(--space-4); text-align:center}
-.section-head p{max-width:62ch; margin-inline:auto}
+/* 62ch left every section intro at ~two thirds the width of the heading above
+   it, so a four-sentence paragraph stacked into six short lines and read as a
+   dense block rather than a lead-in. 78ch is still inside the comfortable
+   measure for a short centred paragraph and takes the longest one down to
+   four lines. Below ~1000px the container caps it anyway, so this only
+   changes the wide layouts, which is where the imbalance was. */
+.section-head p{max-width:78ch; margin-inline:auto}
 .section-head p{color:var(--color-foreground-mut); font-size:1.0625rem; margin-bottom:0}
 .section--primary .section-head p{color:var(--color-on-primary-mut)}
 
@@ -673,7 +679,7 @@ body{padding-bottom:88px}
   filter:blur(80px);
 }
 .confirm__inner{max-width:640px; margin-inline:auto}
-/* The layered wave in index.html runs light → ink. This boundary runs the
+/* The layered wave in composite-bonding.html runs light → ink. This boundary runs the
    other way, so the layers invert: lilac behind, page background in front. */
 .confirm .cut{color:var(--color-background)}
 .confirm .cut__tint{fill:var(--color-flourish)}
@@ -704,22 +710,6 @@ body{padding-bottom:88px}
 @media (prefers-reduced-motion:reduce){
   .confirm__seal path{animation:none; stroke-dashoffset:0}
 }
-
-/* The click that got here promised money off. A confirmation page that says
-   nothing about it reads as a bait-and-switch, and "does my discount still
-   stand?" is the first thing the caller gets asked. Worded as "the offer is
-   running", not "your saving is reserved" — clinical suitability decides what
-   actually applies, and that is settled at the consultation, not here. */
-.confirm__offer{
-  display:flex; gap:12px; align-items:flex-start; text-align:left;
-  max-width:52ch; margin:var(--space-3) auto 0;
-  padding:14px var(--space-2);
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(196,165,232,.34); border-radius:var(--radius-sm);
-  font-size:.9375rem; line-height:1.5; color:var(--color-on-primary-mut);
-}
-.confirm__offer svg{color:var(--color-flourish); flex:none; margin-top:2px}
-.confirm__offer strong{color:#fff}
 
 .confirm__ref{
   display:inline-flex; align-items:center; gap:8px; margin-top:var(--space-3);
@@ -838,7 +828,7 @@ body{padding-bottom:88px}
 
 .ty-reviews{display:grid; gap:var(--space-2); max-width:var(--container-narrow); margin-inline:auto}
 @media (min-width:768px){ .ty-reviews{grid-template-columns:1fr 1fr} }
-/* .stars lives in index.html's hero block, which this page does not carry. */
+/* .stars lives in the funnel's hero block, which this page does not carry. */
 .stars{display:inline-flex; gap:1px; color:var(--color-star)}
 .rating-line{
   display:flex; align-items:center; justify-content:center; gap:8px;
@@ -857,8 +847,8 @@ body{padding-bottom:88px}
 
 <header class="header">
   <div class="container header__inner">
-    <a class="logo js-funnel" href="index.html">
-      <img src="assets/logo.webp" alt="Cygnet House Dental Studio &amp; Implant Centre — home" width="374" height="166">
+    <a class="logo js-funnel" href="composite-bonding.html">
+      <img src="assets/logo.webp" alt="Cygnet House Dental Studio — home" width="374" height="166">
     </a>
     <div class="header__actions">
       <a class="link-call js-tel" href="tel:[Phone]">
@@ -883,12 +873,7 @@ body{padding-bottom:88px}
       </div>
       <p class="confirm__eyebrow">Enquiry received</p>
       <h1 id="ty-title">Thank you<span class="js-ty-name"></span> — we've got your details.</h1>
-      <p class="confirm__lead">A member of our team will call you during practice hours to answer your questions and arrange your implant consultation. Nothing is booked or charged until you're ready.</p>
-      <p class="confirm__offer">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 12.3 21.7a1.6 1.6 0 0 1-2.3 0l-7.7-7.7a1.6 1.6 0 0 1-.4-1.4l1-6.2A1.6 1.6 0 0 1 4.2 5l6.2-1a1.6 1.6 0 0 1 1.4.4l8.8 8.8a1.6 1.6 0 0 1 0 .2Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>
-        <span><strong>You&rsquo;ve enquired while the offer is running</strong> — £500 off a single implant, £500 off All-on-4 and £1,000 off All-on-6, plus a free consultation with our treatment coordinator. We&rsquo;ll confirm exactly what applies to your case in writing, before anything begins.</span>
-      </p>
-
+      <p class="confirm__lead">A member of our team will call you during practice hours to answer your questions and arrange your smile consultation. Nothing is booked or charged until you're ready.</p>
       <p class="confirm__ref">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
         Keep an eye on your email — a confirmation is on its way.
@@ -917,15 +902,15 @@ body{padding-bottom:88px}
     <ol class="next reveal">
       <li class="next__item">
         <h3>We call you</h3>
-        <p>One of our team rings you during practice hours to talk through your situation, answer questions and find a consultation time that suits you.</p>
+        <p>One of our team rings you during practice hours to talk through what you would like to change about your smile, answer your questions and find a consultation time that suits you.</p>
       </li>
       <li class="next__item">
-        <h3>Your consultation</h3>
-        <p>You&rsquo;ll have a free consultation with our treatment coordinator, alongside your full assessment: examination, digital X-rays, a CBCT 3D scan and an intraoral digital scan.</p>
+        <h3>Your smile consultation</h3>
+        <p>A £50 non-refundable deposit secures the appointment. It includes your complimentary oral examination and X-rays, a full smile assessment and an honest answer on whether bonding and whitening suit your goals.</p>
       </li>
       <li class="next__item">
         <h3>Your written plan</h3>
-        <p>You leave with a clear, written breakdown of your options and costs, including how 0% finance over 12 months would work for your treatment.</p>
+        <p>You leave with a clear, written breakdown of your options and costs — including how many teeth bonding would involve, and how 0% finance over 12 months would work for you.</p>
       </li>
     </ol>
   </div>
@@ -963,15 +948,15 @@ body{padding-bottom:88px}
         <ul>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>What's bothering you most</strong> Eating, appearance, a denture that moves, or a tooth you know is on borrowed time.</span>
+            <span><strong>Which teeth bother you most</strong> Chips, gaps, uneven edges, shade — or the one tooth you always notice in photographs.</span>
           </li>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Any medical history that matters</strong> Diabetes, blood thinners, bisphosphonates or a history of smoking all affect implant planning, so it helps to mention them early.</span>
+            <span><strong>A photo of a smile you like</strong> It is far easier to design towards something you can point at than something you are describing.</span>
           </li>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>When you'd want to start</strong> It changes what we suggest — and whether spreading the cost over 12 months makes sense for you.</span>
+            <span><strong>Whether there is a date in mind</strong> A wedding, a holiday or a photograph coming up changes the sequence we suggest — whitening has to come before bonding.</span>
           </li>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
@@ -980,7 +965,7 @@ body{padding-bottom:88px}
         </ul>
       </div>
       <div class="prep__media">
-        <img src="assets/section-nervous.webp" alt="A patient and clinician looking at a panoramic X-ray together at Cygnet House Dental Studio" loading="lazy" decoding="async">
+        <img src="assets/section-nervous.webp" alt="A patient and clinician talking through treatment together at Cygnet House Dental Studio" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
@@ -1016,10 +1001,10 @@ body{padding-bottom:88px}
       </li>
       <li class="card">
         <div class="review-card">
-          <blockquote>"Fantastic service from start to finish. Dr Dimitrios explained every step and the results are better than I hoped for."</blockquote>
+          <blockquote>"I was greeted by the new dentist Rose she is very welcoming and put me at ease straight away. It was very easy and straight forward and Rose is a true professional."</blockquote>
           <div class="review-card__meta">
             <p class="review-card__name">Google review</p>
-            <span class="review-card__treatment">Implant treatment</span>
+            <span class="review-card__treatment">Treatment with Dr Rose</span>
           </div>
         </div>
       </li>
@@ -1049,14 +1034,14 @@ body{padding-bottom:88px}
         </ul>
       </div>
       <div>
-        <!-- These pointed at index.html#pricing, which resolves only while
+        <!-- These pointed at the funnel's #pricing, which resolves only while
              the two files sit in one folder — in GHL they were dead. Plain
              text cannot break. -->
         <h3>Treatments</h3>
         <ul class="plain-list">
-          <li>Single dental implants</li>
-          <li>All-on-4 full-arch implants</li>
-          <li>All-on-6 full-arch implants</li>
+          <li>Composite bonding</li>
+          <li>Professional teeth whitening</li>
+          <li>Smile makeover package</li>
         </ul>
       </div>
       <div>
@@ -1071,22 +1056,26 @@ body{padding-bottom:88px}
             <tr><th scope="row">Sat/Sun</th><td>Closed</td></tr>
           </tbody>
         </table>
-        <h3 style="margin-top:var(--space-3)">Practice information</h3>
-        <ul>
-          <li><a href="https://cygnethousedentalstudio.co.uk/privacy-policy/" rel="noopener">Privacy policy</a></li>
-          <li><a href="https://cygnethousedentalstudio.co.uk/complaints/" rel="noopener">Complaints procedure</a></li>
-          <li><a href="https://cygnethousedentalstudio.co.uk/terms/" rel="noopener">Terms &amp; conditions</a></li>
-        </ul>
+        <!-- The practice has confirmed these three pages do not exist on its
+             website, so the links that used to sit here were 404s. A dead
+             privacy link on a page that collects a name, a phone number and an
+             email is worse than no link, so they are gone and replaced with a
+             plain statement of the only things that can be said truthfully
+             today. This is an interim: a hosted privacy policy and complaints
+             procedure still have to exist, and then link from here. -->
+        <h3 style="margin-top:var(--space-3)">How we use your details</h3>
+        <p>The details you send through this page are used only to contact you about your enquiry and to arrange your consultation. They are not shared with anyone else. To ask what we hold, to have it deleted, or to raise a concern about your care, call the practice on <a class="js-tel" href="tel:[Phone]"><span class="js-phone">[Phone]</span></a>.</p>
       </div>
     </div>
 
     <div class="footer__legal">
-      <p><strong>Regulatory:</strong> Implant treatment provided by Dr Dimitrios Sourtzis, GDC No. 287145. Dr Triantafyllia (Rose) Kantzioura, Dentist, GDC No. 290358. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission.</p>
+      <p><strong>Regulatory:</strong> Cosmetic treatment provided by Dr Triantafyllia (Rose) Kantzioura, Dentist, GDC No. 290358. Dr Dimitrios Sourtzis, Dentist, GDC No. 287145. All clinicians are registered with the General Dental Council (<a href="https://www.gdc-uk.org" rel="noopener">gdc-uk.org</a>). Practice registered with the Care Quality Commission.</p>
       <p><strong>Company:</strong> Cygnet House Dental Studio Ltd, registered in England &amp; Wales, company number 05359263. Registered office: Cygnet House, Grace Swan Close, Hundleby, Spilsby, PE23 5LT.</p>
       <!-- The lender's name and Cygnet House's FRN belong in this paragraph once
            they are to hand. Nothing here is invented, so the line is safe to
            publish as it stands. -->
       <p><strong>Finance:</strong> 0% APR representative over 12 months. Cygnet House Dental Studio Ltd acts as a credit broker, not a lender. Finance is subject to status and affordability checks, and full written terms are provided before you commit.</p>
+      <p><strong>Deposit:</strong> the £50 consultation deposit is payable to secure your appointment and is non-refundable.</p>
       <p>© <span id="year">2026</span> Cygnet House Dental Studio. All rights reserved.</p>
     </div>
   </div>
@@ -1104,7 +1093,7 @@ body{padding-bottom:88px}
   'use strict';
 
   /* ==========================================================
-     CONFIGURE ME — keep in step with index.html
+     CONFIGURE ME — keep in step with composite-bonding.html
      ========================================================== */
   var SITE_CONFIG = {
     phoneDisplay: '07450 302990',
@@ -1115,7 +1104,10 @@ body{padding-bottom:88px}
     /* Set this to the funnel's GHL URL to make the logo link back to it.
        While it is null the logo stays a plain image — better than a link
        that 404s. */
-    funnelUrl:    'https://dentalimplants.cygnethousedentalstudio.co.uk/'
+    /* The funnel this page belongs to. null leaves the footer logo as a
+       plain image rather than a link that 404s. Set it to the bonding
+       funnel's published GHL address. */
+    funnelUrl:    'https://compositebonding.cygnethousedentalstudio.co.uk/'
   };
 
   if (SITE_CONFIG.phoneDisplay) {
@@ -1195,10 +1187,10 @@ body{padding-bottom:88px}
        trigger on "generate_lead" in the container.
 
      Do not also fire a conversion on the form's submit handler in
-     index.html, or every lead counts twice.
+     composite-bonding.html, or every lead counts twice.
      ========================================================== */
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: 'generate_lead', form: 'implant_qualifier' });
+  window.dataLayer.push({ event: 'generate_lead', form: 'bonding_qualifier' });
 
 })();
 </script>
