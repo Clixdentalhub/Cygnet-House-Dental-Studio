@@ -1710,6 +1710,15 @@ body{padding-bottom:88px}
                    the Conversions API, with no on-page pixel. Stored on first landing
                    so a reload that drops the query string does not lose it. -->
               <input type="hidden" name="fbclid" id="fbclid">
+              <!-- Campaign attribution. utm_* come off the ad URL and post to GHL
+                   so each lead carries its source / campaign / ad for reporting
+                   inside GHL, independent of Meta's own Ads Manager matching.
+                   Persisted on first landing, same as fbclid. -->
+              <input type="hidden" name="utm_source" id="utm_source">
+              <input type="hidden" name="utm_medium" id="utm_medium">
+              <input type="hidden" name="utm_campaign" id="utm_campaign">
+              <input type="hidden" name="utm_content" id="utm_content">
+              <input type="hidden" name="utm_term" id="utm_term">
               <!-- Constant. This is what lets one GHL workflow serve both the
                    implants funnel and this one — route on `treatment`. -->
               <input type="hidden" name="treatment" value="Composite Bonding &amp; Teeth Whitening">
@@ -2585,13 +2594,20 @@ body{padding-bottom:88px}
   document.getElementById('year').textContent = new Date().getFullYear();
   var pageUrlField = document.getElementById('pageUrl');
   if (pageUrlField) pageUrlField.value = window.location.href;
-  var fbclidField = document.getElementById('fbclid');
-  if (fbclidField) {
-    var fbclid = new URLSearchParams(window.location.search).get('fbclid') || '';
-    if (fbclid) { try { localStorage.setItem('fbclid', fbclid); } catch (e) {} }
-    else { try { fbclid = localStorage.getItem('fbclid') || ''; } catch (e) {} }
-    fbclidField.value = fbclid;
-  }
+  /* Attribution: the Meta click ID and the UTM tags come off the ad URL and post
+     with the lead. Each is stored on first landing so a reload that drops the
+     query string does not lose it; storage is wrapped for private-mode browsers. */
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+      var field = document.getElementById(key);
+      if (!field) return;
+      var val = params.get(key) || '';
+      if (val) { try { localStorage.setItem(key, val); } catch (e) {} }
+      else { try { val = localStorage.getItem(key) || ''; } catch (e) {} }
+      field.value = val;
+    });
+  })();
 
   /* ==========================================================
      MULTI-STEP QUALIFIER FORM
