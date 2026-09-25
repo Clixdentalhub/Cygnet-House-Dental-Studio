@@ -1544,6 +1544,12 @@ body{padding-bottom:88px}
               <input type="hidden" name="utm_campaign" id="utm_campaign">
               <input type="hidden" name="utm_content" id="utm_content">
               <input type="hidden" name="utm_term" id="utm_term">
+              <!-- Meta object IDs from the ad URL. Stable even when a campaign,
+                   adset or ad is renamed, so they are the reliable join key for
+                   reporting; the utm_* names are the human-readable labels. -->
+              <input type="hidden" name="campaign_id" id="campaign_id">
+              <input type="hidden" name="medium_id" id="medium_id">
+              <input type="hidden" name="content_id" id="content_id">
               <input type="hidden" name="treatment" value="Dental Implants">
 
               <div class="form-nav">
@@ -2302,7 +2308,7 @@ body{padding-bottom:88px}
      query string does not lose it; storage is wrapped for private-mode browsers. */
   (function () {
     var params = new URLSearchParams(window.location.search);
-    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'medium_id', 'content_id'].forEach(function (key) {
       var field = document.getElementById(key);
       if (!field) return;
       var val = params.get(key) || '';
