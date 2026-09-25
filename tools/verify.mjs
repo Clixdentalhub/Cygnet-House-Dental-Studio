@@ -342,12 +342,12 @@ await Promise.all([
 ]);
 await page.waitForTimeout(400);
 
-const REQUIRED = ['situation', 'timing', 'firstName', 'lastName', 'phone', 'email', 'website', 'pageUrl', 'treatment'];
+const REQUIRED = ['situation', 'timing', 'firstName', 'lastName', 'phone', 'email', 'website', 'pageUrl', 'treatment', 'fbclid'];
 const sent = posted?.body ? [...new URLSearchParams(posted.body).keys()] : [];
 const miss = REQUIRED.filter(k => !sent.includes(k));
 if (!posted) bad('form never posted');
 else if (miss.length) bad(`posted body missing: ${miss.join(', ')}`);
-else ok(`all 9 contract fields posted (treatment="${new URLSearchParams(posted.body).get('treatment')}")`);
+else ok(`all 10 contract fields posted (treatment="${new URLSearchParams(posted.body).get('treatment')}")`);
 if (posted) ok(`posts urlencoded to ${new URL(posted.url).host}`);
 
 const landed = /^file:|^https?:/.test(page.url()) ? page.url() : (navTo || page.url());

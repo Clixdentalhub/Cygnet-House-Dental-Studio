@@ -1530,6 +1530,11 @@ body{padding-bottom:88px}
               </div>
 
               <input type="hidden" name="pageUrl" id="pageUrl">
+              <!-- Facebook click ID. Captured from the ad URL (?fbclid=…) and posted
+                   to GHL so Meta can attribute the lead to its campaign/adset/ad via
+                   the Conversions API, with no on-page pixel. Stored on first landing
+                   so a reload that drops the query string does not lose it. -->
+              <input type="hidden" name="fbclid" id="fbclid">
               <input type="hidden" name="treatment" value="Dental Implants">
 
               <div class="form-nav">
@@ -2283,6 +2288,13 @@ body{padding-bottom:88px}
   document.getElementById('year').textContent = new Date().getFullYear();
   var pageUrlField = document.getElementById('pageUrl');
   if (pageUrlField) pageUrlField.value = window.location.href;
+  var fbclidField = document.getElementById('fbclid');
+  if (fbclidField) {
+    var fbclid = new URLSearchParams(window.location.search).get('fbclid') || '';
+    if (fbclid) { try { localStorage.setItem('fbclid', fbclid); } catch (e) {} }
+    else { try { fbclid = localStorage.getItem('fbclid') || ''; } catch (e) {} }
+    fbclidField.value = fbclid;
+  }
 
   /* ==========================================================
      MULTI-STEP QUALIFIER FORM
