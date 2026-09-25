@@ -199,7 +199,9 @@ removed without it being called out, because a silent rename is a mapping that
 keeps working and quietly stops carrying data.
 
 History so far: the eight original fields have never changed. `lastName` was
-added later and is the only one that has ever needed a fresh mapping.
+added later; later still, six attribution fields (`fbclid` + five `utm_*`) were
+added for Meta / GHL campaign tracking. Each addition needs a fresh sample
+capture in GHL (see below), but never breaks an existing mapping.
 
 **The payload**, captured from a real submission:
 
@@ -207,7 +209,11 @@ added later and is the only one that has ever needed a fresh mapping.
 situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
 &lastName=O%E2%80%99Sullivan&phone=07700+900123&email=margaret%40example.co.uk&website=
 &pageUrl=https%3A%2F%2F…&treatment=Dental+Implants
+&fbclid=&utm_source=&utm_medium=&utm_campaign=&utm_content=&utm_term=
 ```
+
+(The six attribution fields are empty here because this capture came from a
+direct visit; from an ad they carry the click ID and campaign tags.)
 
 | Field | Example | Notes |
 |---|---|---|
@@ -220,6 +226,8 @@ situation=Missing+several+teeth&timing=As+soon+as+possible&firstName=Margaret
 | `website` | *(empty)* | **Honeypot.** Always empty from a human. Non-empty = bot — bin it. |
 | `pageUrl` | full page URL | Useful for attribution if the funnel is ever duplicated |
 | `treatment` | `Dental Implants` | Constant, for routing when other funnels share the workflow |
+| `fbclid` | `IwAR…` (or empty) | Meta click ID from the ad URL. Feeds GHL's Conversions API so Meta attributes the lead — no on-page pixel |
+| `utm_source` · `utm_medium` · `utm_campaign` · `utm_content` · `utm_term` | e.g. `facebook` / `paid` / `bonding-sept` / `ad3` / `whitening` (or empty) | Campaign tags from the ad URL, for reporting inside GHL |
 
 #### Capturing the reference payload in GHL
 
@@ -233,10 +241,13 @@ So:
   Re-running "listen for new request" replaces the stored sample; every key
   still present keeps working, and the new one becomes selectable.
 - **Make the capture submission complete.** Fill every field, because a key
-  missing from the stored sample cannot be picked afterwards. All nine keys
-  are transmitted on every send, including `website` with an empty value
-  (verified: the body always contains `website=`), so one ordinary submission
-  is enough.
+  missing from the stored sample cannot be picked afterwards. All fifteen keys
+  are transmitted on every send, including `website` and the six attribution
+  fields with empty values (verified: the body always contains `website=`), so
+  one ordinary submission captures the full key set. **To make the attribution
+  keys mappable, submit your capture from a URL carrying them** — e.g.
+  `?fbclid=TEST&utm_source=facebook&utm_campaign=test` — since GHL may not
+  surface a key that arrived empty.
 
 Submit from the published page rather than a local copy, so `pageUrl` holds
 the real address.
@@ -665,7 +676,7 @@ land in separate workflows:
 https://services.leadconnectorhq.com/hooks/mucgOLidUbBVBQ060OW7/webhook-trigger/xG6w8R0Itdi8jxe3jEIK
 ```
 
-**All nine field names are identical to the implants funnel**, so anything
+**All fifteen field names are identical to the implants funnel**, so anything
 already mapped there maps the same way here:
 
 | Field | What arrives in it |
@@ -679,6 +690,8 @@ already mapped there maps the same way here:
 | `website` | **honeypot** — always empty from a human; non-empty means a bot |
 | `pageUrl` | full page URL, useful for attribution |
 | `treatment` | constant: `Composite Bonding & Teeth Whitening` |
+| `fbclid` | Meta click ID from the ad URL (or empty) — feeds GHL's Conversions API |
+| `utm_source` … `utm_term` | five campaign tags from the ad URL (or empty), for GHL reporting |
 
 `situation`'s *values* are new, but GHL maps on the key rather than the value,
 so nothing breaks. Keep `treatment` even now that the campaign has a dedicated
@@ -692,9 +705,12 @@ Everything downstream then only ever sees real people.
 captured request as its reference, and every downstream action can only pick
 from the keys in that stored sample — so make the capture submission complete.
 Fill every field: a key missing from the sample cannot be picked afterwards.
-All nine are transmitted on every send, including `website` with an empty
-value, so one ordinary submission is enough. Submit from the published page
-rather than a local copy, so `pageUrl` holds the real address.
+All fifteen are transmitted on every send, including `website` and the six
+attribution fields with empty values, so one ordinary submission captures the
+key set. To make the attribution keys mappable, submit the capture from a URL
+carrying them (`?fbclid=TEST&utm_source=facebook&utm_campaign=test`) — GHL may
+not surface a key that arrived empty. Submit from the published page rather
+than a local copy, so `pageUrl` holds the real address.
 
 ## Before this can go live
 

@@ -140,6 +140,7 @@ rename leaves a mapping that keeps working and quietly stops carrying data.
 ```
 situation · timing · firstName · lastName · phone · email
 website (honeypot) · pageUrl · treatment
+fbclid · utm_source · utm_medium · utm_campaign · utm_content · utm_term
 ```
 
 Sent as **`application/x-www-form-urlencoded`** via
@@ -154,6 +155,15 @@ inline error inviting them to call).
 `thankYouUrl` (funnel) and `funnelUrl` (thank-you page). **Every URL lives in
 the HTML** — pasting a fresh build into GHL overwrites anything edited by hand
 there, so change it in the source and rebuild.
+
+**Attribution fields are standing kit — every funnel carries them.** The last
+six are read from the ad URL on landing, stored in `localStorage` (so a reload
+that drops the query string does not lose them), and posted on every send —
+empty when the URL carried nothing. `fbclid` is the Meta click ID: GHL's
+Conversions API attributes the lead to its campaign/adset/ad from it, with no
+on-page pixel. The five `utm_*` carry the campaign source into the contact
+record for reporting inside GHL. Do not drop them when building a new funnel;
+they are part of the contract now.
 
 First workflow condition in GHL should be the honeypot: `website` is not empty
 → stop.
