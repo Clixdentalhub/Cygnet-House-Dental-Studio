@@ -17,14 +17,34 @@
  * this build passed every measurement and was only visible in a picture.
  */
 import { chromium } from 'playwright';
-import { mkdirSync, existsSync } from 'node:fs';
+import { mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 
 const FILE = process.argv[2] || 'composite-bonding.html';
 const SHOTS = process.argv.includes('--shots');
 const PAGE_URL = 'file://' + resolve(FILE);
 const WIDTHS = [360, 375, 414, 768, 1024, 1280, 1440];
-const EXE = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+/* The sandbox bumps the Playwright chromium build between sessions — the
+   number (1194 → 1243 → …) and the dir layout (chrome-linux → chrome-linux64)
+   both move — so resolve the binary at run time instead of pinning a path. */
+const EXE = (() => {
+  const base = '/opt/pw-browsers';
+  const layouts = ['chrome-linux64/chrome', 'chrome-linux/chrome'];
+  try {
+    const dirs = readdirSync(base)
+      .filter(d => /^chromium-\d+$/.test(d))
+      .sort((a, b) => (+b.split('-')[1]) - (+a.split('-')[1]));
+    for (const d of dirs) for (const l of layouts) {
+      const p = `${base}/${d}/${l}`;
+      if (existsSync(p)) return p;
+    }
+  } catch {}
+  for (const l of layouts) {
+    const p = `${base}/chromium/${l}`;
+    if (existsSync(p)) return p;
+  }
+  return `${base}/chromium/chrome-linux/chrome`;
+})();
 
 let fails = 0, warns = 0;
 const ok = m => console.log(`  \x1b[32m✓\x1b[0m ${m}`);
@@ -342,12 +362,12 @@ await Promise.all([
 ]);
 await page.waitForTimeout(400);
 
-const REQUIRED = ['situation', 'timing', 'firstName', 'lastName', 'phone', 'email', 'website', 'pageUrl', 'treatment', 'fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'medium_id', 'content_id'];
+const REQUIRED = ['situation', 'timing', 'firstName', 'lastName', 'phone', 'email', 'website', 'pageUrl', 'treatment', 'fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'medium_id', 'content_id', 'event_id'];
 const sent = posted?.body ? [...new URLSearchParams(posted.body).keys()] : [];
 const miss = REQUIRED.filter(k => !sent.includes(k));
 if (!posted) bad('form never posted');
 else if (miss.length) bad(`posted body missing: ${miss.join(', ')}`);
-else ok(`all 18 contract fields posted (treatment="${new URLSearchParams(posted.body).get('treatment')}")`);
+else ok(`all 19 contract fields posted (treatment="${new URLSearchParams(posted.body).get('treatment')}")`);
 if (posted) ok(`posts urlencoded to ${new URL(posted.url).host}`);
 
 const landed = /^file:|^https?:/.test(page.url()) ? page.url() : (navTo || page.url());

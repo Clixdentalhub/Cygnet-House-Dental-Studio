@@ -1550,6 +1550,11 @@ body{padding-bottom:88px}
               <input type="hidden" name="campaign_id" id="campaign_id">
               <input type="hidden" name="medium_id" id="medium_id">
               <input type="hidden" name="content_id" id="content_id">
+              <!-- Shared Meta event ID. The browser Lead event below is tagged
+                   with this value and it is posted to GHL, so a server-side
+                   Conversions API Lead can carry the same id and Meta counts
+                   the two as one event instead of double-counting. -->
+              <input type="hidden" name="event_id" id="event_id">
               <input type="hidden" name="treatment" value="Dental Implants">
 
               <div class="form-nav">
@@ -2281,6 +2286,10 @@ body{padding-bottom:88px}
   var SITE_CONFIG = {
     phoneDisplay: '07450 302990',
     phoneHref:    '+447450302990',
+    /* Meta Pixel dataset ID. Empty = no pixel loads. Drop the numeric ID in
+       to switch it on: PageView fires on load, and a Lead event fires on a
+       successful form submit below — on the form, not the thank-you page. */
+    metaPixelId:  '',
     /* Where a successful submission lands. Set to null to keep the visitor
        on this page and show the inline success state instead — the two are
        mutually exclusive, and only one of them should ever fire a
@@ -2303,6 +2312,23 @@ body{padding-bottom:88px}
   document.getElementById('year').textContent = new Date().getFullYear();
   var pageUrlField = document.getElementById('pageUrl');
   if (pageUrlField) pageUrlField.value = window.location.href;
+  /* Meta Pixel. One event_id per page load is generated and written to the
+     hidden field regardless, so GHL's Conversions API can reuse it; the pixel
+     itself only boots when SITE_CONFIG.metaPixelId is set. */
+  var metaEventId = '';
+  try { metaEventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); }
+  catch (e) { metaEventId = String(Date.now()); }
+  var eventIdField = document.getElementById('event_id');
+  if (eventIdField) eventIdField.value = metaEventId;
+  if (SITE_CONFIG.metaPixelId) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', SITE_CONFIG.metaPixelId);
+    window.fbq('track', 'PageView');
+  }
   /* Attribution: the Meta click ID and the UTM tags come off the ad URL and post
      with the lead. Each is stored on first landing so a reload that drops the
      query string does not lose it; storage is wrapped for private-mode browsers. */
@@ -2481,6 +2507,12 @@ body{padding-bottom:88px}
          multipart body. The response is opaque by design, so a resolved
          promise means delivered and a rejection means a real network
          failure. */
+      /* Conversion fires here, on the form itself — one Lead per submit,
+         tagged with metaEventId so a CAPI Lead deduplicates against it. */
+      if (SITE_CONFIG.metaPixelId && window.fbq) {
+        window.fbq('track', 'Lead', {}, { eventID: metaEventId });
+      }
+
       fetch(form.action, {
         method: 'POST',
         mode: 'no-cors',

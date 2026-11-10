@@ -165,6 +165,17 @@ on-page pixel. The five `utm_*` carry the campaign source into the contact
 record for reporting inside GHL. Do not drop them when building a new funnel;
 they are part of the contract now.
 
+**Meta Pixel is config-driven, off by default.** `SITE_CONFIG.metaPixelId` is
+empty until a dataset ID is dropped in; set it and the pixel boots, firing
+`PageView` on load and `Lead` **on the form submit — not the thank-you page**,
+which is a separate subdomain. A fresh `event_id` is generated per load, tagged
+onto the browser `Lead` and posted to GHL as a field, so a server-side
+Conversions API `Lead` carrying the same id deduplicates instead of double-
+counting. Running the pixel without wiring that id into CAPI double-counts —
+turn on one or the other, or wire the id into both. The pixel sets cookies, so
+it needs a cookie-consent mechanism under UK PECR before it runs on real
+traffic.
+
 First workflow condition in GHL should be the honeypot: `website` is not empty
 → stop.
 
