@@ -172,9 +172,21 @@ which is a separate subdomain. A fresh `event_id` is generated per load, tagged
 onto the browser `Lead` and posted to GHL as a field, so a server-side
 Conversions API `Lead` carrying the same id deduplicates instead of double-
 counting. Running the pixel without wiring that id into CAPI double-counts —
-turn on one or the other, or wire the id into both. The pixel sets cookies, so
-it needs a cookie-consent mechanism under UK PECR before it runs on real
-traffic.
+turn on one or the other, or wire the id into both.
+
+**Cookie consent is standing kit — every page carries the banner (UK PECR).**
+Nothing that sets a non-essential cookie runs before the visitor chooses: the
+pixel (on funnel *and* thank-you page), the Google map, and the localStorage
+copy of the attribution fields all wait for Accept. Reject loads nothing and
+clears `_fbp`/`_fbc`. The map has its own "Show map" button, which is
+consent for that embed alone. Accept and Reject are styled identically (the
+ICO wants rejecting to be as easy as accepting), the choice lives under
+`localStorage.cookieConsent` (shared by the funnel and `/thank-you`, which
+share an origin), and "Cookie settings" in the footer reopens the banner.
+Attribution still posts from the URL without consent; it just is not
+remembered. Because the pixel is built into both pages, **GHL's tracking-code
+boxes stay empty** on both — a snippet there fires regardless of consent and
+doubles the pixel. `tools/verify.mjs` checks all of this on every page.
 
 First workflow condition in GHL should be the honeypot: `website` is not empty
 → stop.

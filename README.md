@@ -50,9 +50,12 @@ Open any of them in a browser or drop them on any static host.
       old `/preview/…?notrack=true` address, which recorded nothing, is gone.
 - [x] **Meta `Lead` fires on the form submit**, not the thank-you page —
       built in via `SITE_CONFIG.metaPixelId` (`982061177545615`), tagged with
-      `event_id` for Conversions API dedup. Remove any standalone Meta snippet
-      from this landing page's GHL tracking code, and take the `Lead` line
-      out of the thank-you page's snippet, or every lead counts twice.
+      `event_id` for Conversions API dedup.
+- [x] **Cookie consent banner** on the funnel and thank-you page: the pixel,
+      the Google map and stored attribution wait for Accept (UK PECR). The
+      thank-you `PageView` is built in too, so **leave GHL's tracking-code
+      boxes empty on both pages**; any Meta snippet there ignores consent and
+      doubles the pixel.
 - [ ] **Google Ads / GA4 conversion** (if used) goes in the marked block at
       the bottom of `thank-you.html`'s script.
 
@@ -763,6 +766,9 @@ Standard 5.1 expects the second — and then link from the footer.
       at `https://compositebonding.cygnethousedentalstudio.co.uk/`.
 - [x] **Meta `Lead` fires on the form submit** (pixel `982061177545615`,
       `event_id` for CAPI dedup). Keep `Lead` off the thank-you page.
+- [x] **Cookie consent banner** on both pages, gating the pixel, the map and
+      stored attribution. Thank-you `PageView` is built in: **leave GHL's
+      tracking-code boxes empty on both pages.**
 - [ ] **Google Ads / GA4 conversion** (if used) goes in the marked block at
       the bottom of the thank-you page's script.
 - [ ] **Submit one real test lead** and confirm the mapping. Re-capture the

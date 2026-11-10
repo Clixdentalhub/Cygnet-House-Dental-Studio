@@ -143,6 +143,8 @@ page.on('console', m => {
   (/Failed to load resource|net::ERR_/.test(m.text()) ? resourceFails : errors).push(m.text());
 });
 page.on('requestfailed', r => resourceFails.push(r.url()));
+const trackerReqs = [];
+page.on('request', r => { if (/^https?:/.test(r.url())) trackerReqs.push(r.url()); });
 page.on('pageerror', e => errors.push(String(e)));
 await page.goto(PAGE_URL, { waitUntil: 'load' });
 await page.waitForTimeout(600);
@@ -261,6 +263,9 @@ const contrast = await page.evaluate(() => {
     ['trust strip', '.trust-strip li'],
     ['on-ink body', '.section--primary .section-head p'],
     ['footer legal', '.footer__legal p'],
+    ['consent text', '.consent__body'],
+    ['consent button', '.consent__btn'],
+    ['map gate', '.map-gate p'],
   ];
   return probes.map(([name, sel]) => {
     const el = document.querySelector(sel);
@@ -281,6 +286,92 @@ for (const p of contrast) {
   const line = `${p.name.padEnd(15)} ${String(p.r).padStart(6)}:1  (${p.size}px${p.large ? ', large' : ''}, needs ${p.need})`;
   p.r >= p.need ? ok(line) : bad(line);
 }
+
+/* ---------------------------------------------------------- cookie consent */
+// UK PECR: nothing that sets a non-essential cookie may even be requested
+// before the visitor chooses. Off-site requests are aborted in this harness,
+// but 'request' still fires for them, so an attempt is still caught.
+console.log(`\n\x1b[1m${FILE} — cookie consent\x1b[0m`);
+const TRACKERS = /connect\.facebook\.net|facebook\.com\/tr|google\.com\/maps/;
+(await page.isVisible('#consent'))
+  ? ok('consent banner shown on a first visit') : bad('no consent banner on a first visit');
+const early = trackerReqs.filter(u => TRACKERS.test(u));
+early.length ? bad(`tracker requested before any choice: ${early[0]}`)
+             : ok('no Meta or Google Maps request before a choice');
+
+// Reject: the banner goes, nothing loads, and the choice survives a reload.
+await page.click('#consent .js-consent[data-choice="denied"]');
+await page.waitForTimeout(200);
+const afterReject = trackerReqs.filter(u => TRACKERS.test(u));
+(!(await page.isVisible('#consent')) && !afterReject.length)
+  ? ok('Reject hides the banner and loads nothing')
+  : bad(`Reject failed: banner ${await page.isVisible('#consent') ? 'still shown' : 'hidden'}, ${afterReject.length} tracker request(s)`);
+await page.reload({ waitUntil: 'load' });
+await page.waitForTimeout(300);
+!(await page.isVisible('#consent')) && !trackerReqs.some(u => TRACKERS.test(u))
+  ? ok('the Reject is remembered across a reload') : bad('banner or a tracker came back after Reject');
+
+// "Show map" is consent for that one embed: it loads the map and nothing else.
+if (await page.$('.js-map-load')) {
+  await page.click('.js-map-load');
+  await page.waitForTimeout(800);
+  trackerReqs.some(u => /google\.com\/maps/.test(u)) && !trackerReqs.some(u => /facebook/.test(u))
+    ? ok('"Show map" loads the map alone, with no Meta request')
+    : bad('"Show map" did not load the map, or it started the pixel');
+}
+
+// Accept, on a fresh visit: the pixel boots and fires PageView, the map loads,
+// and — on a funnel — the submit Lead carries the event_id posted to GHL.
+const acc = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await offline(acc);
+const accReq = [];
+acc.on('request', r => accReq.push(r.url()));
+await acc.goto(PAGE_URL, { waitUntil: 'load' });
+await acc.waitForTimeout(300);
+await acc.click('#consent .js-consent[data-choice="granted"]');
+await acc.waitForTimeout(300);
+const pixelId = await acc.evaluate(() =>
+  (document.body.innerHTML.match(/metaPixelId:\s*'([^']*)'/) || [])[1] || '');
+if (pixelId) {
+  // fbevents.js itself is aborted here, so fbq stays the stub and its queue
+  // holds every call the page made.
+  const q = await acc.evaluate(() => (window.fbq && window.fbq.queue || []).map(a => Array.from(a)));
+  accReq.some(u => /connect\.facebook\.net/.test(u))
+    && q.some(a => a[0] === 'init' && a[1] === pixelId)
+    && q.some(a => a[0] === 'track' && a[1] === 'PageView')
+    ? ok(`Accept boots pixel ${pixelId} and fires PageView`) : bad('Accept did not boot the pixel');
+} else warn('metaPixelId is empty — pixel path not exercised');
+if (await acc.$('[data-consent-map]')) {
+  // The iframe is loading="lazy" and below the fold, so the browser only
+  // fetches it once it is near the viewport — scroll there before judging.
+  await acc.locator('[data-consent-map]').scrollIntoViewIfNeeded();
+  await acc.waitForTimeout(800);
+  accReq.some(u => /google\.com\/maps/.test(u)) ? ok('Accept loads the Google map')
+                                                 : bad('Accept did not load the map');
+}
+if (pixelId && await acc.$('#qualifier-form')) {
+  let leadBody = null; const fb = [];
+  await acc.exposeFunction('__post', b => { leadBody = b; });
+  await acc.exposeFunction('__fb', a => fb.push(JSON.parse(a)));
+  await acc.evaluate(() => {
+    const orig = window.fbq;
+    window.fbq = function () { window.__fb(JSON.stringify([].slice.call(arguments))); return orig.apply(this, arguments); };
+    window.fetch = (u, o) => { window.__post(o.body.toString()); return Promise.resolve({}); };
+    const f = document.getElementById('qualifier-form');
+    f.querySelector('input[name="situation"]').checked = true;
+    f.querySelector('input[name="timing"]').checked = true;
+    f.firstName.value = 'Margaret'; f.lastName.value = 'Test';
+    f.phone.value = '07700 900123'; f.email.value = 'margaret@example.co.uk';
+    f.requestSubmit();
+  });
+  await acc.waitForTimeout(600);
+  const lead = fb.find(a => a[0] === 'track' && a[1] === 'Lead');
+  const postedId = leadBody ? new URLSearchParams(leadBody).get('event_id') : null;
+  lead && postedId && lead[3] && lead[3].eventID === postedId
+    ? ok(`submit fires Lead with the posted event_id (${postedId.slice(0, 8)}…), so CAPI can dedupe`)
+    : bad(`Lead / event_id mismatch: lead=${JSON.stringify(lead)} posted=${postedId}`);
+}
+await acc.close();
 
 /* ---------------------------------------------------------- the form */
 // A thank-you page has no qualifier form; everything below is funnel-only.

@@ -1124,6 +1124,77 @@ body{padding-bottom:88px}
 @media (min-width:768px){ body{padding-bottom:0} }
 
 /* ==========================================================================
+   18c · COOKIE CONSENT (UK PECR)
+   A bottom bar, non-modal: the page stays fully usable behind it, and it
+   sits above the sticky mobile CTA until a choice is made. Accept and
+   Reject are styled identically: the ICO's guidance is that rejecting has
+   to be as easy as accepting, so neither gets the louder button.
+   ========================================================================== */
+.consent{
+  position:fixed; left:0; right:0; bottom:0; z-index:200;
+  background:var(--color-primary); color:#fff;
+  border-top:1px solid rgba(196,165,232,.28);
+  box-shadow:0 -8px 24px rgba(24,10,34,.28);
+  padding-block:var(--space-2);
+  padding-bottom:calc(var(--space-2) + env(safe-area-inset-bottom,0px));
+}
+.consent[hidden]{display:none}
+/* Same box as .container, so the banner lines up with the page above it. */
+.consent__inner{
+  width:100%; max-width:var(--container); margin-inline:auto;
+  padding-inline:var(--space-2);
+  display:grid; gap:var(--space-2); align-items:center;
+}
+.consent__title{font-family:var(--font-heading); font-weight:700; font-size:1rem; line-height:1.3; color:#fff; margin:0 0 4px}
+.consent__body{font-size:.9375rem; line-height:1.5; color:var(--color-on-primary-mut); margin:0}
+.consent__actions{display:grid; grid-template-columns:1fr 1fr; gap:var(--space)}
+/* Shared by the banner's two buttons and the map's "Show map": one look for
+   every consent decision on the page. */
+.consent__btn{
+  min-height:48px; padding:0 var(--space-3);
+  border:2px solid #fff; border-radius:var(--radius-sm);
+  background:#fff; color:var(--color-primary);
+  font:700 1rem/1 var(--font-heading); cursor:pointer;
+}
+.consent__btn:hover{background:var(--color-on-primary-mut); border-color:var(--color-on-primary-mut)}
+/* The global focus ring is brand purple, which all but vanishes on ink. */
+.consent :focus-visible,
+.map-gate :focus-visible,
+.linkbtn:focus-visible{outline-color:var(--color-flourish)}
+@media (min-width:768px){
+  .consent__inner{padding-inline:var(--space-4); grid-template-columns:1fr auto; gap:var(--space-4)}
+  .consent__actions{grid-template-columns:auto auto}
+}
+/* Reduced motion gets the finished state, not a faster slide. */
+@media (prefers-reduced-motion:no-preference){
+  .consent{animation:consent-in .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes consent-in{from{transform:translateY(100%)}}
+}
+/* Footer control that reopens the banner, so consent can be withdrawn as
+   easily as it was given. A button, not href="#": it navigates nowhere. */
+.linkbtn{
+  background:none; border:0; padding:0; margin-left:var(--space);
+  font:inherit; color:inherit; text-decoration:underline; text-underline-offset:2px;
+  cursor:pointer;
+}
+.linkbtn:hover{color:#fff}
+/* The map waits for consent too: Google sets cookies the moment the embed
+   loads. Until then the slot says why, with a button that loads the map
+   alone — consent for that one embed, not for the pixel. */
+.mapwrap iframe[hidden]{display:none}
+.map-gate{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:var(--space-2); padding:var(--space-3); text-align:center;
+  /* Solid, not translucent: the band behind it is a photograph, and text
+     over a face is neither legible nor measurable. */
+  background:var(--color-primary);
+}
+.map-gate svg{color:var(--color-flourish)}
+.mapwrap.is-loaded .map-gate{display:none}
+.map-gate p{margin:0; max-width:32ch; font-size:.9375rem; line-height:1.5; color:var(--color-on-primary-mut)}
+
+/* ==========================================================================
    18b · SECTION MOTION
 
    Ten patterns from the motion lab, each with exactly one home. No section
@@ -2138,13 +2209,19 @@ body{padding-bottom:88px}
     </div>
 
     <div class="reveal">
-      <!-- Third-party embed: sets Google cookies on load. If the site uses a
-           cookie banner, gate this behind consent. -->
-      <div class="mapwrap">
+      <!-- Gated behind cookie consent: Google sets cookies the moment this
+           embed loads, so it carries data-src, not src, until the visitor
+           accepts cookies or asks for the map itself. -->
+      <div class="mapwrap" data-consent-map>
         <iframe
           title="Map showing Cygnet House Dental Studio, Grace Swan Close, Hundleby, Spilsby PE23 5LT"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2391.3910782100743!2d0.08512549999999998!3d53.17496419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d7d99d627c289d%3A0xaf5f6fa79467425f!2sCygnet%20House%20Dental%20Studio!5e0!3m2!1sen!2sph!4v1786914872150!5m2!1sen!2sph"
-          allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2391.3910782100743!2d0.08512549999999998!3d53.17496419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d7d99d627c289d%3A0xaf5f6fa79467425f!2sCygnet%20House%20Dental%20Studio!5e0!3m2!1sen!2sph!4v1786914872150!5m2!1sen!2sph"
+          allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+        <div class="map-gate">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <p>The map is provided by Google, which sets cookies when it loads.</p>
+          <button type="button" class="consent__btn js-map-load">Show map</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2217,7 +2294,7 @@ body{padding-bottom:88px}
       <p><strong>Finance:</strong> 0% APR representative over 12 months. Cygnet House Dental Studio Ltd acts as a credit broker, not a lender. Finance is subject to status and affordability checks, and full written terms are provided before you commit.</p>
       <p><strong>Pricing:</strong> prices shown are guide prices from the stated amount. Your exact cost is confirmed in writing after your consultation and CBCT assessment. Monthly figures are based on 0% interest spread over 12 months.</p>
       <p>Individual results vary. All before-and-after images and reviews shown are from real patients of this practice, used with their consent.</p>
-      <p>© <span id="year">2026</span> Cygnet House Dental Studio. All rights reserved.</p>
+      <p>© <span id="year">2026</span> Cygnet House Dental Studio. All rights reserved.<button type="button" class="linkbtn js-consent-open">Cookie settings</button></p>
     </div>
   </div>
 </footer>
@@ -2275,6 +2352,24 @@ body{padding-bottom:88px}
 }
 </script>
 
+<!-- ============================================================
+     COOKIE CONSENT (UK PECR). Shown until the visitor chooses; the
+     choice is remembered, and "Cookie settings" in the footer reopens
+     it. Non-modal on purpose: the page works whatever is chosen.
+     ============================================================ -->
+<div class="consent" id="consent" role="region" aria-labelledby="consent-title" hidden>
+  <div class="consent__inner">
+    <div class="consent__text">
+      <p class="consent__title" id="consent-title">Cookies on this page</p>
+      <p class="consent__body">We’d like to set cookies to measure how our Meta adverts perform, and to show the Google map. Nothing is set unless you accept, and your enquiry works either way.</p>
+    </div>
+    <div class="consent__actions">
+      <button type="button" class="consent__btn js-consent" data-choice="denied">Reject</button>
+      <button type="button" class="consent__btn js-consent" data-choice="granted">Accept</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -2286,9 +2381,10 @@ body{padding-bottom:88px}
   var SITE_CONFIG = {
     phoneDisplay: '07450 302990',
     phoneHref:    '+447450302990',
-    /* Meta Pixel dataset ID. Empty = no pixel loads. Drop the numeric ID in
-       to switch it on: PageView fires on load, and a Lead event fires on a
-       successful form submit below — on the form, not the thank-you page. */
+    /* Meta Pixel dataset ID. Empty = no pixel loads. It only ever runs once
+       the visitor accepts cookies: PageView fires then, and a Lead event
+       fires on a successful form submit below — on the form, not the
+       thank-you page. */
     metaPixelId:  '982061177545615',
     /* Where a successful submission lands. Set to null to keep the visitor
        on this page and show the inline success state instead — the two are
@@ -2312,15 +2408,33 @@ body{padding-bottom:88px}
   document.getElementById('year').textContent = new Date().getFullYear();
   var pageUrlField = document.getElementById('pageUrl');
   if (pageUrlField) pageUrlField.value = window.location.href;
-  /* Meta Pixel. One event_id per page load is generated and written to the
-     hidden field regardless, so GHL's Conversions API can reuse it; the pixel
-     itself only boots when SITE_CONFIG.metaPixelId is set. */
+  /* One Meta event_id per page load, written to a hidden field whatever the
+     visitor chooses about cookies: it is never stored on the device, and
+     GHL's Conversions API reuses it so a browser Lead and a server Lead
+     count once. */
   var metaEventId = '';
   try { metaEventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); }
   catch (e) { metaEventId = String(Date.now()); }
   var eventIdField = document.getElementById('event_id');
   if (eventIdField) eventIdField.value = metaEventId;
-  if (SITE_CONFIG.metaPixelId) {
+
+  /* ==========================================================
+     COOKIE CONSENT (UK PECR)
+     Nothing that sets a non-essential cookie runs before the visitor
+     chooses: the Meta Pixel and the Google map both wait for Accept.
+     Storing the choice itself is strictly necessary, so that needs no
+     consent. The landing page and /thank-you share an origin, so a
+     choice made on one carries to the other.
+     ========================================================== */
+  var CONSENT_KEY = 'cookieConsent';
+  var ATTR_KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'medium_id', 'content_id'];
+  function getConsent() { try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; } }
+  function hasConsent() { return getConsent() === 'granted'; }
+
+  var pixelBooted = false;
+  function bootPixel() {
+    if (pixelBooted || !SITE_CONFIG.metaPixelId) return;
+    pixelBooted = true;
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
       n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -2329,20 +2443,81 @@ body{padding-bottom:88px}
     window.fbq('init', SITE_CONFIG.metaPixelId);
     window.fbq('track', 'PageView');
   }
-  /* Attribution: the Meta click ID and the UTM tags come off the ad URL and post
-     with the lead. Each is stored on first landing so a reload that drops the
-     query string does not lose it; storage is wrapped for private-mode browsers. */
-  (function () {
+
+  /* Withdrawing consent: stored attribution and Meta's first-party cookies
+     go. The pixel script cannot be unloaded mid-page, so if it already ran
+     it is told to stop sending instead. */
+  function clearTracking() {
+    ATTR_KEYS.forEach(function (key) { try { localStorage.removeItem(key); } catch (e) {} });
+    var parts = location.hostname.split('.');
+    ['_fbp', '_fbc'].forEach(function (name) {
+      document.cookie = name + '=; Max-Age=0; path=/';
+      for (var i = 0; i < parts.length - 1; i++) {
+        document.cookie = name + '=; Max-Age=0; path=/; domain=.' + parts.slice(i).join('.');
+      }
+    });
+    if (pixelBooted && window.fbq) window.fbq('consent', 'revoke');
+  }
+
+  function loadMaps() {
+    document.querySelectorAll('[data-consent-map]').forEach(function (wrap) {
+      var frame = wrap.querySelector('iframe[data-src]');
+      if (!frame || frame.getAttribute('src')) return;
+      frame.setAttribute('src', frame.getAttribute('data-src'));
+      frame.hidden = false;
+      wrap.classList.add('is-loaded');
+    });
+  }
+
+  /* Attribution: the Meta click ID, the UTM tags and the Meta object IDs
+     come off the ad URL and post with the lead. They are only kept on the
+     device (so a reload that drops the query string does not lose them)
+     once the visitor has accepted cookies. Without that they still post
+     from the URL; they just are not remembered. */
+  function applyAttribution() {
     var params = new URLSearchParams(window.location.search);
-    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'medium_id', 'content_id'].forEach(function (key) {
+    var mayStore = hasConsent();
+    ATTR_KEYS.forEach(function (key) {
       var field = document.getElementById(key);
       if (!field) return;
       var val = params.get(key) || '';
-      if (val) { try { localStorage.setItem(key, val); } catch (e) {} }
+      if (val) { if (mayStore) { try { localStorage.setItem(key, val); } catch (e) {} } }
       else { try { val = localStorage.getItem(key) || ''; } catch (e) {} }
       field.value = val;
     });
-  })();
+  }
+  applyAttribution();
+
+  var consentBanner = document.getElementById('consent');
+  function chooseConsent(choice) {
+    try { localStorage.setItem(CONSENT_KEY, choice); } catch (e) {}
+    if (consentBanner) consentBanner.hidden = true;
+    if (choice === 'granted') {
+      if (pixelBooted && window.fbq) window.fbq('consent', 'grant');
+      bootPixel();
+      loadMaps();
+      applyAttribution();
+    } else {
+      clearTracking();
+    }
+  }
+  document.querySelectorAll('.js-consent').forEach(function (btn) {
+    btn.addEventListener('click', function () { chooseConsent(btn.getAttribute('data-choice')); });
+  });
+  document.querySelectorAll('.js-consent-open').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!consentBanner) return;
+      consentBanner.hidden = false;
+      var first = consentBanner.querySelector('.js-consent');
+      if (first) first.focus();
+    });
+  });
+  document.querySelectorAll('.js-map-load').forEach(function (btn) {
+    btn.addEventListener('click', loadMaps);
+  });
+
+  if (hasConsent()) { bootPixel(); loadMaps(); }
+  else if (getConsent() !== 'denied' && consentBanner) consentBanner.hidden = false;
 
   /* ==========================================================
      MULTI-STEP QUALIFIER FORM
@@ -2508,8 +2683,9 @@ body{padding-bottom:88px}
          promise means delivered and a rejection means a real network
          failure. */
       /* Conversion fires here, on the form itself — one Lead per submit,
-         tagged with metaEventId so a CAPI Lead deduplicates against it. */
-      if (SITE_CONFIG.metaPixelId && window.fbq) {
+         tagged with metaEventId so a CAPI Lead deduplicates against it.
+         Only with cookie consent: no consent, no pixel, no browser Lead. */
+      if (pixelBooted && hasConsent() && window.fbq) {
         window.fbq('track', 'Lead', {}, { eventID: metaEventId });
       }
 
