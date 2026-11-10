@@ -1163,18 +1163,21 @@ body{padding-bottom:88px}
   /* ==========================================================
      CONVERSION TRACKING
 
-     This page is the conversion event. Drop the pixels in below — they fire
-     once, on a page only reachable by submitting the form.
+     Meta: the Lead does NOT fire on this page. It fires on the form
+       submit in index.html, tagged with an event_id that GHL's
+       Conversions API reuses so Meta deduplicates browser and server.
+       Adding fbq('track', 'Lead') here counts every lead twice, and this
+       page re-fires it on every refresh. A PageView-only Meta snippet
+       here is fine. If GTM is used, do not attach a Meta Lead tag to
+       the generate_lead event below, for the same reason.
 
-     Google Ads / GA4:
+     Google Ads / GA4: this page is still the place for those — they fire
+       on a page only reachable by submitting the form:
        gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXX/XXXXXXXXXXXXXX' });
-     Meta:
-       fbq('track', 'Lead');
      GTM: the dataLayer push below is already here — add a Custom Event
        trigger on "generate_lead" in the container.
 
-     Do not also fire a conversion on the form's submit handler in
-     index.html, or every lead counts twice.
+     One place per platform: Meta on the submit, Google here.
      ========================================================== */
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: 'generate_lead', form: 'implant_qualifier' });

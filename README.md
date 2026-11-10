@@ -43,14 +43,18 @@ Open any of them in a browser or drop them on any static host.
       `/terms/`. Confirm those paths exist, or repoint them at the equivalent
       pages once the funnel is up in GHL.
 - [ ] **Set the canonical URL** to the funnel's GHL address once it has one.
-- [ ] **Set `SITE_CONFIG.funnelUrl`** in `thank-you.html` to the funnel's GHL
-      URL. It is `null` today, which leaves the footer logo as a plain image
-      rather than a link that 404s.
-- [ ] **Swap `SITE_CONFIG.thankYouUrl`** off the preview URL. It points at
-      `…/preview/d7eCNYHJ8bPcsjqpLcyP?notrack=true`; `notrack=true` disables
-      GHL's own tracking, so the published address is what should go live.
-- [ ] **Add the conversion tag** to `thank-you.html` — the marked block at the
-      bottom of its script takes the Google Ads / Meta snippet.
+- [x] **`SITE_CONFIG.funnelUrl`** in `thank-you.html` points at
+      `https://dentalimplants.cygnethousedentalstudio.co.uk/`.
+- [x] **`SITE_CONFIG.thankYouUrl`** points at the published
+      `https://dentalimplants.cygnethousedentalstudio.co.uk/thank-you` — the
+      old `/preview/…?notrack=true` address, which recorded nothing, is gone.
+- [x] **Meta `Lead` fires on the form submit**, not the thank-you page —
+      built in via `SITE_CONFIG.metaPixelId` (`982061177545615`), tagged with
+      `event_id` for Conversions API dedup. Remove any standalone Meta snippet
+      from this landing page's GHL tracking code, and take the `Lead` line
+      out of the thank-you page's snippet, or every lead counts twice.
+- [ ] **Google Ads / GA4 conversion** (if used) goes in the marked block at
+      the bottom of `thank-you.html`'s script.
 
 ### After it is live
 
@@ -147,25 +151,20 @@ Set both and every phone reference and `tel:` link on the page updates.
 ### Where a submission lands
 
 `SITE_CONFIG.thankYouUrl` in `index.html` decides what a successful send does.
-It currently points at the GHL page:
+It currently points at the published thank-you page:
 
 ```js
-thankYouUrl: 'https://sites.leadconnectorhq.com/preview/d7eCNYHJ8bPcsjqpLcyP?notrack=true'
+thankYouUrl: 'https://dentalimplants.cygnethousedentalstudio.co.uk/thank-you'
 ```
 
 Set it to `null` to keep the visitor here and show the inline success state
 instead. The two are mutually exclusive, and **only one of them should carry a
 conversion pixel**, or every lead counts twice.
 
-> **That is a preview URL, and `notrack=true` disables GHL's own tracking.**
-> Fine while testing; swap both for the published address before running
-> traffic, or the page will not record a thing.
-
 The lead's first name rides along as `firstName=…`. The separator is chosen
-rather than assumed — this destination already has a query string, so a second
-`?` would collapse the whole thing into one unparseable value. Verified: the
-visitor lands on `…?notrack=true&firstName=Margaret` with both parameters
-readable.
+rather than assumed — `?` when the destination has no query string, `&` when
+it does, so a second `?` never collapses the URL into one unparseable value.
+Verified: the visitor lands on `…/thank-you?firstName=Margaret`.
 
 **This URL lives in the HTML.** Pasting a fresh build into GHL overwrites
 whatever is in the block, including any endpoint you edited there by hand — so
@@ -760,11 +759,12 @@ Standard 5.1 expects the second — and then link from the footer.
       — but **`notrack=true` disables GHL's own tracking and `/preview/` is not
       the published address**. Run traffic at it and the page records nothing.
       This is the same trap `index.html` is still sitting in.
-- [ ] **Set `SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` to
-      the funnel's GHL URL. It is `null` today.
-- [ ] **Add the conversion tag** to the thank-you page — the marked block at
-      the bottom of its script. Fire it there **or** in the funnel's submit
-      handler, never both.
+- [x] **`SITE_CONFIG.funnelUrl`** in `composite-bonding-thank-you.html` points
+      at `https://compositebonding.cygnethousedentalstudio.co.uk/`.
+- [x] **Meta `Lead` fires on the form submit** (pixel `982061177545615`,
+      `event_id` for CAPI dedup). Keep `Lead` off the thank-you page.
+- [ ] **Google Ads / GA4 conversion** (if used) goes in the marked block at
+      the bottom of the thank-you page's script.
 - [ ] **Submit one real test lead** and confirm the mapping. Re-capture the
       webhook reference only if a field is *added* — nothing has been renamed.
 - [ ] Real-device testing and a screen-reader pass. Neither has been done.
